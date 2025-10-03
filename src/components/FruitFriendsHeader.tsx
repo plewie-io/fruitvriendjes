@@ -1,0 +1,57 @@
+import { useNavigate } from "react-router-dom";
+import pineappleFriend from "@/assets/pineapple-friend.jpg";
+import appleFriend from "@/assets/apple-friend.jpg";
+import bananaFriend from "@/assets/banana-friend.jpg";
+import strawberryFriend from "@/assets/strawberry-friend.jpg";
+
+const friends = [
+  { id: "pineapple", name: "Anna Ananas", image: pineappleFriend },
+  { id: "apple", name: "Appie Appel", image: appleFriend },
+  { id: "banana", name: "Bert Banaan", image: bananaFriend },
+  { id: "strawberry", name: "Sanne Aardbei", image: strawberryFriend },
+];
+
+export const FruitFriendsHeader = () => {
+  const navigate = useNavigate();
+
+  const selectFriend = (friendId: string) => {
+    navigate("/recept", { state: { friend: friendId } });
+  };
+
+  return (
+    <div className="flex items-center justify-between mb-8">
+      <h1 className="text-5xl md:text-6xl font-bold text-foreground animate-fade-in">
+        De Fruitvriendjes! 🍎🍊🍌🍓
+      </h1>
+      
+      <div className="flex gap-4">
+        {friends.map((friend, index) => (
+          <div
+            key={friend.id}
+            className="relative group cursor-pointer animate-fade-in"
+            style={{ animationDelay: `${index * 100}ms` }}
+            onClick={() => selectFriend(friend.id)}
+          >
+            <img
+              src={friend.image}
+              alt={friend.name}
+              className="w-20 h-32 object-contain transition-all duration-300 group-hover:animate-[wiggle_0.5s_ease-in-out] group-hover:scale-110"
+            />
+            
+            {/* Speech bubble */}
+            <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              <div className="bg-white rounded-2xl px-4 py-2 shadow-float border-2 border-primary relative">
+                <p className="text-sm font-bold text-foreground whitespace-nowrap">
+                  Kies mij!!
+                </p>
+                {/* Triangle pointer */}
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-white"></div>
+                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-10 border-r-10 border-t-10 border-l-transparent border-r-transparent border-t-primary"></div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};

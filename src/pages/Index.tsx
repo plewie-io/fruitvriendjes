@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { FruitFriendsHeader } from "@/components/FruitFriendsHeader";
 import pineappleFriend from "@/assets/pineapple-friend.jpg";
 import appleFriend from "@/assets/apple-friend.jpg";
 import bananaFriend from "@/assets/banana-friend.jpg";
@@ -23,10 +24,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-hero">
       <div className="container mx-auto px-4 py-12">
+        <FruitFriendsHeader />
+        
         <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-4 animate-fade-in">
-            De Fruitvriendjes! 🍎🍊🍌🍓
-          </h1>
           <p className="text-xl md:text-2xl text-muted-foreground animate-fade-in">
             Kies jouw favoriete fruitvriend en maak samen een lekker recept!
           </p>
