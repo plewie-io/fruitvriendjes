@@ -1,11 +1,80 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useNavigate } from "react-router-dom";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import orangeFriend from "@/assets/orange-friend.png";
+import appleFriend from "@/assets/apple-friend.png";
+import bananaFriend from "@/assets/banana-friend.png";
+import strawberryFriend from "@/assets/strawberry-friend.png";
+
+const friends = [
+  { id: "orange", name: "Otto Sinaasappel", image: orangeFriend, color: "from-orange-400 to-yellow-400" },
+  { id: "apple", name: "Anna Appel", image: appleFriend, color: "from-red-400 to-pink-400" },
+  { id: "banana", name: "Bert Banaan", image: bananaFriend, color: "from-yellow-300 to-yellow-500" },
+  { id: "strawberry", name: "Sanne Aardbei", image: strawberryFriend, color: "from-red-500 to-pink-500" },
+];
 
 const Index = () => {
+  const navigate = useNavigate();
+
+  const selectFriend = (friendId: string) => {
+    navigate("/recept", { state: { friend: friendId } });
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-gradient-hero">
+      <div className="container mx-auto px-4 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-4 animate-fade-in">
+            De Fruitvriendjes! 🍎🍊🍌🍓
+          </h1>
+          <p className="text-xl md:text-2xl text-muted-foreground animate-fade-in">
+            Kies jouw favoriete fruitvriend en maak samen een lekker recept!
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          {friends.map((friend, index) => (
+            <Card
+              key={friend.id}
+              className="overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in"
+              style={{ animationDelay: `${index * 100}ms` }}
+              onClick={() => selectFriend(friend.id)}
+            >
+              <div className={`h-32 bg-gradient-to-br ${friend.color}`} />
+              <div className="p-6 text-center">
+                <img
+                  src={friend.image}
+                  alt={friend.name}
+                  className="w-24 h-36 mx-auto -mt-20 mb-4 object-contain drop-shadow-lg"
+                />
+                <h3 className="text-2xl font-bold mb-2">{friend.name}</h3>
+                <Button className="w-full mt-4" size="lg">
+                  Kies mij!
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        <div className="mt-16 max-w-2xl mx-auto">
+          <Card className="p-6 bg-muted/50">
+            <h2 className="text-2xl font-bold mb-4 text-center">Hoe werkt het?</h2>
+            <ol className="space-y-3 text-lg">
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</span>
+                <span>Kies jouw favoriete fruitvriend hierboven</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</span>
+                <span>Typ welke groenten of fruit je hebt</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">3</span>
+                <span>Krijg een leuk en lekker recept om te maken!</span>
+              </li>
+            </ol>
+          </Card>
+        </div>
       </div>
     </div>
   );
