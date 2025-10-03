@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import orangeFriend from "@/assets/orange-friend.png";
-import appleFriend from "@/assets/apple-friend.png";
-import bananaFriend from "@/assets/banana-friend.png";
-import strawberryFriend from "@/assets/strawberry-friend.png";
+import pineappleFriend from "@/assets/pineapple-friend.jpg";
+import appleFriend from "@/assets/apple-friend.jpg";
+import bananaFriend from "@/assets/banana-friend.jpg";
+import strawberryFriend from "@/assets/strawberry-friend.jpg";
 
 const friends = [
-  { id: "orange", name: "Otto Sinaasappel", image: orangeFriend, color: "from-orange-400 to-yellow-400" },
-  { id: "apple", name: "Anna Appel", image: appleFriend, color: "from-red-400 to-pink-400" },
+  { id: "pineapple", name: "Anna Ananas", image: pineappleFriend, color: "from-orange-400 to-yellow-400" },
+  { id: "apple", name: "Appie Appel", image: appleFriend, color: "from-green-400 to-lime-400" },
   { id: "banana", name: "Bert Banaan", image: bananaFriend, color: "from-yellow-300 to-yellow-500" },
   { id: "strawberry", name: "Sanne Aardbei", image: strawberryFriend, color: "from-red-500 to-pink-500" },
 ];

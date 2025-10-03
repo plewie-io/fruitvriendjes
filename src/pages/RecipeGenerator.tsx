@@ -6,13 +6,13 @@ import { Loader2, ChefHat, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocation, useNavigate } from "react-router-dom";
-import orangeFriend from "@/assets/orange-friend.png";
-import appleFriend from "@/assets/apple-friend.png";
-import bananaFriend from "@/assets/banana-friend.png";
-import strawberryFriend from "@/assets/strawberry-friend.png";
+import pineappleFriend from "@/assets/pineapple-friend.jpg";
+import appleFriend from "@/assets/apple-friend.jpg";
+import bananaFriend from "@/assets/banana-friend.jpg";
+import strawberryFriend from "@/assets/strawberry-friend.jpg";
 
 const friendImages: Record<string, string> = {
-  orange: orangeFriend,
+  pineapple: pineappleFriend,
   apple: appleFriend,
   banana: bananaFriend,
   strawberry: strawberryFriend,
@@ -21,7 +21,7 @@ const friendImages: Record<string, string> = {
 const RecipeGenerator = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const friend = location.state?.friend || "orange";
+  const friend = location.state?.friend || "pineapple";
   const [ingredients, setIngredients] = useState("");
   const [recipe, setRecipe] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
