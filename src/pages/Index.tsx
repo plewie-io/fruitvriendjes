@@ -32,30 +32,6 @@ const Index = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-          {friends.map((friend, index) => (
-            <Card
-              key={friend.id}
-              className="overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
-              onClick={() => selectFriend(friend.id)}
-            >
-              <div className={`h-32 bg-gradient-to-br ${friend.color}`} />
-              <div className="p-6 text-center">
-                <img
-                  src={friend.image}
-                  alt={friend.name}
-                  className="w-24 h-36 mx-auto -mt-20 mb-4 object-contain drop-shadow-lg"
-                />
-                <h3 className="text-2xl font-bold mb-2">{friend.name}</h3>
-                <Button className="w-full mt-4" size="lg">
-                  Kies mij!
-                </Button>
-              </div>
-            </Card>
-          ))}
-        </div>
-
         <div className="mt-16 max-w-2xl mx-auto">
           <Card className="p-6 bg-muted/50">
             <h2 className="text-2xl font-bold mb-4 text-center">Hoe werkt het?</h2>
