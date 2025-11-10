@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { FruitFriendsHeader } from "@/components/FruitFriendsHeader";
 import pineappleFriend from "@/assets/pineapple-friend.jpg";
 import appleFriend from "@/assets/apple-friend.jpg";
@@ -16,6 +18,7 @@ const friends = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const [showSafetyDialog, setShowSafetyDialog] = useState(true);
 
   const selectFriend = (friendId: string) => {
     navigate("/recept", { state: { friend: friendId } });
@@ -23,6 +26,27 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-hero">
+      <AlertDialog open={showSafetyDialog} onOpenChange={setShowSafetyDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-2xl">⚠️ Veilig koken met kinderen</AlertDialogTitle>
+            <AlertDialogDescription className="space-y-3 text-base">
+              <p>Leuk dat je samen met je kinderen gaat koken! Houd hierbij rekening met het volgende:</p>
+              <ul className="list-disc list-inside space-y-2 text-foreground">
+                <li>Wees voorzichtig met scherpe keukenartikelen zoals messen en scharen</li>
+                <li>Let op hete pannen en ovens</li>
+                <li>Houd rekening met allergieën en voedselintoleranties</li>
+                <li>Was altijd je handen voordat je begint</li>
+              </ul>
+              <p className="font-semibold">Veel kookplezier! 🍳👨‍🍳👩‍🍳</p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction>Begrepen!</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <div className="container mx-auto px-4 py-12">
         <FruitFriendsHeader />
         
