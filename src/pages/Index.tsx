@@ -66,13 +66,13 @@ const Index = () => {
                 <span className="text-lg font-semibold">Klik hier!</span>
               </button>
             </div>
-            <div className="p-10 bg-card flex flex-col items-start">
+            <div className="py-8 bg-card flex flex-col items-center">
               <img
                 src={mandarijn}
                 alt="Mandy Mandarijn"
-                className="w-96 h-[450px] object-contain drop-shadow-lg"
+                className="w-[500px] h-[550px] object-contain drop-shadow-lg"
               />
-              <h3 className="text-4xl font-bold mt-4 ml-16">Mandy Mandarijn</h3>
+              <h3 className="text-4xl font-bold mt-2">Mandy Mandarijn</h3>
             </div>
           </Card>
         </div>
