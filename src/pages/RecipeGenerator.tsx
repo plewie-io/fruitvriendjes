@@ -68,17 +68,12 @@ const RecipeGenerator = () => {
           Terug
         </Button>
 
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-8 bg-white/80 backdrop-blur-sm rounded-2xl p-6">
-            <img
-              src={mandarijn}
-              alt="Mandy Mandarijn"
-              className="w-40 h-56 mx-auto mb-4 object-contain animate-fade-in"
-            />
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
+        <div className="max-w-2xl mx-auto flex flex-col items-center">
+          <div className="text-center mb-8 bg-white/80 backdrop-blur-sm rounded-2xl p-4 inline-block mx-auto w-auto">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-1">
               Hoi, ik ben Mandy Mandarijn!
             </h1>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Vertel me welke groenten of fruit je hebt, en ik maak er een leuk recept van!
             </p>
           </div>
