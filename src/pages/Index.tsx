@@ -64,7 +64,7 @@ const Index = () => {
               }}
             >
               <div className="flex flex-col items-center z-10">
-                <Button className="text-xl py-6 px-12 bg-card text-foreground hover:bg-card/90 border-4 border-card" size="lg">
+                <Button className="text-xl py-6 px-12 bg-white/70 backdrop-blur-sm text-foreground hover:bg-white/80 border-4 border-white/50" size="lg">
                   Kook met mij!
                 </Button>
                 <button 
