@@ -9,8 +9,11 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Playful gradient background colors */
-    --background: 39 100% 97%;
+    --background: 68 65% 48%;
     --foreground: 24 70% 20%;
+    
+    /* Popup/dialog color */
+    --popup-accent: 50 100% 46%;
 
     /* Card colors with soft warmth */
     --card: 0 0% 100%;
@@ -47,7 +50,7 @@ All colors MUST be HSL.
     /* Gradient definitions */
     --gradient-warm: linear-gradient(135deg, hsl(24, 95%, 65%) 0%, hsl(48, 100%, 70%) 100%);
     --gradient-fresh: linear-gradient(135deg, hsl(142, 70%, 55%) 0%, hsl(174, 70%, 55%) 100%);
-    --gradient-hero: linear-gradient(180deg, hsl(39, 100%, 97%) 0%, hsl(48, 100%, 92%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(68, 65%, 48%) 0%, hsl(68, 65%, 55%) 100%);
     
     /* Fun shadows */
     --shadow-playful: 0 8px 24px -4px hsl(24, 95%, 55% / 0.2);
