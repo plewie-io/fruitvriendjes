@@ -48,20 +48,20 @@ const Index = () => {
           </p>
         </div>
 
-        <div className="flex justify-center max-w-lg mx-auto">
+        <div className="flex justify-center max-w-2xl mx-auto">
           <Card
             className="overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in w-full"
             onClick={goToRecipe}
           >
-            <div className="h-40 bg-gradient-to-br from-orange-300 to-orange-500" />
-            <div className="p-8 text-center">
+            <div className="h-48 bg-mandy-orange" />
+            <div className="p-10 text-center">
               <img
                 src={mandarijn}
                 alt="Mandy Mandarijn"
-                className="w-48 h-64 mx-auto -mt-32 mb-4 object-contain drop-shadow-lg"
+                className="w-72 h-96 mx-auto -mt-48 mb-6 object-contain drop-shadow-lg"
               />
-              <h3 className="text-3xl font-bold mb-4">Mandy Mandarijn</h3>
-              <Button className="w-full mt-4 text-lg py-6" size="lg">
+              <h3 className="text-4xl font-bold mb-6">Mandy Mandarijn</h3>
+              <Button className="w-full mt-4 text-xl py-8" size="lg">
                 Kook met mij!
               </Button>
             </div>
