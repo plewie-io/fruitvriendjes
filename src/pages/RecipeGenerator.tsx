@@ -78,7 +78,7 @@ const RecipeGenerator = () => {
             </p>
           </div>
 
-          <Card className="p-6 shadow-playful">
+          <Card className="p-8 shadow-playful w-full max-w-xl">
             <div className="space-y-4">
               <div>
                 <label htmlFor="ingredients" className="block text-sm font-medium mb-2">
