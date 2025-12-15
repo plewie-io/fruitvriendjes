@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
+import Footer from "@/components/Footer";
 import { ArrowUp } from "lucide-react";
 import mandarijn from "@/assets/mandarijn.png";
 import cookingFamily from "@/assets/cooking-family.png";
@@ -17,7 +18,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-hero">
+    <div className="min-h-screen bg-gradient-hero flex flex-col">
       <SchoolfruitsHeader />
       <AlertDialog open={showSafetyDialog} onOpenChange={setShowSafetyDialog}>
         <AlertDialogContent>
@@ -107,6 +108,7 @@ const Index = () => {
           </Card>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
