@@ -7,6 +7,7 @@ import { FruitFriendsHeader } from "@/components/FruitFriendsHeader";
 import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
 import { ArrowUp } from "lucide-react";
 import mandarijn from "@/assets/mandarijn.png";
+import cookingFamily from "@/assets/cooking-family.png";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -54,8 +55,15 @@ const Index = () => {
             className="overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in w-full border-4 border-card"
             onClick={goToRecipe}
           >
-            <div className="bg-mandy-orange flex items-center justify-between px-8 py-6">
-              <div className="flex flex-col items-center">
+            <div 
+              className="relative flex items-center justify-between px-8 py-6"
+              style={{
+                backgroundImage: `linear-gradient(rgba(240, 132, 0, 0.85), rgba(240, 132, 0, 0.85)), url(${cookingFamily})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
+              <div className="flex flex-col items-center z-10">
                 <Button className="text-xl py-6 px-12 bg-card text-foreground hover:bg-card/90 border-4 border-card" size="lg">
                   Kook met mij!
                 </Button>
@@ -67,13 +75,15 @@ const Index = () => {
                   <span className="text-lg font-semibold">Klik hier!</span>
                 </button>
               </div>
-              <div className="flex flex-col items-center">
-                <img
-                  src={mandarijn}
-                  alt="Mandy Mandarijn"
-                  className="w-64 h-72 object-contain drop-shadow-lg"
-                />
-                <h3 className="text-3xl font-bold text-card mt-2">Mandy Mandarijn</h3>
+              <div className="flex flex-col items-center z-10">
+                <div className="bg-card p-4 rounded-lg">
+                  <img
+                    src={mandarijn}
+                    alt="Mandy Mandarijn"
+                    className="w-64 h-72 object-contain drop-shadow-lg"
+                  />
+                </div>
+                <h3 className="text-3xl font-bold text-card mt-4">Mandy Mandarijn</h3>
               </div>
             </div>
           </Card>
