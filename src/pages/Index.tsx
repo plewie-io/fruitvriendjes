@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { FruitFriendsHeader } from "@/components/FruitFriendsHeader";
 import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
+import { ArrowUp } from "lucide-react";
 import mandarijn from "@/assets/mandarijn.png";
 
 const Index = () => {
@@ -48,7 +49,7 @@ const Index = () => {
           </p>
         </div>
 
-        <div className="flex justify-center max-w-2xl mx-auto">
+        <div className="flex justify-center max-w-3xl mx-auto">
           <Card
             className="overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in w-full border-4 border-card"
             onClick={goToRecipe}
@@ -58,13 +59,24 @@ const Index = () => {
                 Kook met mij!
               </Button>
             </div>
-            <div className="p-10 bg-card text-center flex flex-col items-center justify-center min-h-[400px]">
-              <img
-                src={mandarijn}
-                alt="Mandy Mandarijn"
-                className="w-72 h-80 object-contain drop-shadow-lg"
-              />
-              <h3 className="text-4xl font-bold mt-6">Mandy Mandarijn</h3>
+            <div className="p-10 bg-card flex items-center">
+              <div className="flex-1">
+                <img
+                  src={mandarijn}
+                  alt="Mandy Mandarijn"
+                  className="w-96 h-[450px] object-contain drop-shadow-lg"
+                />
+              </div>
+              <div className="flex flex-col items-center gap-4 pr-8">
+                <h3 className="text-4xl font-bold">Mandy Mandarijn</h3>
+                <button 
+                  onClick={goToRecipe}
+                  className="flex flex-col items-center gap-2 text-mandy-orange hover:scale-110 transition-transform animate-bounce"
+                >
+                  <ArrowUp className="w-16 h-16" />
+                  <span className="text-lg font-semibold">Klik hier!</span>
+                </button>
+              </div>
             </div>
           </Card>
         </div>
