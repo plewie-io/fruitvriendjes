@@ -7,10 +7,6 @@ import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
 import { ArrowUp } from "lucide-react";
 import mandarijn from "@/assets/mandarijn.png";
 import cookingFamily from "@/assets/cooking-family.png";
-import blender from "@/assets/blender.png";
-import spoon from "@/assets/spoon.png";
-import fork from "@/assets/fork.png";
-import knife from "@/assets/knife.png";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -78,17 +74,11 @@ const Index = () => {
                 </button>
               </div>
               <div className="flex flex-col items-center z-10">
-                <div className="flex items-center justify-center gap-4">
-                  <div className="hidden md:flex flex-col items-center gap-2">
-                    <img src={blender} alt="Blender" className="w-14 h-14 object-contain" />
-                    <img src={spoon} alt="Lepel" className="w-12 h-12 object-contain" />
-                    <img src={fork} alt="Vork" className="w-12 h-12 object-contain" />
-                    <img src={knife} alt="Mes" className="w-12 h-12 object-contain" />
-                  </div>
+                <div className="bg-white/70 backdrop-blur-sm w-56 h-56 md:w-80 md:h-80 rounded-lg flex items-center justify-center">
                   <img
                     src={mandarijn}
                     alt="Mandy Mandarijn"
-                    className="w-64 h-72 md:w-80 md:h-[400px] object-contain drop-shadow-lg"
+                    className="w-52 h-60 md:w-72 md:h-[340px] object-contain drop-shadow-lg"
                   />
                 </div>
                 <h3 className="text-2xl md:text-3xl font-bold text-card mt-4">Mandy Mandarijn</h3>
