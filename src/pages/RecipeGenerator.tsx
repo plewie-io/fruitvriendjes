@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import mandarijn from "@/assets/mandarijn.png";
+import recipeBackground from "@/assets/recipe-background.jpg";
 
 const RecipeGenerator = () => {
   const navigate = useNavigate();
@@ -53,7 +54,10 @@ const RecipeGenerator = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-hero">
+    <div 
+      className="min-h-screen bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${recipeBackground})` }}
+    >
       <div className="container mx-auto px-4 py-8">
         <Button
           variant="ghost"
