@@ -19,7 +19,7 @@ export const SchoolfruitsHeader = () => {
           {/* Navigation */}
           <nav className="hidden lg:flex items-center gap-6">
             <a 
-              href="https://www.schoolfruit.nl/producten" 
+              href="https://www.schoolfruit.nl/nl/producten/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
@@ -27,7 +27,7 @@ export const SchoolfruitsHeader = () => {
               PRODUCTEN
             </a>
             <a 
-              href="https://www.schoolfruit.nl/nieuws" 
+              href="https://www.schoolfruit.nl/nl/nieuws/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
@@ -35,25 +35,13 @@ export const SchoolfruitsHeader = () => {
               NIEUWS
             </a>
             <a 
-              href="https://www.schoolfruit.nl/over-ons" 
+              href="https://www.schoolfruit.nl/nl/over-ons/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
             >
               OVER ONS
             </a>
-            <a 
-              href="https://www.schoolfruit.nl/contact" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
-            >
-              NEEM CONTACT OP
-            </a>
-          </nav>
-
-          {/* CTA buttons */}
-          <div className="flex items-center gap-3">
             <a
               href="https://www.schoolfruit.nl/"
               target="_blank"
@@ -63,6 +51,10 @@ export const SchoolfruitsHeader = () => {
               <ExternalLink className="w-4 h-4" />
               <span className="hidden sm:inline">BEZOEK WEBSITE</span>
             </a>
+          </nav>
+
+          {/* CTA button */}
+          <div className="flex items-center">
             <a
               href="https://schoolfruitnl.zohobookings.eu/#/customer/kennismaken"
               target="_blank"
