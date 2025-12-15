@@ -76,7 +76,7 @@ const Index = () => {
                 </button>
               </div>
               <div className="flex flex-col items-center z-10">
-                <div className="bg-card w-80 h-80 rounded-lg flex items-center justify-center">
+                <div className="bg-white/70 backdrop-blur-sm w-80 h-80 rounded-lg flex items-center justify-center">
                   <img
                     src={mandarijn}
                     alt="Mandy Mandarijn"
