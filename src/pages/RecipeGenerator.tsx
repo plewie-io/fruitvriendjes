@@ -69,7 +69,7 @@ const RecipeGenerator = () => {
         </Button>
 
         <div className="max-w-2xl mx-auto flex flex-col items-center">
-          <div className="text-center mb-8 bg-white/80 backdrop-blur-sm rounded-2xl p-4 inline-block mx-auto w-auto">
+          <div className="text-center mb-8 bg-white/80 backdrop-blur-sm rounded-2xl p-4 w-full max-w-xl">
             <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-1">
               Hoi, ik ben Mandy Mandarijn!
             </h1>
@@ -131,7 +131,7 @@ const RecipeGenerator = () => {
             </Card>
           )}
 
-          <div className="mt-8 p-4 bg-white/80 backdrop-blur-sm rounded-2xl">
+          <div className="mt-8 p-4 bg-white/80 backdrop-blur-sm rounded-2xl w-full max-w-xl">
             <p className="text-sm text-center text-foreground">
               ⚠️ <strong>Belangrijk:</strong> Vraag altijd een volwassene om hulp bij het koken!
             </p>
