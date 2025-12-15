@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, CalendarDays } from "lucide-react";
 import aardbei from "@/assets/aardbei.png";
 import banaan from "@/assets/banaan.png";
 import appel from "@/assets/appel.png";
@@ -67,10 +67,21 @@ export const SchoolfruitsHeader = () => {
               href="https://www.schoolfruit.nl/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-full font-semibold text-sm hover:bg-primary/90 transition-colors"
+              className="flex items-center gap-2 bg-mandy-orange text-card px-4 py-2 rounded-full font-semibold text-sm hover:bg-mandy-orange/90 transition-colors"
             >
               <ExternalLink className="w-4 h-4" />
               <span className="hidden sm:inline">BEZOEK WEBSITE</span>
+            </a>
+            <a
+              href="https://schoolfruitnl.zohobookings.eu/#/customer/kennismaken"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity"
+            >
+              <div className="w-12 h-12 bg-mandy-orange rounded-full flex items-center justify-center">
+                <CalendarDays className="w-6 h-6 text-card" />
+              </div>
+              <span className="text-xs font-bold text-foreground hidden sm:block">PLAN EEN AFSPRAAK</span>
             </a>
           </div>
         </div>
