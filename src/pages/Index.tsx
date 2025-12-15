@@ -4,30 +4,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { FruitFriendsHeader } from "@/components/FruitFriendsHeader";
-import aardbei from "@/assets/aardbei.png";
-import ananas from "@/assets/ananas.png";
-import appel from "@/assets/appel.png";
-import banaan from "@/assets/banaan.png";
-import peer from "@/assets/peer.png";
-import sinaasappel from "@/assets/sinaasappel.png";
 import mandarijn from "@/assets/mandarijn.png";
-
-const friends = [
-  { id: "strawberry", name: "Sanne Aardbei", image: aardbei, color: "from-red-500 to-pink-500" },
-  { id: "pineapple", name: "Anna Ananas", image: ananas, color: "from-orange-400 to-yellow-400" },
-  { id: "apple", name: "Appie Appel", image: appel, color: "from-green-400 to-lime-400" },
-  { id: "banana", name: "Bert Banaan", image: banaan, color: "from-yellow-300 to-yellow-500" },
-  { id: "pear", name: "Pieter Peer", image: peer, color: "from-lime-400 to-green-500" },
-  { id: "orange", name: "Oscar Sinaasappel", image: sinaasappel, color: "from-orange-400 to-orange-600" },
-  { id: "mandarin", name: "Mandy Mandarijn", image: mandarijn, color: "from-orange-300 to-orange-500" },
-];
 
 const Index = () => {
   const navigate = useNavigate();
   const [showSafetyDialog, setShowSafetyDialog] = useState(true);
 
-  const selectFriend = (friendId: string) => {
-    navigate("/recept", { state: { friend: friendId } });
+  const goToRecipe = () => {
+    navigate("/recept");
   };
 
   return (
@@ -58,32 +42,28 @@ const Index = () => {
         
         <div className="text-center mb-12">
           <p className="text-xl md:text-2xl text-muted-foreground animate-fade-in">
-            Kies jouw favoriete fruitvriend en maak samen een lekker recept!
+            Klik op Mandy om samen een lekker recept te maken!
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-          {friends.map((friend, index) => (
-            <Card
-              key={friend.id}
-              className="overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
-              onClick={() => selectFriend(friend.id)}
-            >
-              <div className={`h-32 bg-gradient-to-br ${friend.color}`} />
-              <div className="p-6 text-center">
-                <img
-                  src={friend.image}
-                  alt={friend.name}
-                  className="w-32 h-48 mx-auto -mt-24 mb-4 object-contain drop-shadow-lg"
-                />
-                <h3 className="text-2xl font-bold mb-2">{friend.name}</h3>
-                <Button className="w-full mt-4" size="lg">
-                  Kies mij!
-                </Button>
-              </div>
-            </Card>
-          ))}
+        <div className="flex justify-center max-w-lg mx-auto">
+          <Card
+            className="overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in w-full"
+            onClick={goToRecipe}
+          >
+            <div className="h-40 bg-gradient-to-br from-orange-300 to-orange-500" />
+            <div className="p-8 text-center">
+              <img
+                src={mandarijn}
+                alt="Mandy Mandarijn"
+                className="w-48 h-64 mx-auto -mt-32 mb-4 object-contain drop-shadow-lg"
+              />
+              <h3 className="text-3xl font-bold mb-4">Mandy Mandarijn</h3>
+              <Button className="w-full mt-4 text-lg py-6" size="lg">
+                Kook met mij!
+              </Button>
+            </div>
+          </Card>
         </div>
 
         <div className="mt-16 max-w-2xl mx-auto">
