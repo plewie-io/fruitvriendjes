@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { FruitFriendsHeader } from "@/components/FruitFriendsHeader";
+import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
 import mandarijn from "@/assets/mandarijn.png";
 
 const Index = () => {
@@ -16,6 +17,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-hero">
+      <SchoolfruitsHeader />
       <AlertDialog open={showSafetyDialog} onOpenChange={setShowSafetyDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
