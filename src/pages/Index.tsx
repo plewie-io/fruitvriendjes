@@ -10,6 +10,7 @@ import appel from "@/assets/appel.png";
 import banaan from "@/assets/banaan.png";
 import peer from "@/assets/peer.png";
 import sinaasappel from "@/assets/sinaasappel.png";
+import mandarijn from "@/assets/mandarijn.png";
 
 const friends = [
   { id: "strawberry", name: "Sanne Aardbei", image: aardbei, color: "from-red-500 to-pink-500" },
@@ -18,6 +19,7 @@ const friends = [
   { id: "banana", name: "Bert Banaan", image: banaan, color: "from-yellow-300 to-yellow-500" },
   { id: "pear", name: "Pieter Peer", image: peer, color: "from-lime-400 to-green-500" },
   { id: "orange", name: "Oscar Sinaasappel", image: sinaasappel, color: "from-orange-400 to-orange-600" },
+  { id: "mandarin", name: "Mandy Mandarijn", image: mandarijn, color: "from-orange-300 to-orange-500" },
 ];
 
 const Index = () => {
@@ -73,7 +75,7 @@ const Index = () => {
                 <img
                   src={friend.image}
                   alt={friend.name}
-                  className="w-24 h-36 mx-auto -mt-20 mb-4 object-contain drop-shadow-lg"
+                  className="w-32 h-48 mx-auto -mt-24 mb-4 object-contain drop-shadow-lg"
                 />
                 <h3 className="text-2xl font-bold mb-2">{friend.name}</h3>
                 <Button className="w-full mt-4" size="lg">

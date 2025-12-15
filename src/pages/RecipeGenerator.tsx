@@ -5,23 +5,11 @@ import { Card } from "@/components/ui/card";
 import { Loader2, ChefHat, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useLocation, useNavigate } from "react-router-dom";
-import pineappleFriend from "@/assets/pineapple-friend.jpg";
-import appleFriend from "@/assets/apple-friend.jpg";
-import bananaFriend from "@/assets/banana-friend.jpg";
-import strawberryFriend from "@/assets/strawberry-friend.jpg";
-
-const friendImages: Record<string, string> = {
-  pineapple: pineappleFriend,
-  apple: appleFriend,
-  banana: bananaFriend,
-  strawberry: strawberryFriend,
-};
+import { useNavigate } from "react-router-dom";
+import mandarijn from "@/assets/mandarijn.png";
 
 const RecipeGenerator = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const friend = location.state?.friend || "pineapple";
   const [ingredients, setIngredients] = useState("");
   const [recipe, setRecipe] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -79,12 +67,12 @@ const RecipeGenerator = () => {
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
             <img
-              src={friendImages[friend]}
-              alt={`${friend} vriend`}
-              className="w-32 h-48 mx-auto mb-4 object-contain animate-fade-in"
+              src={mandarijn}
+              alt="Mandy Mandarijn"
+              className="w-40 h-56 mx-auto mb-4 object-contain animate-fade-in"
             />
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
-              Maak een lekker recept!
+              Hoi, ik ben Mandy Mandarijn!
             </h1>
             <p className="text-lg text-muted-foreground">
               Vertel me welke groenten of fruit je hebt, en ik maak er een leuk recept van!
