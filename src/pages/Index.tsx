@@ -4,16 +4,20 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { FruitFriendsHeader } from "@/components/FruitFriendsHeader";
-import pineappleFriend from "@/assets/pineapple-friend.jpg";
-import appleFriend from "@/assets/apple-friend.jpg";
-import bananaFriend from "@/assets/banana-friend.jpg";
-import strawberryFriend from "@/assets/strawberry-friend.jpg";
+import aardbei from "@/assets/aardbei.png";
+import ananas from "@/assets/ananas.png";
+import appel from "@/assets/appel.png";
+import banaan from "@/assets/banaan.png";
+import peer from "@/assets/peer.png";
+import sinaasappel from "@/assets/sinaasappel.png";
 
 const friends = [
-  { id: "pineapple", name: "Anna Ananas", image: pineappleFriend, color: "from-orange-400 to-yellow-400" },
-  { id: "apple", name: "Appie Appel", image: appleFriend, color: "from-green-400 to-lime-400" },
-  { id: "banana", name: "Bert Banaan", image: bananaFriend, color: "from-yellow-300 to-yellow-500" },
-  { id: "strawberry", name: "Sanne Aardbei", image: strawberryFriend, color: "from-red-500 to-pink-500" },
+  { id: "strawberry", name: "Sanne Aardbei", image: aardbei, color: "from-red-500 to-pink-500" },
+  { id: "pineapple", name: "Anna Ananas", image: ananas, color: "from-orange-400 to-yellow-400" },
+  { id: "apple", name: "Appie Appel", image: appel, color: "from-green-400 to-lime-400" },
+  { id: "banana", name: "Bert Banaan", image: banaan, color: "from-yellow-300 to-yellow-500" },
+  { id: "pear", name: "Pieter Peer", image: peer, color: "from-lime-400 to-green-500" },
+  { id: "orange", name: "Oscar Sinaasappel", image: sinaasappel, color: "from-orange-400 to-orange-600" },
 ];
 
 const Index = () => {
