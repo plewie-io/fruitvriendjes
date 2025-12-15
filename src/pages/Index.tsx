@@ -77,20 +77,18 @@ const Index = () => {
                   <span className="text-base md:text-lg font-semibold">Klik hier!</span>
                 </button>
               </div>
-              <div className="hidden md:flex flex-col items-center z-10">
-                <div className="bg-white/70 backdrop-blur-sm w-40 h-80 rounded-lg flex flex-col items-center justify-center gap-2 p-4">
-                  <img src={blender} alt="Blender" className="w-16 h-16 object-contain" />
-                  <img src={spoon} alt="Lepel" className="w-12 h-12 object-contain" />
-                  <img src={fork} alt="Vork" className="w-12 h-12 object-contain" />
-                  <img src={knife} alt="Mes" className="w-12 h-12 object-contain" />
-                </div>
-              </div>
               <div className="flex flex-col items-center z-10">
-                <div className="bg-white/70 backdrop-blur-sm w-56 h-56 md:w-80 md:h-80 rounded-lg flex items-center justify-center">
+                <div className="bg-white/70 backdrop-blur-sm w-56 h-56 md:w-96 md:h-80 rounded-lg flex items-center justify-center gap-4 p-4">
+                  <div className="hidden md:flex flex-col items-center gap-2">
+                    <img src={blender} alt="Blender" className="w-12 h-12 object-contain" />
+                    <img src={spoon} alt="Lepel" className="w-10 h-10 object-contain" />
+                    <img src={fork} alt="Vork" className="w-10 h-10 object-contain" />
+                    <img src={knife} alt="Mes" className="w-10 h-10 object-contain" />
+                  </div>
                   <img
                     src={mandarijn}
                     alt="Mandy Mandarijn"
-                    className="w-52 h-60 md:w-72 md:h-[340px] object-contain drop-shadow-lg"
+                    className="w-52 h-60 md:w-56 md:h-[300px] object-contain drop-shadow-lg"
                   />
                 </div>
                 <h3 className="text-2xl md:text-3xl font-bold text-card mt-4">Mandy Mandarijn</h3>
