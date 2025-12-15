@@ -1,8 +1,5 @@
 import { ExternalLink, CalendarDays } from "lucide-react";
-import aardbei from "@/assets/aardbei.png";
-import banaan from "@/assets/banaan.png";
-import appel from "@/assets/appel.png";
-import sinaasappel from "@/assets/sinaasappel.png";
+import schoolfruitLogo from "@/assets/schoolfruit-logo.png";
 
 export const SchoolfruitsHeader = () => {
   return (
@@ -14,15 +11,9 @@ export const SchoolfruitsHeader = () => {
             href="https://www.schoolfruit.nl/" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            className="hover:opacity-80 transition-opacity"
           >
-            <div className="flex items-end -space-x-2">
-              <img src={banaan} alt="" className="w-8 h-12 object-contain" />
-              <img src={sinaasappel} alt="" className="w-10 h-14 object-contain" />
-              <img src={appel} alt="" className="w-8 h-12 object-contain" />
-              <img src={aardbei} alt="" className="w-7 h-10 object-contain" />
-            </div>
-            <span className="text-xl font-bold text-foreground ml-2">SCHOOLFRUIT.NL</span>
+            <img src={schoolfruitLogo} alt="Schoolfruit.nl" className="h-14 object-contain" />
           </a>
 
           {/* Navigation */}
