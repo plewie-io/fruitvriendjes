@@ -50,20 +50,21 @@ const Index = () => {
 
         <div className="flex justify-center max-w-2xl mx-auto">
           <Card
-            className="overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in w-full"
+            className="overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in w-full border-4 border-card"
             onClick={goToRecipe}
           >
-            <div className="h-48 bg-mandy-orange" />
-            <div className="p-10 text-center">
+            <div className="h-24 bg-mandy-orange flex items-center justify-center">
+              <Button className="text-xl py-6 px-12 bg-card text-foreground hover:bg-card/90 border-4 border-card" size="lg">
+                Kook met mij!
+              </Button>
+            </div>
+            <div className="p-10 bg-card text-center flex flex-col items-center justify-center min-h-[400px]">
               <img
                 src={mandarijn}
                 alt="Mandy Mandarijn"
-                className="w-72 h-96 mx-auto -mt-48 mb-6 object-contain drop-shadow-lg"
+                className="w-72 h-80 object-contain drop-shadow-lg"
               />
-              <h3 className="text-4xl font-bold mb-6">Mandy Mandarijn</h3>
-              <Button className="w-full mt-4 text-xl py-8" size="lg">
-                Kook met mij!
-              </Button>
+              <h3 className="text-4xl font-bold mt-6">Mandy Mandarijn</h3>
             </div>
           </Card>
         </div>
