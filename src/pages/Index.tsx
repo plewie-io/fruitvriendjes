@@ -7,6 +7,7 @@ import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
 import { ArrowUp } from "lucide-react";
 import mandarijn from "@/assets/mandarijn.png";
 import cookingFamily from "@/assets/cooking-family.png";
+import blender from "@/assets/blender.png";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -72,6 +73,13 @@ const Index = () => {
                   <ArrowUp className="w-10 md:w-12 h-10 md:h-12" />
                   <span className="text-base md:text-lg font-semibold">Klik hier!</span>
                 </button>
+              </div>
+              <div className="hidden md:flex items-end z-10">
+                <img
+                  src={blender}
+                  alt="Blender"
+                  className="w-32 h-32 object-contain drop-shadow-lg"
+                />
               </div>
               <div className="flex flex-col items-center z-10">
                 <div className="bg-white/70 backdrop-blur-sm w-56 h-56 md:w-80 md:h-80 rounded-lg flex items-center justify-center">
