@@ -54,29 +54,25 @@ const Index = () => {
             className="overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in w-full border-4 border-card"
             onClick={goToRecipe}
           >
-            <div className="h-24 bg-mandy-orange flex items-center justify-center">
+            <div className="bg-mandy-orange flex flex-col items-center py-6">
               <Button className="text-xl py-6 px-12 bg-card text-foreground hover:bg-card/90 border-4 border-card" size="lg">
                 Kook met mij!
               </Button>
+              <button 
+                onClick={goToRecipe}
+                className="flex flex-col items-center gap-1 mt-4 text-card hover:scale-110 transition-transform animate-bounce"
+              >
+                <ArrowUp className="w-12 h-12" />
+                <span className="text-lg font-semibold">Klik hier!</span>
+              </button>
             </div>
-            <div className="p-10 bg-card flex items-center">
-              <div className="flex-1">
-                <img
-                  src={mandarijn}
-                  alt="Mandy Mandarijn"
-                  className="w-96 h-[450px] object-contain drop-shadow-lg"
-                />
-              </div>
-              <div className="flex flex-col items-center gap-4 pr-8">
-                <h3 className="text-4xl font-bold">Mandy Mandarijn</h3>
-                <button 
-                  onClick={goToRecipe}
-                  className="flex flex-col items-center gap-2 text-mandy-orange hover:scale-110 transition-transform animate-bounce"
-                >
-                  <ArrowUp className="w-16 h-16" />
-                  <span className="text-lg font-semibold">Klik hier!</span>
-                </button>
-              </div>
+            <div className="p-10 bg-card flex flex-col items-start">
+              <img
+                src={mandarijn}
+                alt="Mandy Mandarijn"
+                className="w-96 h-[450px] object-contain drop-shadow-lg"
+              />
+              <h3 className="text-4xl font-bold mt-4 ml-16">Mandy Mandarijn</h3>
             </div>
           </Card>
         </div>
