@@ -6,6 +6,7 @@ import appel from "@/assets/appel.png";
 import banaan from "@/assets/banaan.png";
 import peer from "@/assets/peer.png";
 import sinaasappel from "@/assets/sinaasappel.png";
+import mandarijn from "@/assets/mandarijn.png";
 
 const friends = [
   { id: "strawberry", name: "Sanne Aardbei", image: aardbei },
@@ -14,6 +15,7 @@ const friends = [
   { id: "banana", name: "Bert Banaan", image: banaan },
   { id: "pear", name: "Pieter Peer", image: peer },
   { id: "orange", name: "Oscar Sinaasappel", image: sinaasappel },
+  { id: "mandarin", name: "Mandy Mandarijn", image: mandarijn },
 ];
 
 export const FruitFriendsHeader = () => {
@@ -47,7 +49,7 @@ export const FruitFriendsHeader = () => {
                 <img
                   src={friend.image}
                   alt={friend.name}
-                  className="w-20 h-32 object-contain transition-all duration-300 group-hover:animate-[wiggle_0.5s_ease-in-out] group-hover:scale-110"
+                  className="w-32 h-48 object-contain transition-all duration-300 group-hover:animate-[wiggle_0.5s_ease-in-out] group-hover:scale-110"
                 />
                 
                 {/* Speech bubble */}
