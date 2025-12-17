@@ -69,7 +69,7 @@ export const SchoolfruitChatbot = () => {
       {/* Floating Chat Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full bg-schoolfruit-yellow shadow-lg hover:scale-110 transition-all duration-300 flex items-center justify-center overflow-hidden ${isOpen ? 'scale-0' : 'scale-100'}`}
+        className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full bg-white shadow-lg hover:scale-110 transition-all duration-300 flex items-center justify-center overflow-hidden border-2 border-schoolfruit-yellow ${isOpen ? 'scale-0' : 'scale-100'}`}
         aria-label="Open chat"
       >
         <img src={annieAnanas} alt="Annie de Ananas" className="w-14 h-14 object-contain" />
