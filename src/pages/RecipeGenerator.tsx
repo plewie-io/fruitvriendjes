@@ -4,15 +4,18 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Loader2, ChefHat, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { generateRecipe as generateRecipeAI, generatePhotoPrompt, generateRecipePhoto } from "@/lib/firebase";
 import { useNavigate } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 import mandarijn from "@/assets/mandarijn.png";
 import recipeBackground from "@/assets/recipe-background.jpg";
 const RecipeGenerator = () => {
   const navigate = useNavigate();
   const [ingredients, setIngredients] = useState("");
   const [recipe, setRecipe] = useState<string | null>(null);
+  const [recipeImage, setRecipeImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
   const {
     toast
   } = useToast();
@@ -27,19 +30,27 @@ const RecipeGenerator = () => {
     }
     setLoading(true);
     setRecipe(null);
+    setRecipeImage(null);
     try {
-      const {
-        data,
-        error
-      } = await supabase.functions.invoke("generate-recipe", {
-        body: {
-          ingredients: ingredients.trim()
-        }
-      });
-      if (error) throw error;
-      setRecipe(data.recipe);
+      // Step 1: Generate the recipe
+      const recipeText = await generateRecipeAI(ingredients.trim());
+      setRecipe(recipeText);
       toast({
         title: "Recept klaar! 🎉",
+        description: "Nu maken we een mooie foto..."
+      });
+
+      // Step 2: Generate photo prompt from recipe
+      setImageLoading(true);
+      const photoPrompt = await generatePhotoPrompt(recipeText);
+      
+      // Step 3: Generate the actual image
+      const imageUrl = await generateRecipePhoto(photoPrompt);
+      setRecipeImage(imageUrl);
+      setImageLoading(false);
+      
+      toast({
+        title: "Foto klaar! 📸",
         description: "Veel kookplezier!"
       });
     } catch (error: any) {
@@ -51,6 +62,7 @@ const RecipeGenerator = () => {
       });
     } finally {
       setLoading(false);
+      setImageLoading(false);
     }
   };
   return <div className="min-h-screen bg-cover bg-center bg-no-repeat" style={{
@@ -102,8 +114,26 @@ const RecipeGenerator = () => {
                 <ChefHat className="h-6 w-6 text-primary" />
                 Jouw recept:
               </h2>
-              <div className="prose prose-lg max-w-none whitespace-pre-wrap">
-                {recipe}
+              
+              {/* Recipe Image */}
+              {imageLoading && (
+                <div className="flex items-center justify-center py-8 mb-4 bg-gray-100 rounded-xl">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary mr-2" />
+                  <span className="text-muted-foreground">Foto maken...</span>
+                </div>
+              )}
+              {recipeImage && (
+                <div className="mb-4">
+                  <img 
+                    src={recipeImage} 
+                    alt="Recept foto" 
+                    className="w-full rounded-xl shadow-md"
+                  />
+                </div>
+              )}
+              
+              <div className="prose prose-lg max-w-none">
+                <ReactMarkdown>{recipe}</ReactMarkdown>
               </div>
             </Card>}
 

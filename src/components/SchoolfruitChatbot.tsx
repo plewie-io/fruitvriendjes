@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { X, Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { supabase } from '@/integrations/supabase/client';
+import { generateRecipe } from '@/lib/firebase';
+import ReactMarkdown from 'react-markdown';
 import annieAnanas from '@/assets/annie-ananas.png';
 
 type Message = {
@@ -36,15 +37,11 @@ export const SchoolfruitChatbot = () => {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('schoolfruit-chat', {
-        body: { question: userMessage }
-      });
-
-      if (error) throw error;
+      const recipe = await generateRecipe(userMessage);
 
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: data.answer || 'Sorry, ik kon geen antwoord vinden.'
+        content: recipe || 'Sorry, ik kon geen recept maken.'
       }]);
     } catch (error) {
       console.error('Chat error:', error);
@@ -113,7 +110,13 @@ export const SchoolfruitChatbot = () => {
                     : 'bg-white text-gray-800 shadow-sm rounded-bl-md'
                 }`}
               >
-                {message.content}
+                {message.role === 'assistant' ? (
+                  <div className="prose prose-sm max-w-none">
+                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                  </div>
+                ) : (
+                  message.content
+                )}
               </div>
             </div>
           ))}
