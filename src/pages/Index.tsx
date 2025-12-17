@@ -11,13 +11,20 @@ import mandarijn from "@/assets/mandarijn.png";
 import cookingFamily from "@/assets/cooking-family.png";
 const Index = () => {
   const navigate = useNavigate();
-  const [showSafetyDialog, setShowSafetyDialog] = useState(true);
+  const [showSafetyDialog, setShowSafetyDialog] = useState(() => {
+    return !localStorage.getItem('safetyDialogShown');
+  });
+
+  const handleDialogClose = () => {
+    localStorage.setItem('safetyDialogShown', 'true');
+    setShowSafetyDialog(false);
+  };
   const goToRecipe = () => {
     navigate("/recept");
   };
   return <div className="min-h-screen bg-gradient-hero flex flex-col">
       <SchoolfruitsHeader />
-      <AlertDialog open={showSafetyDialog} onOpenChange={setShowSafetyDialog}>
+      <AlertDialog open={showSafetyDialog} onOpenChange={handleDialogClose}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-2xl">⚠️ Veilig koken met kinderen</AlertDialogTitle>
