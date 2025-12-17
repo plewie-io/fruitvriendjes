@@ -101,10 +101,8 @@ const Footer = () => {
       <div className="bg-primary text-primary-foreground py-4">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 text-sm">
-            <a href="#" className="hover:underline">Privacy Statement</a>
-            <a href="#" className="hover:underline">Algemene voorwaarden</a>
-            <span>© 2025 Schoolfruit.nl</span>
-            <span>Designed by - ÈRES Design</span>
+            <a href="https://www.schoolfruit.nl/nl/pages/privacy/" target="_blank" rel="noopener noreferrer" className="hover:underline">Privacy Statement</a>
+            <span>EDUrebls en Handyhow</span>
           </div>
         </div>
       </div>
