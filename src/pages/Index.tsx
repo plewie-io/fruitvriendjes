@@ -79,7 +79,7 @@ const Index = () => {
                   <img
                     src={mandarijn}
                     alt="Mandy Mandarijn"
-                    className="w-64 h-64 md:w-80 md:h-80 object-contain drop-shadow-lg"
+                    className="w-72 h-72 md:w-96 md:h-96 object-contain drop-shadow-lg -ml-8 md:-ml-12"
                   />
                 </div>
                 <h3 className="text-2xl md:text-3xl font-bold text-card mt-4">Mandy Mandarijn</h3>
