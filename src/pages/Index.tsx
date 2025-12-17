@@ -32,7 +32,7 @@ const Index = () => {
                 <li>Houd rekening met allergieën en voedselintoleranties</li>
                 <li>Was altijd je handen voordat je begint</li>
               </ul>
-              <p className="font-semibold">Veel kookplezier! 🍳👨‍🍳👩‍🍳</p>
+              <p className="font-semibold">Veel kookplezier! 🍊🍎🍓</p>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
