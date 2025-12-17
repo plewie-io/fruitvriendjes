@@ -14,7 +14,6 @@ const Index = () => {
   const [showSafetyDialog, setShowSafetyDialog] = useState(() => {
     return !localStorage.getItem('safetyDialogShown');
   });
-
   const handleDialogClose = () => {
     localStorage.setItem('safetyDialogShown', 'true');
     setShowSafetyDialog(false);
@@ -83,7 +82,7 @@ const Index = () => {
             <ol className="space-y-3 text-lg">
               <li className="flex items-start gap-3">
                 <span className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</span>
-                <span>Klik op "Kook met mij!" en de nieuwe pagina opent</span>
+                <span>Klik op "Kook met mij!" en de nieuwe pagina opent vanzelf</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</span>
