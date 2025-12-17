@@ -108,8 +108,7 @@ const RecipeGenerator = () => {
             </Card>}
 
           <div className="mt-8 p-4 bg-white/80 backdrop-blur-sm rounded-2xl w-full max-w-xl">
-            <p className="text-sm text-center text-foreground">⚠️ Belangrijk: hou altijd toezicht op je kind (of kinderen)! Kook nooit alleen.<strong>Belangrijk:</strong> Vraag altijd een volwassene om hulp bij het koken!
-            </p>
+            
           </div>
         </div>
       </div>
