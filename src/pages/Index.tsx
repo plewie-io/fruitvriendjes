@@ -8,17 +8,13 @@ import Footer from "@/components/Footer";
 import { ArrowUp } from "lucide-react";
 import mandarijn from "@/assets/mandarijn.png";
 import cookingFamily from "@/assets/cooking-family.png";
-
 const Index = () => {
   const navigate = useNavigate();
   const [showSafetyDialog, setShowSafetyDialog] = useState(true);
-
   const goToRecipe = () => {
     navigate("/recept");
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-hero flex flex-col">
+  return <div className="min-h-screen bg-gradient-hero flex flex-col">
       <SchoolfruitsHeader />
       <AlertDialog open={showSafetyDialog} onOpenChange={setShowSafetyDialog}>
         <AlertDialogContent>
@@ -44,43 +40,28 @@ const Index = () => {
       <div className="container mx-auto px-4 py-6 md:py-12">
         <div className="text-center mb-6 md:mb-12">
           <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-4">De Fruitvriendjes!</h1>
-          <p className="text-lg md:text-2xl text-muted-foreground animate-fade-in">
-            Klik op Mandy om samen een lekker recept te maken!
-          </p>
+          <p className="text-lg md:text-2xl text-muted-foreground animate-fade-in">Klik op Mandy om samen met je kind (of kinderen) een lekker recept te maken!</p>
         </div>
 
         <div className="flex justify-center max-w-4xl mx-auto">
-          <Card
-            className="overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in w-full border-4 border-card"
-            onClick={goToRecipe}
-          >
-            <div 
-              className="relative flex flex-col md:flex-row items-center justify-center md:justify-between px-4 md:px-8 py-6"
-              style={{
-                backgroundImage: `linear-gradient(rgba(240, 132, 0, 0.85), rgba(240, 132, 0, 0.85)), url(${cookingFamily})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            >
+          <Card className="overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in w-full border-4 border-card" onClick={goToRecipe}>
+            <div className="relative flex flex-col md:flex-row items-center justify-center md:justify-between px-4 md:px-8 py-6" style={{
+            backgroundImage: `linear-gradient(rgba(240, 132, 0, 0.85), rgba(240, 132, 0, 0.85)), url(${cookingFamily})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}>
               <div className="flex flex-col items-center z-10 mb-6 md:mb-0">
                 <Button className="text-lg md:text-xl py-4 md:py-6 px-8 md:px-12 bg-white/70 backdrop-blur-sm text-foreground hover:bg-white/80 border-4 border-white/50" size="lg">
                   Kook met mij!
                 </Button>
-                <button 
-                  onClick={goToRecipe}
-                  className="flex flex-col items-center gap-1 mt-4 text-card hover:scale-110 transition-transform animate-bounce"
-                >
+                <button onClick={goToRecipe} className="flex flex-col items-center gap-1 mt-4 text-card hover:scale-110 transition-transform animate-bounce">
                   <ArrowUp className="w-10 md:w-12 h-10 md:h-12" />
                   <span className="text-base md:text-lg font-semibold">Klik hier!</span>
                 </button>
               </div>
               <div className="flex flex-col items-center z-10">
                 <div className="bg-white/70 backdrop-blur-sm w-56 h-56 md:w-72 md:h-72 rounded-lg flex items-center justify-center">
-                  <img
-                    src={mandarijn}
-                    alt="Mandy Mandarijn"
-                    className="w-80 h-80 md:w-[28rem] md:h-[28rem] object-contain drop-shadow-lg -ml-12 md:-ml-20"
-                  />
+                  <img src={mandarijn} alt="Mandy Mandarijn" className="w-80 h-80 md:w-[28rem] md:h-[28rem] object-contain drop-shadow-lg -ml-12 md:-ml-20" />
                 </div>
                 <h3 className="text-2xl md:text-3xl font-bold text-card mt-4">Mandy Mandarijn</h3>
               </div>
@@ -109,8 +90,6 @@ const Index = () => {
         </div>
       </div>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
