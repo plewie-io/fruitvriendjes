@@ -21,7 +21,7 @@ const Index = () => {
           <AlertDialogHeader>
             <AlertDialogTitle className="text-2xl">⚠️ Veilig koken met kinderen</AlertDialogTitle>
             <AlertDialogDescription className="space-y-3 text-base">
-              <p>Leuk dat je samen met je kinderen gaat koken! Houd hierbij rekening met het volgende:</p>
+              <p>Leuk dat je samen met je kind (of kinderen) gaat koken! Houd hierbij rekening met het volgende:</p>
               <ul className="list-disc list-inside space-y-2 text-foreground">
                 <li>Wees voorzichtig met scherpe keukenartikelen zoals messen en scharen</li>
                 <li>Let op hete pannen en ovens</li>
