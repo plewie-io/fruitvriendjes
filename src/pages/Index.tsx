@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
 import Footer from "@/components/Footer";
+import { SchoolfruitChatbot } from "@/components/SchoolfruitChatbot";
 import { ArrowUp } from "lucide-react";
 import mandarijn from "@/assets/mandarijn.png";
 import cookingFamily from "@/assets/cooking-family.png";
@@ -90,6 +91,7 @@ const Index = () => {
         </div>
       </div>
       <Footer />
+      <SchoolfruitChatbot />
     </div>;
 };
 export default Index;

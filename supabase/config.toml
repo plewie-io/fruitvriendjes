@@ -1,1 +1,7 @@
 project_id = "sbmxqxmovzgmxjockait"
+
+[functions.generate-recipe]
+verify_jwt = false
+
+[functions.schoolfruit-chat]
+verify_jwt = false
