@@ -75,11 +75,11 @@ const Index = () => {
                 </button>
               </div>
               <div className="flex flex-col items-center z-10">
-                <div className="bg-white/70 backdrop-blur-sm w-56 h-56 md:w-80 md:h-80 rounded-lg flex items-center justify-center">
+                <div className="bg-white/70 backdrop-blur-sm w-72 h-72 md:w-96 md:h-96 rounded-lg flex items-center justify-center">
                   <img
                     src={mandarijn}
                     alt="Mandy Mandarijn"
-                    className="w-52 h-60 md:w-72 md:h-[340px] object-contain drop-shadow-lg"
+                    className="w-48 h-48 md:w-64 md:h-64 object-contain drop-shadow-lg"
                   />
                 </div>
                 <h3 className="text-2xl md:text-3xl font-bold text-card mt-4">Mandy Mandarijn</h3>
