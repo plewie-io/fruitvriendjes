@@ -1,8 +1,11 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAI, getTemplateGenerativeModel, getTemplateImagenModel, VertexAIBackend } from "firebase/ai";
+import { getAI, getGenerativeModel, getTemplateGenerativeModel, getTemplateImagenModel, VertexAIBackend } from "firebase/ai";
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
+import { getAuth, signInAnonymously, onAuthStateChanged, User } from "firebase/auth";
+import { getFirestore, collection, doc, addDoc, updateDoc, serverTimestamp, Timestamp, getDoc, setDoc } from "firebase/firestore";
+import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -19,6 +22,9 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
 // Initialize App Check with debug token for local development
 if (typeof window !== 'undefined') {
@@ -41,6 +47,113 @@ export const templateModel = getTemplateGenerativeModel(ai);
 
 // Create a TemplateImagenModel instance for image generation
 export const templateImagenModel = getTemplateImagenModel(ai);
+
+// Create a GenerativeModel instance for chat with Google Search grounding
+export const chatModel = getGenerativeModel(ai, { 
+  model: "gemini-2.5-flash",
+  tools: [{ googleSearch: {} }]
+});
+
+// Current user and session state
+let currentUser: User | null = null;
+let currentSessionId: string | null = null;
+
+// Listen for auth state changes
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  if (!user) {
+    currentSessionId = null;
+  }
+});
+
+// Sign in anonymously and create a new session
+export async function signInAndCreateSession(fruitCharacter: string): Promise<string> {
+  try {
+    // Sign in anonymously if not already signed in
+    if (!currentUser) {
+      const userCredential = await signInAnonymously(auth);
+      currentUser = userCredential.user;
+      console.log("🔐 Signed in anonymously:", currentUser.uid);
+    }
+
+    // Create a new session in Firestore
+    const sessionRef = await addDoc(collection(db, "sessions"), {
+      userId: currentUser.uid,
+      fruitCharacter: fruitCharacter,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+
+    currentSessionId = sessionRef.id;
+    console.log("📝 Created session:", currentSessionId);
+
+    return currentSessionId;
+  } catch (error) {
+    console.error("Error creating session:", error);
+    throw error;
+  }
+}
+
+// Get current session ID
+export function getCurrentSessionId(): string | null {
+  return currentSessionId;
+}
+
+// Get current user
+export function getCurrentUser(): User | null {
+  return currentUser;
+}
+
+// Save a recipe generation to Firestore
+export async function saveRecipeGeneration(
+  ingredients: string,
+  recipe: string,
+  imagePrompt: string,
+  imageDataUrl: string | null,
+  isModification: boolean = false,
+  previousRecipeId: string | null = null
+): Promise<string> {
+  if (!currentUser || !currentSessionId) {
+    throw new Error("No active session. Please sign in first.");
+  }
+
+  try {
+    let imageUrl: string | null = null;
+
+    // Upload image to Storage if provided
+    if (imageDataUrl) {
+      const imagePath = `recipes/${currentSessionId}/${Date.now()}.png`;
+      const imageRef = ref(storage, imagePath);
+      await uploadString(imageRef, imageDataUrl, 'data_url');
+      imageUrl = await getDownloadURL(imageRef);
+      console.log("📸 Image uploaded:", imageUrl);
+    }
+
+    // Save recipe to Firestore
+    const recipeDoc = await addDoc(collection(db, "recipes"), {
+      sessionId: currentSessionId,
+      userId: currentUser.uid,
+      ingredients: ingredients,
+      recipe: recipe,
+      imagePrompt: imagePrompt,
+      imageUrl: imageUrl,
+      isModification: isModification,
+      previousRecipeId: previousRecipeId,
+      createdAt: serverTimestamp()
+    });
+
+    // Update session's updatedAt timestamp
+    await updateDoc(doc(db, "sessions", currentSessionId), {
+      updatedAt: serverTimestamp()
+    });
+
+    console.log("💾 Recipe saved:", recipeDoc.id);
+    return recipeDoc.id;
+  } catch (error) {
+    console.error("Error saving recipe:", error);
+    throw error;
+  }
+}
 
 // Type for the structured recipe response
 export interface RecipeResponse {
@@ -133,6 +246,152 @@ export async function modifyRecipe(previousRecipe: string, modifications: string
     console.error("Firebase AI modify recipe error:", error);
     throw error;
   }
+}
+
+// Chat session management
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let currentChatSession: any = null;
+let currentChatSessionId: string | null = null;
+
+// Chat message type for history
+export interface ChatMessage {
+  role: 'user' | 'model';
+  content: string;
+}
+
+// System prompt for Annie de Ananas
+const ANNIE_SYSTEM_PROMPT = `Je bent Annie de Ananas, een vriendelijke en behulpzame fruitvriendin die vragen beantwoordt over Schoolfruit en het EU Schoolfruit programma.
+
+BELANGRIJKE REGELS:
+- Stel jezelf voor als Annie de Ananas als dat passend is
+- Beantwoord ALLEEN vragen die gerelateerd zijn aan Schoolfruit, het EU Schoolfruit programma, fruit en groenten op scholen, en de producten en dienstverlening
+- Als de vraag NIET over Schoolfruit of gerelateerde onderwerpen gaat, zeg dan vriendelijk dat je alleen vragen over Schoolfruit kunt beantwoorden
+- Gebruik Google Search om actuele informatie van schoolfruit.nl te vinden
+- Wees vriendelijk, enthousiast en behulpzaam
+- Geef korte, duidelijke antwoorden
+- Als je iets niet weet, zeg dat eerlijk en verwijs naar www.schoolfruit.nl
+- Gebruik af en toe een ananas emoji 🍍 om je karakter te benadrukken
+- Antwoord altijd in het Nederlands`;
+
+// Ensure we have an authenticated session for chat
+export async function ensureChatSession(): Promise<string> {
+  // If we already have a session, return it
+  if (currentUser && currentSessionId) {
+    return currentSessionId;
+  }
+
+  // Create a new anonymous session for chat
+  return await signInAndCreateSession("annie-ananas");
+}
+
+// Start or continue a chat session
+export async function startChatSession(existingHistory: ChatMessage[] = []): Promise<void> {
+  // Ensure we have auth session
+  await ensureChatSession();
+
+  // Convert our message format to Firebase AI format
+  const firebaseHistory = existingHistory.map(msg => ({
+    role: msg.role,
+    parts: [{ text: msg.content }]
+  }));
+
+  // Add system instruction as first message pair in history
+  const historyWithSystem = [
+    {
+      role: "user" as const,
+      parts: [{ text: `Instructies voor deze chat sessie:\n\n${ANNIE_SYSTEM_PROMPT}\n\nBevestig dat je dit begrijpt.` }]
+    },
+    {
+      role: "model" as const,
+      parts: [{ text: "Begrepen! Ik ben Annie de Ananas 🍍 en ik help je graag met al je vragen over Schoolfruit en het EU Schoolfruit programma!" }]
+    },
+    ...firebaseHistory
+  ];
+
+  // Start new chat with history
+  currentChatSession = chatModel.startChat({
+    history: historyWithSystem,
+    generationConfig: {
+      maxOutputTokens: 1000,
+    },
+  });
+
+  // Create a new chat session document in Firestore if we don't have one
+  if (!currentChatSessionId && currentSessionId) {
+    const chatSessionRef = await addDoc(collection(db, "chatSessions"), {
+      sessionId: currentSessionId,
+      userId: currentUser!.uid,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      messages: existingHistory.map(msg => ({
+        role: msg.role,
+        content: msg.content,
+        timestamp: new Date().toISOString()
+      }))
+    });
+    currentChatSessionId = chatSessionRef.id;
+    console.log("💬 Created chat session:", currentChatSessionId);
+  }
+}
+
+// Send a message in the chat (with optional streaming callback)
+export async function sendChatMessage(
+  message: string, 
+  onChunk?: (text: string) => void
+): Promise<string> {
+  // Start a new chat session if we don't have one
+  if (!currentChatSession) {
+    await startChatSession();
+  }
+
+  try {
+    let responseText = '';
+    
+    if (onChunk) {
+      // Use streaming for real-time updates
+      const result = await currentChatSession!.sendMessageStream(message);
+      for await (const chunk of result.stream) {
+        const chunkText = chunk.text();
+        responseText += chunkText;
+        onChunk(responseText); // Send accumulated text to callback
+      }
+    } else {
+      // Non-streaming fallback
+      const result = await currentChatSession!.sendMessage(message);
+      responseText = result.response.text();
+    }
+
+    // Save messages to Firestore
+    if (currentChatSessionId) {
+      const chatSessionRef = doc(db, "chatSessions", currentChatSessionId);
+      const chatSessionDoc = await getDoc(chatSessionRef);
+      
+      if (chatSessionDoc.exists()) {
+        const existingMessages = chatSessionDoc.data().messages || [];
+        await updateDoc(chatSessionRef, {
+          messages: [
+            ...existingMessages,
+            { role: 'user', content: message, timestamp: new Date().toISOString() },
+            { role: 'model', content: responseText, timestamp: new Date().toISOString() }
+          ],
+          updatedAt: serverTimestamp()
+        });
+      }
+    }
+
+    console.log("💬 Chat response:", responseText);
+    return responseText;
+  } catch (error) {
+    console.error("Chat error:", error);
+    throw error;
+  }
+}
+
+// Reset chat session (for starting a new conversation)
+export function resetChatSession(): void {
+  currentChatSession = null;
+  currentChatSessionId = null;
+  console.log("🔄 Chat session reset");
 }
 
 export { app, analytics };

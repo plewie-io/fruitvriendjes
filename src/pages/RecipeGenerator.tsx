@@ -4,13 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Loader2, ChefHat, ArrowLeft, Undo2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { generateRecipe as generateRecipeAI, generateRecipePhoto, modifyRecipe } from "@/lib/firebase";
+import { generateRecipe as generateRecipeAI, generateRecipePhoto, modifyRecipe, saveRecipeGeneration, getCurrentSessionId } from "@/lib/firebase";
 import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import recipeBackground from "@/assets/recipe-background.jpg";
 type RecipeHistoryItem = {
   recipe: string;
   image: string | null;
+  recipeId: string | null;
 };
 
 const RecipeGenerator = () => {
@@ -19,6 +20,7 @@ const RecipeGenerator = () => {
   const [recipe, setRecipe] = useState<string | null>(null);
   const [recipeImage, setRecipeImage] = useState<string | null>(null);
   const [recipeHistory, setRecipeHistory] = useState<RecipeHistoryItem[]>([]);
+  const [currentRecipeId, setCurrentRecipeId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [isModifyMode, setIsModifyMode] = useState(false);
@@ -32,6 +34,7 @@ const RecipeGenerator = () => {
     const previousVersion = recipeHistory[recipeHistory.length - 1];
     setRecipe(previousVersion.recipe);
     setRecipeImage(previousVersion.image);
+    setCurrentRecipeId(previousVersion.recipeId);
     setRecipeHistory(prev => prev.slice(0, -1));
     
     toast({
@@ -62,7 +65,8 @@ const RecipeGenerator = () => {
     
     // Save current state to history before modifying
     const previousRecipe = recipe;
-    setRecipeHistory(prev => [...prev, { recipe, image: recipeImage }]);
+    const previousIngredients = ingredients.trim();
+    setRecipeHistory(prev => [...prev, { recipe, image: recipeImage, recipeId: currentRecipeId }]);
     
     // Clear current recipe and image to show loading state
     setRecipe(null);
@@ -70,9 +74,11 @@ const RecipeGenerator = () => {
     
     setLoading(true);
     try {
-      const recipeResponse = await modifyRecipe(previousRecipe, ingredients.trim());
+      const recipeResponse = await modifyRecipe(previousRecipe, previousIngredients);
       setRecipe(recipeResponse.recipe);
       setIngredients("");
+
+      let newImageUrl: string | null = null;
 
       // Generate new image if valid
       if (recipeResponse.isValidRequest && recipeResponse.imagePrompt) {
@@ -82,8 +88,8 @@ const RecipeGenerator = () => {
         });
         
         setImageLoading(true);
-        const imageUrl = await generateRecipePhoto(recipeResponse.imagePrompt);
-        setRecipeImage(imageUrl);
+        newImageUrl = await generateRecipePhoto(recipeResponse.imagePrompt);
+        setRecipeImage(newImageUrl);
         setImageLoading(false);
         
         toast({
@@ -95,6 +101,23 @@ const RecipeGenerator = () => {
           title: "Recept aangepast! 🎉",
           description: "Veel kookplezier!"
         });
+      }
+
+      // Save to database
+      if (getCurrentSessionId()) {
+        try {
+          const newRecipeId = await saveRecipeGeneration(
+            previousIngredients,
+            recipeResponse.recipe,
+            recipeResponse.imagePrompt || "",
+            newImageUrl,
+            true,
+            currentRecipeId
+          );
+          setCurrentRecipeId(newRecipeId);
+        } catch (saveError) {
+          console.error("Error saving recipe:", saveError);
+        }
       }
     } catch (error: any) {
       console.error("Error modifying recipe:", error);
@@ -118,16 +141,22 @@ const RecipeGenerator = () => {
       });
       return;
     }
+    
+    const userIngredients = ingredients.trim();
     setLoading(true);
     setRecipe(null);
     setRecipeImage(null);
     setRecipeHistory([]);
+    setCurrentRecipeId(null);
+    
     try {
       // Step 1: Generate the recipe (returns both recipe and imagePrompt)
-      const recipeResponse = await generateRecipeAI(ingredients.trim(), "mandy-mandarijn");
+      const recipeResponse = await generateRecipeAI(userIngredients, "mandy-mandarijn");
       setRecipe(recipeResponse.recipe);
       setIngredients("");
       setIsModifyMode(true);
+
+      let imageUrl: string | null = null;
 
       // Step 2: Generate the actual image only if isValidRequest is true
       if (recipeResponse.isValidRequest && recipeResponse.imagePrompt) {
@@ -137,7 +166,7 @@ const RecipeGenerator = () => {
         });
         
         setImageLoading(true);
-        const imageUrl = await generateRecipePhoto(recipeResponse.imagePrompt);
+        imageUrl = await generateRecipePhoto(recipeResponse.imagePrompt);
         setRecipeImage(imageUrl);
         setImageLoading(false);
         
@@ -150,6 +179,23 @@ const RecipeGenerator = () => {
           title: "Recept klaar! 🎉",
           description: "Veel kookplezier!"
         });
+      }
+
+      // Save to database
+      if (getCurrentSessionId()) {
+        try {
+          const newRecipeId = await saveRecipeGeneration(
+            userIngredients,
+            recipeResponse.recipe,
+            recipeResponse.imagePrompt || "",
+            imageUrl,
+            false, // isModification
+            null   // previousRecipeId
+          );
+          setCurrentRecipeId(newRecipeId);
+        } catch (saveError) {
+          console.error("Error saving recipe:", saveError);
+        }
       }
     } catch (error: any) {
       console.error("Error generating recipe:", error);
@@ -228,6 +274,7 @@ const RecipeGenerator = () => {
                           setRecipe(null);
                           setRecipeImage(null);
                           setRecipeHistory([]);
+                          setCurrentRecipeId(null);
                           setIsModifyMode(false);
                           setIngredients("");
                         }} 

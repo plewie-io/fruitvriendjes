@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Send, Loader2 } from 'lucide-react';
+import { X, Send, Loader2, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { generateRecipe } from '@/lib/firebase';
+import { sendChatMessage, startChatSession, resetChatSession, ChatMessage } from '@/lib/firebase';
 import ReactMarkdown from 'react-markdown';
 import annieAnanas from '@/assets/annie-ananas.png';
 
@@ -11,13 +11,18 @@ type Message = {
   content: string;
 };
 
+const INITIAL_MESSAGE: Message = { 
+  role: 'assistant', 
+  content: 'Hallo! 👋 Ik ben Annie de Ananas! Ik beantwoord al je vragen over schoolfruit en gezonde voeding!' 
+};
+
 export const SchoolfruitChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Hallo! 👋 Ik ben Annie de Ananas! Ik beantwoord al je vragen over ons product en dienstverlening!' }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(false);
+  const [chatInitialized, setChatInitialized] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -28,30 +33,82 @@ export const SchoolfruitChatbot = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Initialize chat session when chat is opened for the first time
+  useEffect(() => {
+    if (isOpen && !chatInitialized && !isInitializing) {
+      initializeChat();
+    }
+  }, [isOpen]);
+
+  const initializeChat = async () => {
+    setIsInitializing(true);
+    try {
+      // Convert messages to ChatMessage format (excluding initial greeting)
+      const historyForAI: ChatMessage[] = messages
+        .slice(1) // Skip the initial greeting
+        .map(msg => ({
+          role: msg.role === 'assistant' ? 'model' : 'user',
+          content: msg.content
+        }));
+      
+      await startChatSession(historyForAI);
+      setChatInitialized(true);
+      console.log("✅ Chat session initialized");
+    } catch (error) {
+      console.error("Failed to initialize chat:", error);
+    } finally {
+      setIsInitializing(false);
+    }
+  };
+
   const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || isInitializing) return;
 
     const userMessage = input.trim();
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsLoading(true);
 
-    try {
-      const recipeResponse = await generateRecipe(userMessage, "mandy-mandarijn");
+    // Add placeholder for streaming response
+    setMessages(prev => [...prev, { role: 'assistant', content: '' }]);
 
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: recipeResponse.recipe || 'Sorry, ik kon geen recept maken.'
-      }]);
+    try {
+      // Initialize chat if not already done
+      if (!chatInitialized) {
+        await initializeChat();
+      }
+
+      // Use streaming with callback to update message in real-time
+      await sendChatMessage(userMessage, (streamedText) => {
+        setMessages(prev => {
+          const newMessages = [...prev];
+          // Update the last message (assistant's response)
+          newMessages[newMessages.length - 1] = { 
+            role: 'assistant', 
+            content: streamedText 
+          };
+          return newMessages;
+        });
+      });
     } catch (error) {
       console.error('Chat error:', error);
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: 'Oeps! Er ging iets mis. Probeer het later nog eens.' 
-      }]);
+      setMessages(prev => {
+        const newMessages = [...prev];
+        newMessages[newMessages.length - 1] = { 
+          role: 'assistant', 
+          content: 'Oeps! Er ging iets mis. Probeer het later nog eens. 🍍' 
+        };
+        return newMessages;
+      });
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleNewChat = () => {
+    resetChatSession();
+    setMessages([INITIAL_MESSAGE]);
+    setChatInitialized(false);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -87,13 +144,23 @@ export const SchoolfruitChatbot = () => {
               <p className="text-xs text-foreground/70">Stel je vraag!</p>
             </div>
           </div>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="p-1 hover:bg-foreground/10 rounded-full transition-colors"
-            aria-label="Sluit chat"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handleNewChat}
+              className="p-1 hover:bg-foreground/10 rounded-full transition-colors"
+              aria-label="Nieuw gesprek"
+              title="Nieuw gesprek"
+            >
+              <RotateCcw className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="p-1 hover:bg-foreground/10 rounded-full transition-colors"
+              aria-label="Sluit chat"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Messages */}
@@ -120,7 +187,7 @@ export const SchoolfruitChatbot = () => {
               </div>
             </div>
           ))}
-          {isLoading && (
+          {(isLoading || isInitializing) && (
             <div className="flex justify-start">
               <div className="bg-white p-3 rounded-2xl rounded-bl-md shadow-sm">
                 <Loader2 className="w-5 h-5 animate-spin text-schoolfruit-yellow" />
@@ -138,12 +205,12 @@ export const SchoolfruitChatbot = () => {
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Typ je vraag..."
-              disabled={isLoading}
+              disabled={isLoading || isInitializing}
               className="flex-1 rounded-full border-gray-200 focus:border-schoolfruit-yellow"
             />
             <Button
               onClick={handleSend}
-              disabled={!input.trim() || isLoading}
+              disabled={!input.trim() || isLoading || isInitializing}
               size="icon"
               className="rounded-full bg-schoolfruit-yellow hover:bg-schoolfruit-yellow/90 text-foreground"
             >
