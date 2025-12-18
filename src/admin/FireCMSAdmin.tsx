@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Scaffold,
   AppBar,
@@ -19,9 +19,8 @@ import {
   useFirebaseStorageSource,
   useFirestoreDelegate,
   useInitialiseFirebase,
-  useAppCheck,
 } from "@firecms/firebase";
-import { ReCaptchaEnterpriseProvider } from "@firebase/app-check";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 import { sessionsCollection, recipesCollection, chatSessionsCollection } from "./collections";
 import schoolfruitLogo from "../assets/schoolfruit-logo.png";
@@ -90,19 +89,32 @@ export function FireCMSAdmin() {
     return true;
   }, []);
 
-  // Initialize Firebase
+  // Initialize Firebase with a different app name to avoid conflicts
   const { firebaseApp, firebaseConfigLoading, configError } = useInitialiseFirebase({
     firebaseConfig,
+    name: "firecms-admin", // Use a different app name to avoid conflicts with main app
   });
 
-  // App Check
-  const { loading: appCheckLoading } = useAppCheck({
-    firebaseApp,
-    options: {
-      provider: new ReCaptchaEnterpriseProvider("6LcQeC4sAAAAAIcJR51ruWdvVg16DQYMgNsrmLsT"),
-      isTokenAutoRefreshEnabled: true,
-    },
-  });
+  // Track App Check initialization
+  const [appCheckReady, setAppCheckReady] = useState(false);
+
+  // Initialize App Check for the admin app
+  useEffect(() => {
+    if (firebaseApp && !appCheckReady) {
+      try {
+        initializeAppCheck(firebaseApp, {
+          provider: new ReCaptchaEnterpriseProvider("6LcQeC4sAAAAAIcJR51ruWdvVg16DQYMgNsrmLsT"),
+          isTokenAutoRefreshEnabled: true,
+        });
+        setAppCheckReady(true);
+        console.log("✅ App Check initialized for FireCMS admin");
+      } catch (error) {
+        // App Check may already be initialized for this app
+        console.log("App Check already initialized or error:", error);
+        setAppCheckReady(true);
+      }
+    }
+  }, [firebaseApp, appCheckReady]);
 
   // Auth controller with authenticator
   const authController: FirebaseAuthController = useFirebaseAuthController({
@@ -140,7 +152,7 @@ export function FireCMSAdmin() {
     storageSource,
   });
 
-  if (firebaseConfigLoading || appCheckLoading || authLoading) {
+  if (firebaseConfigLoading || authLoading || !appCheckReady) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-100">
         <div className="text-center">
