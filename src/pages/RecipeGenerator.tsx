@@ -2,23 +2,113 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Loader2, ChefHat, ArrowLeft } from "lucide-react";
+import { Loader2, ChefHat, ArrowLeft, Undo2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { generateRecipe as generateRecipeAI, generatePhotoPrompt, generateRecipePhoto } from "@/lib/firebase";
+import { generateRecipe as generateRecipeAI, generateRecipePhoto, modifyRecipe } from "@/lib/firebase";
 import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
-import mandarijn from "@/assets/mandarijn.png";
 import recipeBackground from "@/assets/recipe-background.jpg";
+type RecipeHistoryItem = {
+  recipe: string;
+  image: string | null;
+};
+
 const RecipeGenerator = () => {
   const navigate = useNavigate();
   const [ingredients, setIngredients] = useState("");
   const [recipe, setRecipe] = useState<string | null>(null);
   const [recipeImage, setRecipeImage] = useState<string | null>(null);
+  const [recipeHistory, setRecipeHistory] = useState<RecipeHistoryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
+  const [isModifyMode, setIsModifyMode] = useState(false);
   const {
     toast
   } = useToast();
+
+  const handleUndo = () => {
+    if (recipeHistory.length === 0) return;
+    
+    const previousVersion = recipeHistory[recipeHistory.length - 1];
+    setRecipe(previousVersion.recipe);
+    setRecipeImage(previousVersion.image);
+    setRecipeHistory(prev => prev.slice(0, -1));
+    
+    toast({
+      title: "Vorige versie hersteld",
+      description: "Je ziet nu het vorige recept."
+    });
+  };
+
+  const handleSubmit = async () => {
+    if (!ingredients.trim()) {
+      toast({
+        title: isModifyMode ? "Wat wil je aanpassen?" : "Vergeet je ingrediënten niet!",
+        description: isModifyMode ? "Typ eerst wat je wilt veranderen." : "Typ eerst wat groenten of fruit in.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (isModifyMode && recipe) {
+      await handleModifyRecipe();
+    } else {
+      await generateRecipe();
+    }
+  };
+
+  const handleModifyRecipe = async () => {
+    if (!recipe) return;
+    
+    // Save current state to history before modifying
+    const previousRecipe = recipe;
+    setRecipeHistory(prev => [...prev, { recipe, image: recipeImage }]);
+    
+    // Clear current recipe and image to show loading state
+    setRecipe(null);
+    setRecipeImage(null);
+    
+    setLoading(true);
+    try {
+      const recipeResponse = await modifyRecipe(previousRecipe, ingredients.trim());
+      setRecipe(recipeResponse.recipe);
+      setIngredients("");
+
+      // Generate new image if valid
+      if (recipeResponse.isValidRequest && recipeResponse.imagePrompt) {
+        toast({
+          title: "Recept aangepast! 🎉",
+          description: "Nu maken we een nieuwe foto..."
+        });
+        
+        setImageLoading(true);
+        const imageUrl = await generateRecipePhoto(recipeResponse.imagePrompt);
+        setRecipeImage(imageUrl);
+        setImageLoading(false);
+        
+        toast({
+          title: "Foto klaar! 📸",
+          description: "Veel kookplezier!"
+        });
+      } else {
+        toast({
+          title: "Recept aangepast! 🎉",
+          description: "Veel kookplezier!"
+        });
+      }
+    } catch (error: any) {
+      console.error("Error modifying recipe:", error);
+      toast({
+        title: "Oeps!",
+        description: "Er ging iets mis. Probeer het nog eens.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+      setImageLoading(false);
+    }
+  };
+
   const generateRecipe = async () => {
     if (!ingredients.trim()) {
       toast({
@@ -31,28 +121,36 @@ const RecipeGenerator = () => {
     setLoading(true);
     setRecipe(null);
     setRecipeImage(null);
+    setRecipeHistory([]);
     try {
-      // Step 1: Generate the recipe
-      const recipeText = await generateRecipeAI(ingredients.trim());
-      setRecipe(recipeText);
-      toast({
-        title: "Recept klaar! 🎉",
-        description: "Nu maken we een mooie foto..."
-      });
+      // Step 1: Generate the recipe (returns both recipe and imagePrompt)
+      const recipeResponse = await generateRecipeAI(ingredients.trim(), "mandy-mandarijn");
+      setRecipe(recipeResponse.recipe);
+      setIngredients("");
+      setIsModifyMode(true);
 
-      // Step 2: Generate photo prompt from recipe
-      setImageLoading(true);
-      const photoPrompt = await generatePhotoPrompt(recipeText);
-      
-      // Step 3: Generate the actual image
-      const imageUrl = await generateRecipePhoto(photoPrompt);
-      setRecipeImage(imageUrl);
-      setImageLoading(false);
-      
-      toast({
-        title: "Foto klaar! 📸",
-        description: "Veel kookplezier!"
-      });
+      // Step 2: Generate the actual image only if isValidRequest is true
+      if (recipeResponse.isValidRequest && recipeResponse.imagePrompt) {
+        toast({
+          title: "Recept klaar! 🎉",
+          description: "Nu maken we een mooie foto..."
+        });
+        
+        setImageLoading(true);
+        const imageUrl = await generateRecipePhoto(recipeResponse.imagePrompt);
+        setRecipeImage(imageUrl);
+        setImageLoading(false);
+        
+        toast({
+          title: "Foto klaar! 📸",
+          description: "Veel kookplezier!"
+        });
+      } else {
+        toast({
+          title: "Recept klaar! 🎉",
+          description: "Veel kookplezier!"
+        });
+      }
     } catch (error: any) {
       console.error("Error generating recipe:", error);
       toast({
@@ -88,24 +186,64 @@ const RecipeGenerator = () => {
             <div className="space-y-4">
               <div>
                 <label htmlFor="ingredients" className="block text-sm font-medium mb-2">
-                  Welke ingrediënten heb je?
+                  {isModifyMode ? "Wat wil je aanpassen?" : "Welke ingrediënten heb je?"}
                 </label>
-                <Input id="ingredients" value={ingredients} onChange={e => setIngredients(e.target.value)} placeholder="Bijv: appels, bananen, aardbeien..." className="text-lg" onKeyDown={e => {
-                if (e.key === "Enter" && !loading) {
-                  generateRecipe();
-                }
-              }} />
+                <Input 
+                  id="ingredients" 
+                  value={ingredients} 
+                  onChange={e => setIngredients(e.target.value)} 
+                  placeholder={isModifyMode ? "Bijv: maak het vegetarisch, voeg noten toe..." : "Bijv: appels, bananen, aardbeien..."} 
+                  className="text-lg" 
+                  disabled={loading || imageLoading}
+                  onKeyDown={e => {
+                    if (e.key === "Enter" && !loading && !imageLoading) {
+                      handleSubmit();
+                    }
+                  }} 
+                />
               </div>
 
-              <Button onClick={generateRecipe} disabled={loading} className="w-full text-lg py-6" size="lg">
-                {loading ? <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Recept maken...
-                  </> : <>
+              {!loading && !imageLoading ? (
+                <>
+                  <Button onClick={handleSubmit} className="w-full text-lg py-6" size="lg">
                     <ChefHat className="mr-2 h-5 w-5" />
-                    Maak een recept!
-                  </>}
-              </Button>
+                    {isModifyMode ? "Pas recept aan!" : "Maak een recept!"}
+                  </Button>
+
+                  {isModifyMode && (
+                    <div className="flex gap-2">
+                      {recipeHistory.length > 0 && (
+                        <Button 
+                          variant="outline" 
+                          onClick={handleUndo}
+                          className="flex-1"
+                        >
+                          <Undo2 className="mr-2 h-4 w-4" />
+                          Vorige versie
+                        </Button>
+                      )}
+                      <Button 
+                        variant="outline" 
+                        onClick={() => {
+                          setRecipe(null);
+                          setRecipeImage(null);
+                          setRecipeHistory([]);
+                          setIsModifyMode(false);
+                          setIngredients("");
+                        }} 
+                        className="flex-1"
+                      >
+                        Nieuw recept maken
+                      </Button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <Button disabled className="w-full text-lg py-6" size="lg">
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  {imageLoading ? "Foto maken..." : (isModifyMode ? "Recept aanpassen..." : "Recept maken...")}
+                </Button>
+              )}
             </div>
           </Card>
 

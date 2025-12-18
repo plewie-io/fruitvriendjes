@@ -102,7 +102,7 @@ const Footer = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 text-sm">
             <a href="https://www.schoolfruit.nl/nl/pages/privacy/" target="_blank" rel="noopener noreferrer" className="hover:underline">Privacy Statement</a>
-            <span>EDUrebls en Handyhow</span>
+            <span>EDUrebls en HandiHow</span>
           </div>
         </div>
       </div>

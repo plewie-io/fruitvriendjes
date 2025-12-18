@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAI, getTemplateGenerativeModel, getImagenModel, VertexAIBackend } from "firebase/ai";
-import { initializeAppCheck, ReCaptchaV3Provider, ReCaptchaEnterpriseProvider } from "firebase/app-check";
+import { getAI, getTemplateGenerativeModel, getTemplateImagenModel, VertexAIBackend } from "firebase/ai";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -39,55 +39,41 @@ export const ai = getAI(app, { backend: new VertexAIBackend() });
 // Create a TemplateGenerativeModel instance
 export const templateModel = getTemplateGenerativeModel(ai);
 
-// Create an ImagenModel instance for image generation
-export const imagenModel = getImagenModel(ai, {
-  model: "imagen-4.0-generate-001",
-  generationConfig: {
-    numberOfImages: 1
-  }
-});
+// Create a TemplateImagenModel instance for image generation
+export const templateImagenModel = getTemplateImagenModel(ai);
+
+// Type for the structured recipe response
+export interface RecipeResponse {
+  recipe: string;
+  imagePrompt: string;
+  isValidRequest: boolean;
+}
 
 // Function to generate recipe using Firebase AI template
-export async function generateRecipe(ingredients: string): Promise<string> {
+export async function generateRecipe(ingredients: string, template: string = "mandy-mandarijn"): Promise<RecipeResponse> {
   try {
     const input = {
       ingredients: ingredients
     };
 
     const result = await templateModel.generateContent(
-      // Template ID for recipe generation
-      "recept-maken",
-      // Provide the values for template variables
+      template,
       input,
-
     );
 
     const response = result.response;
-    return response.text();
+    const text = response.text();
+    console.log("📝 Raw recipe response:", text);
+    
+    // Parse the JSON response
+    const parsedResponse = JSON.parse(text);
+    return {
+      recipe: parsedResponse.recipe,
+      imagePrompt: parsedResponse.imagePrompt,
+      isValidRequest: parsedResponse.isValidRequest ?? false
+    };
   } catch (error) {
     console.error("Firebase AI error:", error);
-    throw error;
-  }
-}
-
-// Function to generate a photo prompt from a recipe
-export async function generatePhotoPrompt(recipe: string): Promise<string> {
-  try {
-    const input = {
-      recipe: recipe
-    };
-
-    const result = await templateModel.generateContent(
-      "foto-prompt-maken",
-      input
-    );
-
-    const response = result.response;
-    const promptText = response.text();
-    console.log("📸 Generated photo prompt:", promptText);
-    return promptText;
-  } catch (error) {
-    console.error("Firebase AI photo prompt error:", error);
     throw error;
   }
 }
@@ -97,7 +83,10 @@ export async function generateRecipePhoto(prompt: string): Promise<string> {
   try {
     console.log("🖼️ Generating image with prompt:", prompt);
     
-    const result = await imagenModel.generateImages(prompt);
+    const result = await templateImagenModel.generateImages(
+      "afbeelding-genereren",
+      { prompt: prompt }
+    );
     console.log("🖼️ Image generation response:", result);
     
     // Get the first generated image
@@ -112,6 +101,36 @@ export async function generateRecipePhoto(prompt: string): Promise<string> {
     throw new Error("No image found in response");
   } catch (error) {
     console.error("Firebase AI photo generation error:", error);
+    throw error;
+  }
+}
+
+// Function to modify an existing recipe
+export async function modifyRecipe(previousRecipe: string, modifications: string): Promise<RecipeResponse> {
+  try {
+    const input = {
+      previousRecipe: previousRecipe,
+      modifications: modifications
+    };
+
+    const result = await templateModel.generateContent(
+      "recept-aanpassen",
+      input,
+    );
+
+    const response = result.response;
+    const text = response.text();
+    console.log("📝 Raw modified recipe response:", text);
+    
+    // Parse the JSON response
+    const parsedResponse = JSON.parse(text);
+    return {
+      recipe: parsedResponse.recipe,
+      imagePrompt: parsedResponse.imagePrompt,
+      isValidRequest: parsedResponse.isValidRequest ?? false
+    };
+  } catch (error) {
+    console.error("Firebase AI modify recipe error:", error);
     throw error;
   }
 }

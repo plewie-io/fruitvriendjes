@@ -37,11 +37,11 @@ export const SchoolfruitChatbot = () => {
     setIsLoading(true);
 
     try {
-      const recipe = await generateRecipe(userMessage);
+      const recipeResponse = await generateRecipe(userMessage, "mandy-mandarijn");
 
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: recipe || 'Sorry, ik kon geen recept maken.'
+        content: recipeResponse.recipe || 'Sorry, ik kon geen recept maken.'
       }]);
     } catch (error) {
       console.error('Chat error:', error);
