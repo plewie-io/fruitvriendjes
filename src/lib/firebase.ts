@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAI, getGenerativeModel, getTemplateGenerativeModel, getTemplateImagenModel, VertexAIBackend } from "firebase/ai";
+import { getAI, getGenerativeModel, getTemplateGenerativeModel, getTemplateImagenModel, VertexAIBackend, HarmCategory, HarmBlockThreshold } from "firebase/ai";
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { getAuth, signInAnonymously, onAuthStateChanged, User } from "firebase/auth";
 import { getFirestore, collection, doc, addDoc, updateDoc, serverTimestamp, Timestamp, getDoc, setDoc } from "firebase/firestore";
@@ -39,8 +39,8 @@ export const appCheck = initializeAppCheck(app, {
   isTokenAutoRefreshEnabled: true
 });
 
-// Initialize the Vertex AI Gemini API backend service
-export const ai = getAI(app, { backend: new VertexAIBackend() });
+// Initialize the Vertex AI Gemini API backend service with European region
+export const ai = getAI(app, { backend: new VertexAIBackend('europe-west4') });
 
 // Create a TemplateGenerativeModel instance
 export const templateModel = getTemplateGenerativeModel(ai);
@@ -48,10 +48,31 @@ export const templateModel = getTemplateGenerativeModel(ai);
 // Create a TemplateImagenModel instance for image generation
 export const templateImagenModel = getTemplateImagenModel(ai);
 
+// Safety settings for the chat model
+const safetySettings = [
+  {
+    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+  },
+];
+
 // Create a GenerativeModel instance for chat with Google Search grounding
 export const chatModel = getGenerativeModel(ai, { 
   model: "gemini-2.5-flash",
-  tools: [{ googleSearch: {} }]
+  tools: [{ googleSearch: {} }],
+  safetySettings
 });
 
 // Current user and session state
@@ -381,8 +402,19 @@ export async function sendChatMessage(
 
     console.log("💬 Chat response:", responseText);
     return responseText;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Chat error:", error);
+    
+    // Check if this is a safety block error
+    if (error?.message?.includes('SAFETY') || error?.code === 'AI/response-error') {
+      // Reset chat session to prevent malformed history from blocking subsequent messages
+      currentChatSession = null;
+      
+      const safetyError = new Error('SAFETY_BLOCK');
+      safetyError.name = 'SafetyBlockError';
+      throw safetyError;
+    }
+    
     throw error;
   }
 }

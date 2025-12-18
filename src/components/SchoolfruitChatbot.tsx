@@ -90,13 +90,21 @@ export const SchoolfruitChatbot = () => {
           return newMessages;
         });
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat error:', error);
+      
+      let errorMessage = 'Oeps! Er ging iets mis. Probeer het later nog eens. 🍍';
+      
+      // Check if this is a safety block error
+      if (error?.name === 'SafetyBlockError' || error?.message === 'SAFETY_BLOCK') {
+        errorMessage = 'Hé, laten we het over iets anders hebben! 🍎 Stel me een vraag over fruit, groente of gezond eten!';
+      }
+      
       setMessages(prev => {
         const newMessages = [...prev];
         newMessages[newMessages.length - 1] = { 
           role: 'assistant', 
-          content: 'Oeps! Er ging iets mis. Probeer het later nog eens. 🍍' 
+          content: errorMessage 
         };
         return newMessages;
       });
