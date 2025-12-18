@@ -1,4 +1,5 @@
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin, Settings } from "lucide-react";
+import { Link } from "react-router-dom";
 import schoolfruitLogo from "@/assets/schoolfruit-logo.png";
 
 const Footer = () => {
@@ -103,6 +104,10 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 text-sm">
             <a href="https://www.schoolfruit.nl/nl/pages/privacy/" target="_blank" rel="noopener noreferrer" className="hover:underline">Privacy Statement</a>
             <span>EDUrebls en HandiHow</span>
+            <Link to="/admin" className="hover:underline flex items-center gap-1">
+              <Settings className="h-4 w-4" />
+              Admin
+            </Link>
           </div>
         </div>
       </div>

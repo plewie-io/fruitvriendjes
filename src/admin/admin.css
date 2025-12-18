@@ -1,0 +1,8 @@
+/* FireCMS Admin Styles */
+@import "@firecms/ui/index.css";
+
+/* FireCMS color customization */
+:root {
+  --fcms-primary: #F08400;
+  --fcms-secondary: #4CAF50;
+}
