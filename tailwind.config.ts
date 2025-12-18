@@ -1,8 +1,21 @@
 import type { Config } from "tailwindcss";
+import fireCMSConfig from "@firecms/ui/tailwind.config.js";
 
 export default {
+  presets: [fireCMSConfig],
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./index.html",
+    "./pages/**/*.{ts,tsx}", 
+    "./components/**/*.{ts,tsx}", 
+    "./app/**/*.{ts,tsx}", 
+    "./src/**/*.{ts,tsx}",
+    "./node_modules/@firecms/**/*.{js,ts,jsx,tsx}"
+  ],
+  safelist: [
+    "ease-[cubic-bezier(0,0,0.2,1)]",
+    "ease-[cubic-bezier(0.4,0,0.2,1)]",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -15,6 +28,7 @@ export default {
     extend: {
       fontFamily: {
         'fredoka': ['Fredoka', 'sans-serif'],
+        'headers': ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

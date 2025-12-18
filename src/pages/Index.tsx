@@ -6,11 +6,13 @@ import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescript
 import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
 import Footer from "@/components/Footer";
 import { SchoolfruitChatbot } from "@/components/SchoolfruitChatbot";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, Loader2 } from "lucide-react";
+import { signInAndCreateSession } from "@/lib/firebase";
 import mandarijn from "@/assets/mandarijn.png";
 import cookingFamily from "@/assets/cooking-family.png";
 const Index = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [showSafetyDialog, setShowSafetyDialog] = useState(() => {
     return !localStorage.getItem('safetyDialogShown');
   });
@@ -18,8 +20,18 @@ const Index = () => {
     localStorage.setItem('safetyDialogShown', 'true');
     setShowSafetyDialog(false);
   };
-  const goToRecipe = () => {
-    navigate("/recept");
+  const goToRecipe = async (fruitCharacter: string = "mandy-mandarijn") => {
+    setIsLoading(true);
+    try {
+      await signInAndCreateSession(fruitCharacter);
+      navigate("/recept");
+    } catch (error) {
+      console.error("Error starting session:", error);
+      // Still navigate even if session creation fails
+      navigate("/recept");
+    } finally {
+      setIsLoading(false);
+    }
   };
   return <div className="min-h-screen bg-gradient-hero flex flex-col">
       <SchoolfruitsHeader />
@@ -51,20 +63,29 @@ const Index = () => {
         </div>
 
         <div className="flex justify-center max-w-4xl mx-auto">
-          <Card className="overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in w-full border-4 border-card" onClick={goToRecipe}>
+          <Card className={`overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in w-full border-4 border-card ${isLoading ? 'pointer-events-none opacity-75' : ''}`} onClick={() => goToRecipe("mandy-mandarijn")}>
             <div className="relative flex flex-col md:flex-row items-center justify-center md:justify-between px-4 md:px-8 py-6" style={{
             backgroundImage: `linear-gradient(rgba(240, 132, 0, 0.85), rgba(240, 132, 0, 0.85)), url(${cookingFamily})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}>
               <div className="flex flex-col items-center z-10 mb-6 md:mb-0">
-                <Button className="text-lg md:text-xl py-4 md:py-6 px-8 md:px-12 bg-white/70 backdrop-blur-sm text-foreground hover:bg-white/80 border-4 border-white/50" size="lg">
-                  Kook met mij!
+                <Button className="text-lg md:text-xl py-4 md:py-6 px-8 md:px-12 bg-white/70 backdrop-blur-sm text-foreground hover:bg-white/80 border-4 border-white/50" size="lg" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Even geduld...
+                    </>
+                  ) : (
+                    "Kook met mij!"
+                  )}
                 </Button>
-                <button onClick={goToRecipe} className="flex flex-col items-center gap-1 mt-4 text-card hover:scale-110 transition-transform animate-bounce">
-                  <ArrowUp className="w-10 md:w-12 h-10 md:h-12" />
-                  <span className="text-base md:text-lg font-semibold">Klik hier!</span>
-                </button>
+                {!isLoading && (
+                  <button onClick={() => goToRecipe("mandy-mandarijn")} className="flex flex-col items-center gap-1 mt-4 text-card hover:scale-110 transition-transform animate-bounce">
+                    <ArrowUp className="w-10 md:w-12 h-10 md:h-12" />
+                    <span className="text-base md:text-lg font-semibold">Klik hier!</span>
+                  </button>
+                )}
               </div>
               <div className="flex flex-col items-center z-10">
                 <div className="bg-white/70 backdrop-blur-sm w-56 h-56 md:w-72 md:h-72 rounded-lg flex items-center justify-center">
