@@ -52,8 +52,15 @@ const signInOptions: FirebaseSignInProvider[] = [
   "password",
 ];
 
+// Allowed email domains for admin access
+const ALLOWED_DOMAINS = [
+  "handihow.com",
+  "eduprompt.nl",
+  "schoolfruit.nl",
+];
+
 export function FireCMSAdmin() {
-  // Authenticator to reject anonymous users
+  // Authenticator to reject unauthorized users
   const myAuthenticator: Authenticator<FirebaseUserWrapper> = useCallback(async ({
     user,
     authController
@@ -71,6 +78,12 @@ export function FireCMSAdmin() {
     // Reject users without email (additional safety check)
     if (!user.email) {
       throw Error("Users without an email address cannot access the admin panel.");
+    }
+
+    // Check if email domain is allowed
+    const emailDomain = user.email.split("@")[1]?.toLowerCase();
+    if (!emailDomain || !ALLOWED_DOMAINS.includes(emailDomain)) {
+      throw Error(`Access denied. Only users from the following domains are allowed: ${ALLOWED_DOMAINS.join(", ")}`);
     }
 
     console.log("🔐 Admin access granted to:", user.email);
@@ -174,8 +187,6 @@ export function FireCMSAdmin() {
               signInOptions={signInOptions}
               notAllowedError={notAllowedError || context.authController.authError}
               logo={schoolfruitLogo}
-              disableSignupScreen={true}
-              disableResetPassword={true}
             />
           );
         }
