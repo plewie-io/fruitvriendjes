@@ -22,7 +22,6 @@ import {
   useAppCheck,
 } from "@firecms/firebase";
 import { ReCaptchaEnterpriseProvider } from "@firebase/app-check";
-import { useExportPlugin } from "@firecms/data_export";
 
 import { sessionsCollection, recipesCollection, chatSessionsCollection } from "./collections";
 import schoolfruitLogo from "../assets/schoolfruit-logo.png";
@@ -108,16 +107,12 @@ export function FireCMSAdmin() {
     firebaseApp,
   });
 
-  // Data export plugin
-  const exportPlugin = useExportPlugin();
-
   // Navigation controller
   const navigationController = useBuildNavigationController({
     collections,
     authController,
     dataSourceDelegate: firestoreDelegate,
     basePath: "/admin",
-    plugins: [exportPlugin],
   });
 
   // Validate authenticator - reject anonymous users

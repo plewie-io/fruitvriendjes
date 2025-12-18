@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@firecms/core": "^3.0.0",
-    "@firecms/data_export": "^3.0.0",
     "@firecms/firebase": "^3.0.0",
     "@firecms/ui": "^3.0.0",
     "@hookform/resolvers": "^3.10.0",
