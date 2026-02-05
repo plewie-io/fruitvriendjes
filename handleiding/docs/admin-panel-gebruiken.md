@@ -52,21 +52,6 @@ Gebruik de zoekfunctie:
 3. Druk op Enter
 4. Bekijk gefilterde resultaten
 
-## Data Exporteren
-
-### Stappen voor Export
-
-1. **Open collectie** - Ga naar Sessies, Recepten of Chatsessies
-2. **Filter data** (optioneel) - Pas filters toe
-3. **Klik Export** - Rechtsboven in de tabel
-4. **Kies formaat** - Meestal CSV
-5. **Download** - Save het bestand
-
-### Export Formaten
-
-- **CSV** - Voor Excel/Google Sheets
-- **JSON** - Voor technische analyse
-
 ## Tips & Tricks
 
 ### 🔍 Efficiënt Zoeken
@@ -77,9 +62,9 @@ Gebruik de zoekfunctie:
 
 ### 📊 Data Analyse
 
-- Exporteer naar CSV voor analyse in Excel
 - Gebruik sortering om trends te zien
 - Bekijk relaties tussen records via links
+- Filter data om specifieke patronen te ontdekken
 
 ### ⚡ Snelkoppelingen
 
@@ -107,7 +92,7 @@ Het admin panel respecteert je systeem voorkeur:
 
 - Gebruikers-IDs zijn verborgen in tabellen
 - Deel geen persoonlijke data extern
-- Export alleen wat nodig is
+- Bekijk alleen data waar je toegang tot nodig hebt
 
 ### Performance
 
@@ -119,7 +104,7 @@ Het admin panel respecteert je systeem voorkeur:
 
 ### Kan ik data bewerken?
 
-Nee, alle collecties zijn read-only. Je kunt data alleen bekijken en exporteren.
+Nee, alle collecties zijn read-only. Je kunt data alleen bekijken.
 
 ### Hoe vaak wordt data ververst?
 

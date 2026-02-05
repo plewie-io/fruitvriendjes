@@ -86,15 +86,6 @@ Alle collecties zijn **read-only** - je kunt data bekijken maar niet bewerken of
 - Klik op kolomkoppen om te sorteren
 - Gebruik filters om data te filteren
 
-### Data Exporteren
-
-Je kunt data exporteren naar CSV:
-
-1. Open een collectie
-2. Klik op het export icoon (rechtsboven)
-3. Kies je export formaat
-4. Download het bestand
-
 ## Relaties tussen Collecties
 
 ```
