@@ -17,16 +17,16 @@ export type ChatSession = {
 export const chatSessionsCollection = buildCollection<ChatSession>({
   id: "chatSessions",
   path: "chatSessions",
-  name: "Chat Sessions",
-  singularName: "Chat Session",
+  name: "Chatsessies",
+  singularName: "Chatsessie",
   group: "Data",
   icon: "Chat",
-  description: "Chat conversations with Annie de Ananas",
+  description: "Chats met de chatbot onderin de pagina",
   defaultSize: "xs",
   initialSort: ["createdAt", "desc"],
   properties: {
     sessionId: buildProperty({
-      name: "Session",
+      name: "Sessie",
       dataType: "string",
       readOnly: true,
       // Use string as reference to sessions collection
@@ -37,44 +37,45 @@ export const chatSessionsCollection = buildCollection<ChatSession>({
       },
     }),
     userId: buildProperty({
-      name: "User ID",
+      name: "Gebruikers-ID",
       dataType: "string",
       readOnly: true,
+      hideFromCollection: true,
     }),
     messages: buildProperty({
-      name: "Messages",
+      name: "Berichten",
       dataType: "array",
       of: {
         dataType: "map",
         properties: {
           role: {
-            name: "Role",
+            name: "Rol",
             dataType: "string",
             enumValues: {
-              user: "User",
+              user: "Gebruiker",
               model: "Model",
             },
           },
           content: {
-            name: "Content",
+            name: "Inhoud",
             dataType: "string",
             multiline: true,
           },
           timestamp: {
-            name: "Timestamp",
+            name: "Tijdstempel",
             dataType: "string",
           },
         },
       },
     }),
     createdAt: buildProperty({
-      name: "Created At",
+      name: "Aangemaakt op",
       dataType: "date",
       readOnly: true,
       mode: "date_time",
     }),
     updatedAt: buildProperty({
-      name: "Updated At",
+      name: "Bijgewerkt op",
       dataType: "date",
       readOnly: true,
       mode: "date_time",

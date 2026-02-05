@@ -20,9 +20,16 @@ import {
   useFirestoreDelegate,
   useInitialiseFirebase,
 } from "@firecms/firebase";
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
+import {
+  initializeAppCheck,
+  ReCaptchaEnterpriseProvider,
+} from "firebase/app-check";
 
-import { sessionsCollection, recipesCollection, chatSessionsCollection } from "./collections";
+import {
+  sessionsCollection,
+  recipesCollection,
+  chatSessionsCollection,
+} from "./collections";
 import schoolfruitLogo from "../assets/schoolfruit-logo.png";
 
 import "./admin.css";
@@ -35,7 +42,7 @@ const firebaseConfig = {
   storageBucket: "fruitvriendjes-35c8c.firebasestorage.app",
   messagingSenderId: "104281679692",
   appId: "1:104281679692:web:6754372d57f65ed53e11e9",
-  measurementId: "G-P1C709MBME"
+  measurementId: "G-P1C709MBME",
 };
 
 // All collections for the CMS
@@ -46,54 +53,54 @@ const collections = [
 ];
 
 // Sign in providers - only Google and email/password (no anonymous)
-const signInOptions: FirebaseSignInProvider[] = [
-  "google.com",
-  "password",
-];
+const signInOptions: FirebaseSignInProvider[] = ["google.com", "password"];
 
 // Allowed email domains for admin access
-const ALLOWED_DOMAINS = [
-  "handihow.com",
-  "eduprompt.nl",
-  "schoolfruit.nl",
-];
+const ALLOWED_DOMAINS = ["handihow.com", "eduprompt.nl", "schoolfruit.nl"];
 
 export function FireCMSAdmin() {
   // Authenticator to reject unauthorized users
-  const myAuthenticator: Authenticator<FirebaseUserWrapper> = useCallback(async ({
-    user,
-    authController
-  }) => {
-    // Reject if no user
-    if (!user) {
-      return false;
-    }
+  const myAuthenticator: Authenticator<FirebaseUserWrapper> = useCallback(
+    async ({ user, authController }) => {
+      // Reject if no user
+      if (!user) {
+        return false;
+      }
 
-    // Reject anonymous users
-    if (user.isAnonymous) {
-      throw Error("Anonymous users are not allowed to access the admin panel. Please sign in with Google or email/password.");
-    }
+      // Reject anonymous users
+      if (user.isAnonymous) {
+        throw Error(
+          "Anonymous users are not allowed to access the admin panel. Please sign in with Google or email/password.",
+        );
+      }
 
-    // Reject users without email (additional safety check)
-    if (!user.email) {
-      throw Error("Users without an email address cannot access the admin panel.");
-    }
+      // Reject users without email (additional safety check)
+      if (!user.email) {
+        throw Error(
+          "Users without an email address cannot access the admin panel.",
+        );
+      }
 
-    // Check if email domain is allowed
-    const emailDomain = user.email.split("@")[1]?.toLowerCase();
-    if (!emailDomain || !ALLOWED_DOMAINS.includes(emailDomain)) {
-      throw Error(`Access denied. Only users from the following domains are allowed: ${ALLOWED_DOMAINS.join(", ")}`);
-    }
+      // Check if email domain is allowed
+      const emailDomain = user.email.split("@")[1]?.toLowerCase();
+      if (!emailDomain || !ALLOWED_DOMAINS.includes(emailDomain)) {
+        throw Error(
+          `Access denied. Only users from the following domains are allowed: ${ALLOWED_DOMAINS.join(", ")}`,
+        );
+      }
 
-    console.log("🔐 Admin access granted to:", user.email);
-    return true;
-  }, []);
+      console.log("🔐 Admin access granted to:", user.email);
+      return true;
+    },
+    [],
+  );
 
   // Initialize Firebase with a different app name to avoid conflicts
-  const { firebaseApp, firebaseConfigLoading, configError } = useInitialiseFirebase({
-    firebaseConfig,
-    name: "firecms-admin", // Use a different app name to avoid conflicts with main app
-  });
+  const { firebaseApp, firebaseConfigLoading, configError } =
+    useInitialiseFirebase({
+      firebaseConfig,
+      name: "firecms-admin", // Use a different app name to avoid conflicts with main app
+    });
 
   // Track App Check initialization
   const [appCheckReady, setAppCheckReady] = useState(false);
@@ -103,7 +110,9 @@ export function FireCMSAdmin() {
     if (firebaseApp && !appCheckReady) {
       try {
         initializeAppCheck(firebaseApp, {
-          provider: new ReCaptchaEnterpriseProvider("6LcQeC4sAAAAAIcJR51ruWdvVg16DQYMgNsrmLsT"),
+          provider: new ReCaptchaEnterpriseProvider(
+            "6LcQeC4sAAAAAIcJR51ruWdvVg16DQYMgNsrmLsT",
+          ),
           isTokenAutoRefreshEnabled: true,
         });
         setAppCheckReady(true);
@@ -141,16 +150,13 @@ export function FireCMSAdmin() {
   });
 
   // Validate authenticator - reject anonymous users
-  const {
-    canAccessMainView,
-    authLoading,
-    notAllowedError,
-  } = useValidateAuthenticator({
-    authController,
-    authenticator: myAuthenticator,
-    dataSourceDelegate: firestoreDelegate,
-    storageSource,
-  });
+  const { canAccessMainView, authLoading, notAllowedError } =
+    useValidateAuthenticator({
+      authController,
+      authenticator: myAuthenticator,
+      dataSourceDelegate: firestoreDelegate,
+      storageSource,
+    });
 
   if (firebaseConfigLoading || authLoading || !appCheckReady) {
     return (
@@ -197,7 +203,9 @@ export function FireCMSAdmin() {
               authController={authController}
               firebaseApp={firebaseApp!}
               signInOptions={signInOptions}
-              notAllowedError={notAllowedError || context.authController.authError}
+              notAllowedError={
+                notAllowedError || context.authController.authError
+              }
               logo={schoolfruitLogo}
             />
           );
@@ -205,7 +213,38 @@ export function FireCMSAdmin() {
 
         return (
           <Scaffold autoOpenDrawer={false} logo={schoolfruitLogo}>
-            <AppBar title="Fruitvriendjes Admin" includeModeToggle={false} />
+            <AppBar
+              title="Fruitvriendjes Admin"
+              includeModeToggle={false}
+              endAdornment={
+                <a
+                  href="https://schoolfruit-handleiding.web.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    padding: "8px 16px",
+                    color: "inherit",
+                    textDecoration: "none",
+                    borderRadius: "4px",
+                    transition: "background-color 0.2s",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    fontWeight: 500,
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor =
+                      "rgba(0, 0, 0, 0.04)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "transparent")
+                  }
+                >
+                  <span>📖</span>
+                  <span>Handleiding</span>
+                </a>
+              }
+            />
             <Drawer />
             <NavigationRoutes />
             <SideDialogs />

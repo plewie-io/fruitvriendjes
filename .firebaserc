@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "fruitvriendjes-35c8c"
-  }
+  },
+  "targets": {
+    "fruitvriendjes-35c8c": {
+      "hosting": {
+        "app": [
+          "fruitvriendjes-35c8c"
+        ],
+        "handleiding": [
+          "schoolfruit-handleiding"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

@@ -11,7 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci && npm run build
+
+      # Build main app
+      - name: Install and build main app
+        run: npm ci && npm run build
+
+      # Build handleiding
+      - name: Install and build handleiding
+        run: |
+          cd handleiding
+          npm ci
+          npm run build
+          cd ..
+
+      # Deploy both sites
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}

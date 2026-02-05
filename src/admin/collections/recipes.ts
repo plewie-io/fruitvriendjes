@@ -15,17 +15,17 @@ export type Recipe = {
 export const recipesCollection = buildCollection<Recipe>({
   id: "recipes",
   path: "recipes",
-  name: "Recipes",
-  singularName: "Recipe",
+  name: "Recepten",
+  singularName: "Recept",
   group: "Data",
   icon: "Restaurant",
-  description: "Generated recipes from the Fruitvriendjes app",
+  description: "Recepten gegenereerd door AI tijdens een recepten chat sessie",
   defaultSize: "xs",
   initialSort: ["createdAt", "desc"],
   textSearchEnabled: false,
   properties: {
     sessionId: buildProperty({
-      name: "Session",
+      name: "Sessie",
       dataType: "string",
       readOnly: true,
       // Use string as reference to sessions collection
@@ -36,30 +36,32 @@ export const recipesCollection = buildCollection<Recipe>({
       },
     }),
     userId: buildProperty({
-      name: "User ID",
+      name: "Gebruikers-ID",
       dataType: "string",
       readOnly: true,
+      hideFromCollection: true,
     }),
     ingredients: buildProperty({
-      name: "Ingredients",
+      name: "Ingrediënten",
       dataType: "string",
       multiline: true,
       validation: { required: true },
     }),
     recipe: buildProperty({
-      name: "Recipe",
+      name: "Recept",
       dataType: "string",
       multiline: true,
       markdown: true,
       validation: { required: true },
     }),
     imagePrompt: buildProperty({
-      name: "Image Prompt",
+      name: "Afbeelding prompt",
       dataType: "string",
       multiline: true,
+      hideFromCollection: true,
     }),
     imageUrl: buildProperty({
-      name: "Image",
+      name: "Afbeelding",
       dataType: "string",
       storage: {
         mediaType: "image",
@@ -68,16 +70,17 @@ export const recipesCollection = buildCollection<Recipe>({
       },
     }),
     isModification: buildProperty({
-      name: "Is Modification",
+      name: "Is aanpassing",
       dataType: "boolean",
       columnWidth: 120,
     }),
     previousRecipeId: buildProperty({
-      name: "Previous Recipe ID",
+      name: "Vorige recept-ID",
       dataType: "string",
+      hideFromCollection: true,
     }),
     createdAt: buildProperty({
-      name: "Created At",
+      name: "Aangemaakt op",
       dataType: "date",
       readOnly: true,
       mode: "date_time",

@@ -10,21 +10,22 @@ export type Session = {
 export const sessionsCollection = buildCollection<Session>({
   id: "sessions",
   path: "sessions",
-  name: "Sessions",
-  singularName: "Session",
+  name: "Sessies",
+  singularName: "Sessie",
   group: "Data",
   icon: "People",
-  description: "User sessions for the Fruitvriendjes app",
+  description: "Recepten chat sessies - elke sessie is een recepten chat",
   defaultSize: "xs",
   initialSort: ["createdAt", "desc"],
   properties: {
     userId: buildProperty({
-      name: "User ID",
+      name: "Gebruikers-ID",
       dataType: "string",
       readOnly: true,
+      hideFromCollection: true,
     }),
     fruitCharacter: buildProperty({
-      name: "Fruit Character",
+      name: "Fruitpersonage",
       dataType: "string",
       enumValues: {
         "mandy-mandarijn": "Mandy Mandarijn",
@@ -32,13 +33,13 @@ export const sessionsCollection = buildCollection<Session>({
       },
     }),
     createdAt: buildProperty({
-      name: "Created At",
+      name: "Aangemaakt op",
       dataType: "date",
       readOnly: true,
       mode: "date_time",
     }),
     updatedAt: buildProperty({
-      name: "Updated At",
+      name: "Bijgewerkt op",
       dataType: "date",
       readOnly: true,
       mode: "date_time",
