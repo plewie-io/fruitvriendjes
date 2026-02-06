@@ -132,7 +132,7 @@ export const SchoolfruitChatbot = () => {
       {/* Floating Chat Button - larger */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 z-50 w-48 h-14 rounded-xl bg-background shadow-lg hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden border-2 border-schoolfruit-yellow ${isOpen ? 'scale-0' : 'scale-100'}`}
+        className={`fixed bottom-6 right-6 z-50 w-48 h-14 rounded-xl bg-background shadow-lg hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden border-2 border-mandy-orange ${isOpen ? 'scale-0' : 'scale-100'}`}
         aria-label="Open chat"
       >
         <img src={annieAnanas} alt="Annie de Ananas" className="w-10 h-10 object-contain" />
@@ -144,20 +144,20 @@ export const SchoolfruitChatbot = () => {
         className={`fixed bottom-6 right-6 z-50 w-[400px] sm:w-[440px] h-[560px] bg-background rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 ${isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}
       >
         {/* Header */}
-        <div className="bg-schoolfruit-yellow text-foreground p-4 flex items-center justify-between">
+        <div className="bg-mandy-orange text-primary-foreground p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-background/50 rounded-full flex items-center justify-center overflow-hidden">
               <img src={annieAnanas} alt="Annie de Ananas" className="w-10 h-10 object-contain" />
             </div>
             <div>
               <h3 className="font-bold">Annie de Ananas</h3>
-              <p className="text-xs text-foreground/70">Stel je vraag!</p>
+              <p className="text-xs text-primary-foreground/70">Stel je vraag!</p>
             </div>
           </div>
           <div className="flex items-center gap-1">
             <button
               onClick={handleNewChat}
-              className="p-1 hover:bg-foreground/10 rounded-full transition-colors"
+              className="p-1 hover:bg-primary-foreground/10 rounded-full transition-colors"
               aria-label="Nieuw gesprek"
               title="Nieuw gesprek"
             >
@@ -165,7 +165,7 @@ export const SchoolfruitChatbot = () => {
             </button>
             <button
               onClick={() => setIsOpen(false)}
-              className="p-1 hover:bg-foreground/10 rounded-full transition-colors"
+              className="p-1 hover:bg-primary-foreground/10 rounded-full transition-colors"
               aria-label="Sluit chat"
             >
               <X className="w-5 h-5" />
@@ -174,7 +174,7 @@ export const SchoolfruitChatbot = () => {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-muted/30">
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-mandy-orange-light">
           {messages.map((message, index) => (
             <div
               key={index}
@@ -183,7 +183,7 @@ export const SchoolfruitChatbot = () => {
               <div
                 className={`max-w-[80%] p-3 rounded-2xl text-sm ${
                   message.role === 'user'
-                    ? 'bg-schoolfruit-yellow text-foreground rounded-br-md'
+                    ? 'bg-mandy-orange text-primary-foreground rounded-br-md'
                     : 'bg-background text-foreground shadow-sm rounded-bl-md'
                 }`}
               >
@@ -203,7 +203,7 @@ export const SchoolfruitChatbot = () => {
             <div className="flex justify-start">
               <button
                 onClick={() => handleSend(SUGGESTED_QUESTION)}
-                className="text-sm px-4 py-2 rounded-full border border-schoolfruit-yellow text-foreground hover:bg-schoolfruit-yellow/20 transition-colors"
+                className="text-sm px-4 py-2 rounded-full border border-mandy-orange text-foreground hover:bg-mandy-orange/20 transition-colors"
               >
                 💡 {SUGGESTED_QUESTION}
               </button>
@@ -213,7 +213,7 @@ export const SchoolfruitChatbot = () => {
           {(isLoading || isInitializing) && (
             <div className="flex justify-start">
               <div className="bg-background p-3 rounded-2xl rounded-bl-md shadow-sm">
-                <Loader2 className="w-5 h-5 animate-spin text-schoolfruit-yellow" />
+                <Loader2 className="w-5 h-5 animate-spin text-mandy-orange" />
               </div>
             </div>
           )}
@@ -229,13 +229,13 @@ export const SchoolfruitChatbot = () => {
               onKeyPress={handleKeyPress}
               placeholder="Typ je vraag..."
               disabled={isLoading || isInitializing}
-              className="flex-1 rounded-full border-muted focus:border-schoolfruit-yellow"
+              className="flex-1 rounded-full border-muted focus:border-mandy-orange"
             />
             <Button
               onClick={() => handleSend()}
               disabled={!input.trim() || isLoading || isInitializing}
               size="icon"
-              className="rounded-full bg-schoolfruit-yellow hover:bg-schoolfruit-yellow/90 text-foreground"
+              className="rounded-full bg-mandy-orange hover:bg-mandy-orange/90 text-primary-foreground"
             >
               <Send className="w-4 h-4" />
             </Button>
