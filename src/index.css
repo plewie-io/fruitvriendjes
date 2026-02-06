@@ -17,6 +17,7 @@ All colors MUST be HSL.
     
     /* Mandy orange #F08400 */
     --mandy-orange: 33 100% 47%;
+    --mandy-orange-light: 33 100% 92%;
 
     /* Card colors with soft warmth */
     --card: 0 0% 100%;
