@@ -17,7 +17,7 @@ const INITIAL_MESSAGE: Message = {
   content: 'Hallo! 👋 Ik ben Annie de Ananas! Ik beantwoord al je vragen over schoolfruit en gezonde voeding!' 
 };
 
-const SUGGESTED_QUESTION = 'Wat is Fruitvriendjes?';
+const SUGGESTED_QUESTION = 'Ik wil graag aan de slag met schoolfruit';
 
 export const SchoolfruitChatbot = () => {
   const isMobile = useIsMobile();
