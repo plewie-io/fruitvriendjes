@@ -1,40 +1,168 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
 import Footer from "@/components/Footer";
 import { SchoolfruitChatbot } from "@/components/SchoolfruitChatbot";
-import { ArrowUp, Loader2 } from "lucide-react";
-import { signInAndCreateSession } from "@/lib/firebase";
-import mandarijn from "@/assets/mandarijn.png";
-import cookingFamily from "@/assets/cooking-family.png";
+import { Loader2, ChefHat, Undo2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { generateRecipe as generateRecipeAI, generateRecipePhoto, modifyRecipe, saveRecipeGeneration, getCurrentSessionId, signInAndCreateSession } from "@/lib/firebase";
+import ReactMarkdown from "react-markdown";
+import recipeBackground from "@/assets/recipe-background.jpg";
+
+type RecipeHistoryItem = {
+  recipe: string;
+  image: string | null;
+  recipeId: string | null;
+};
+
 const Index = () => {
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
   const [showSafetyDialog, setShowSafetyDialog] = useState(() => {
     return !localStorage.getItem('safetyDialogShown');
   });
+  const [ingredients, setIngredients] = useState("");
+  const [recipe, setRecipe] = useState<string | null>(null);
+  const [recipeImage, setRecipeImage] = useState<string | null>(null);
+  const [recipeHistory, setRecipeHistory] = useState<RecipeHistoryItem[]>([]);
+  const [currentRecipeId, setCurrentRecipeId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
+  const [isModifyMode, setIsModifyMode] = useState(false);
+  const [sessionReady, setSessionReady] = useState(false);
+  const { toast } = useToast();
+
   const handleDialogClose = () => {
     localStorage.setItem('safetyDialogShown', 'true');
     setShowSafetyDialog(false);
   };
-  const goToRecipe = async (fruitCharacter: string = "mandy-mandarijn") => {
-    setIsLoading(true);
-    try {
-      await signInAndCreateSession(fruitCharacter);
-      navigate("/recept");
-    } catch (error) {
-      console.error("Error starting session:", error);
-      // Still navigate even if session creation fails
-      navigate("/recept");
-    } finally {
-      setIsLoading(false);
+
+  // Auto-initialize session on mount
+  useEffect(() => {
+    const initSession = async () => {
+      try {
+        await signInAndCreateSession("mandy-mandarijn");
+        setSessionReady(true);
+      } catch (error) {
+        console.error("Error starting session:", error);
+        setSessionReady(true); // Still allow usage
+      }
+    };
+    initSession();
+  }, []);
+
+  const handleUndo = () => {
+    if (recipeHistory.length === 0) return;
+    const previousVersion = recipeHistory[recipeHistory.length - 1];
+    setRecipe(previousVersion.recipe);
+    setRecipeImage(previousVersion.image);
+    setCurrentRecipeId(previousVersion.recipeId);
+    setRecipeHistory(prev => prev.slice(0, -1));
+    toast({ title: "Vorige versie hersteld", description: "Je ziet nu het vorige recept." });
+  };
+
+  const handleSubmit = async () => {
+    if (!ingredients.trim()) {
+      toast({
+        title: isModifyMode ? "Wat wil je aanpassen?" : "Vergeet je ingrediënten niet!",
+        description: isModifyMode ? "Typ eerst wat je wilt veranderen." : "Typ eerst wat groenten of fruit in.",
+        variant: "destructive"
+      });
+      return;
+    }
+    if (isModifyMode && recipe) {
+      await handleModifyRecipe();
+    } else {
+      await generateRecipe();
     }
   };
-  return <div className="min-h-screen bg-gradient-hero flex flex-col">
+
+  const handleModifyRecipe = async () => {
+    if (!recipe) return;
+    const previousRecipe = recipe;
+    const previousIngredients = ingredients.trim();
+    setRecipeHistory(prev => [...prev, { recipe, image: recipeImage, recipeId: currentRecipeId }]);
+    setRecipe(null);
+    setRecipeImage(null);
+    setLoading(true);
+    try {
+      const recipeResponse = await modifyRecipe(previousRecipe, previousIngredients);
+      setRecipe(recipeResponse.recipe);
+      setIngredients("");
+      let newImageUrl: string | null = null;
+      if (recipeResponse.isValidRequest && recipeResponse.imagePrompt) {
+        toast({ title: "Recept aangepast! 🎉", description: "Nu maken we een nieuwe foto..." });
+        setImageLoading(true);
+        newImageUrl = await generateRecipePhoto(recipeResponse.imagePrompt);
+        setRecipeImage(newImageUrl);
+        setImageLoading(false);
+        toast({ title: "Foto klaar! 📸", description: "Veel kookplezier!" });
+      } else {
+        toast({ title: "Recept aangepast! 🎉", description: "Veel kookplezier!" });
+      }
+      if (getCurrentSessionId()) {
+        try {
+          const newRecipeId = await saveRecipeGeneration(previousIngredients, recipeResponse.recipe, recipeResponse.imagePrompt || "", newImageUrl, true, currentRecipeId);
+          setCurrentRecipeId(newRecipeId);
+        } catch (saveError) {
+          console.error("Error saving recipe:", saveError);
+        }
+      }
+    } catch (error: any) {
+      console.error("Error modifying recipe:", error);
+      toast({ title: "Oeps!", description: "Er ging iets mis. Probeer het nog eens.", variant: "destructive" });
+    } finally {
+      setLoading(false);
+      setImageLoading(false);
+    }
+  };
+
+  const generateRecipe = async () => {
+    if (!ingredients.trim()) return;
+    const userIngredients = ingredients.trim();
+    setLoading(true);
+    setRecipe(null);
+    setRecipeImage(null);
+    setRecipeHistory([]);
+    setCurrentRecipeId(null);
+    try {
+      const recipeResponse = await generateRecipeAI(userIngredients, "mandy-mandarijn");
+      setRecipe(recipeResponse.recipe);
+      setIngredients("");
+      setIsModifyMode(true);
+      let imageUrl: string | null = null;
+      if (recipeResponse.isValidRequest && recipeResponse.imagePrompt) {
+        toast({ title: "Recept klaar! 🎉", description: "Nu maken we een mooie foto..." });
+        setImageLoading(true);
+        imageUrl = await generateRecipePhoto(recipeResponse.imagePrompt);
+        setRecipeImage(imageUrl);
+        setImageLoading(false);
+        toast({ title: "Foto klaar! 📸", description: "Veel kookplezier!" });
+      } else {
+        toast({ title: "Recept klaar! 🎉", description: "Veel kookplezier!" });
+      }
+      if (getCurrentSessionId()) {
+        try {
+          const newRecipeId = await saveRecipeGeneration(userIngredients, recipeResponse.recipe, recipeResponse.imagePrompt || "", imageUrl, false, null);
+          setCurrentRecipeId(newRecipeId);
+        } catch (saveError) {
+          console.error("Error saving recipe:", saveError);
+        }
+      }
+    } catch (error: any) {
+      console.error("Error generating recipe:", error);
+      toast({ title: "Oeps!", description: "Er ging iets mis. Probeer het nog eens.", variant: "destructive" });
+    } finally {
+      setLoading(false);
+      setImageLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
       <SchoolfruitsHeader />
+
       <AlertDialog open={showSafetyDialog} onOpenChange={handleDialogClose}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -56,69 +184,117 @@ const Index = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      <div className="container mx-auto px-4 py-6 md:py-12">
-        <div className="text-center mb-6 md:mb-12">
-          <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-4">De Fruitvriendjes!</h1>
-          <p className="text-lg md:text-2xl text-muted-foreground animate-fade-in">Klik op Mandy om samen met je kind (of kinderen) een lekker recept te maken!</p>
-        </div>
+      <main className="flex-1 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${recipeBackground})` }}>
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-2xl mx-auto flex flex-col items-center">
+            <div className="text-center mb-8 bg-white/80 backdrop-blur-sm rounded-2xl p-4 w-full max-w-xl">
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-1">
+                Hoi, ik ben Mandy Mandarijn!
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Vertel me welke groenten of fruit je hebt, en ik maak er een leuk recept van!
+              </p>
+            </div>
 
-        <div className="flex justify-center max-w-4xl mx-auto">
-          <Card className={`overflow-hidden cursor-pointer transition-all hover:scale-105 hover:shadow-float animate-fade-in w-full border-4 border-card ${isLoading ? 'pointer-events-none opacity-75' : ''}`} onClick={() => goToRecipe("mandy-mandarijn")}>
-            <div className="relative flex flex-col md:flex-row items-center justify-center md:justify-between px-4 md:px-8 py-6" style={{
-            backgroundImage: `linear-gradient(rgba(240, 132, 0, 0.85), rgba(240, 132, 0, 0.85)), url(${cookingFamily})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}>
-              <div className="flex flex-col items-center z-10 mb-6 md:mb-0">
-                <Button className="text-lg md:text-xl py-4 md:py-6 px-8 md:px-12 bg-white/70 backdrop-blur-sm text-foreground hover:bg-white/80 border-4 border-white/50" size="lg" disabled={isLoading}>
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      Even geduld...
-                    </>
-                  ) : (
-                    "Kook met mij!"
-                  )}
-                </Button>
-                {!isLoading && (
-                  <button onClick={() => goToRecipe("mandy-mandarijn")} className="flex flex-col items-center gap-1 mt-4 text-card hover:scale-110 transition-transform animate-bounce">
-                    <ArrowUp className="w-10 md:w-12 h-10 md:h-12" />
-                    <span className="text-base md:text-lg font-semibold">Klik hier!</span>
-                  </button>
+            <Card className="p-8 shadow-playful w-full max-w-xl">
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="ingredients" className="block text-sm font-medium mb-2">
+                    {isModifyMode ? "Wat wil je aanpassen?" : "Welke ingrediënten heb je?"}
+                  </label>
+                  <Input
+                    id="ingredients"
+                    value={ingredients}
+                    onChange={e => setIngredients(e.target.value)}
+                    placeholder={isModifyMode ? "Bijv: maak het vegetarisch, voeg noten toe..." : "Bijv: appels, bananen, aardbeien..."}
+                    className="text-lg"
+                    disabled={loading || imageLoading}
+                    onKeyDown={e => {
+                      if (e.key === "Enter" && !loading && !imageLoading) {
+                        handleSubmit();
+                      }
+                    }}
+                  />
+                </div>
+
+                {!loading && !imageLoading ? (
+                  <>
+                    <Button onClick={handleSubmit} className="w-full text-lg py-6" size="lg">
+                      <ChefHat className="mr-2 h-5 w-5" />
+                      {isModifyMode ? "Pas recept aan!" : "Maak een recept!"}
+                    </Button>
+
+                    {isModifyMode && (
+                      <div className="flex gap-2">
+                        {recipeHistory.length > 0 && (
+                          <Button variant="outline" onClick={handleUndo} className="flex-1">
+                            <Undo2 className="mr-2 h-4 w-4" />
+                            Vorige versie
+                          </Button>
+                        )}
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setRecipe(null);
+                            setRecipeImage(null);
+                            setRecipeHistory([]);
+                            setCurrentRecipeId(null);
+                            setIsModifyMode(false);
+                            setIngredients("");
+                          }}
+                          className="flex-1"
+                        >
+                          Nieuw recept maken
+                        </Button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <Button disabled className="w-full text-lg py-6" size="lg">
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    {imageLoading ? "Foto maken..." : (isModifyMode ? "Recept aanpassen..." : "Recept maken...")}
+                  </Button>
                 )}
               </div>
-              <div className="flex flex-col items-center z-10">
-                <div className="bg-white/70 backdrop-blur-sm w-56 h-56 md:w-72 md:h-72 rounded-lg flex items-center justify-center">
-                  <img src={mandarijn} alt="Mandy Mandarijn" className="w-80 h-80 md:w-[28rem] md:h-[28rem] object-contain drop-shadow-lg -ml-12 md:-ml-20" />
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-card mt-4">Mandy Mandarijn</h3>
-              </div>
-            </div>
-          </Card>
-        </div>
+            </Card>
 
-        <div className="mt-16 max-w-2xl mx-auto">
-          <Card className="p-6 bg-muted/50">
-            <h2 className="text-2xl font-bold mb-4 text-center">Hoe werkt het?</h2>
-            <ol className="space-y-3 text-lg">
-              <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">1</span>
-                <span>Klik op "Kook met mij!" en de nieuwe pagina opent vanzelf</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">2</span>
-                <span>Typ welke groenten of fruit je hebt</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">3</span>
-                <span>Krijg een leuk en lekker recept om te maken!</span>
-              </li>
-            </ol>
-          </Card>
+            {recipe && (
+              <Card className="mt-6 p-6 shadow-float animate-fade-in bg-card">
+                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                  <ChefHat className="h-6 w-6 text-primary" />
+                  Jouw recept:
+                </h2>
+                {imageLoading && (
+                  <div className="flex items-center justify-center py-8 mb-4 bg-gray-100 rounded-xl">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary mr-2" />
+                    <span className="text-muted-foreground">Foto maken...</span>
+                  </div>
+                )}
+                {recipeImage && (
+                  <div className="mb-4">
+                    <img src={recipeImage} alt="Recept foto" className="w-full rounded-xl shadow-md" />
+                  </div>
+                )}
+                <div className="prose prose-lg max-w-none">
+                  <ReactMarkdown>{recipe}</ReactMarkdown>
+                </div>
+              </Card>
+            )}
+
+            <div className="mt-8 p-4 bg-white/80 backdrop-blur-sm rounded-2xl w-full max-w-xl">
+              <p className="text-sm text-center text-foreground">
+                ⚠️ Belangrijk: hou altijd toezicht op je kind (of kinderen)! Kook nooit alleen.
+                <strong> Belangrijk:</strong> Vraag altijd een volwassene om hulp bij het koken!
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
+
       <Footer />
       <SchoolfruitChatbot />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
