@@ -76,6 +76,6 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground font-fredoka;
+    @apply bg-background text-foreground font-poster;
   }
 }
