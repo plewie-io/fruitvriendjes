@@ -188,10 +188,10 @@ const Index = () => {
       <div className="relative">
         <div className="bg-background py-12 px-4">
           <div className="container mx-auto max-w-2xl">
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-1 font-fredoka">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-1 font-poster uppercase">
               MANDY MANDARIJN
             </h1>
-            <p className="text-lg text-white font-bold font-fredoka">
+            <p className="text-lg text-white font-bold font-poster uppercase">
               IK HELP JOU IN DE KEUKEN!
             </p>
           </div>

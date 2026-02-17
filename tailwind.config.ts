@@ -28,6 +28,7 @@ export default {
     extend: {
       fontFamily: {
         'fredoka': ['Fredoka', 'sans-serif'],
+        'poster': ['"Poster Cut Neue"', 'sans-serif'],
         'headers': ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
