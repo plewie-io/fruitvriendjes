@@ -10,7 +10,8 @@ import { Loader2, ChefHat, Undo2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateRecipe as generateRecipeAI, generateRecipePhoto, modifyRecipe, saveRecipeGeneration, getCurrentSessionId, signInAndCreateSession } from "@/lib/firebase";
 import ReactMarkdown from "react-markdown";
-
+import golfje from "@/assets/golfje-appel-dubbel.png";
+import masterchefMandy from "@/assets/masterchef-mandy.png";
 
 type RecipeHistoryItem = {
   recipe: string;
@@ -33,12 +34,12 @@ const Index = () => {
   const [sessionReady, setSessionReady] = useState(false);
   const { toast } = useToast();
 
+  // ... keep existing code (handleDialogClose, useEffect, handleUndo, handleSubmit, handleModifyRecipe, generateRecipe)
   const handleDialogClose = () => {
     localStorage.setItem('safetyDialogShown', 'true');
     setShowSafetyDialog(false);
   };
 
-  // Auto-initialize session on mount
   useEffect(() => {
     const initSession = async () => {
       try {
@@ -46,7 +47,7 @@ const Index = () => {
         setSessionReady(true);
       } catch (error) {
         console.error("Error starting session:", error);
-        setSessionReady(true); // Still allow usage
+        setSessionReady(true);
       }
     };
     initSession();
@@ -184,57 +185,66 @@ const Index = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Green banner with wave */}
-      <div className="relative">
-        <div className="bg-background py-12 px-4">
-          <div className="container mx-auto max-w-2xl">
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-1 font-poster uppercase">
-              MANDY MANDARIJN
-            </h1>
-            <p className="text-lg text-white font-bold font-poster uppercase">
-              IK HELP JOU IN DE KEUKEN!
-            </p>
-          </div>
+      {/* Green banner */}
+      <div className="bg-background py-12 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-1 font-poster uppercase">
+            MANDY MANDARIJN
+          </h1>
+          <p className="text-lg text-white font-bold font-poster uppercase">
+            IK HELP JOU IN DE KEUKEN!
+          </p>
         </div>
-        {/* Wavy bottom edge */}
-        <div className="relative -mt-1">
-          <svg viewBox="0 0 1440 40" className="w-full block" preserveAspectRatio="none">
-            <path
-              d="M0,0 C60,30 120,40 180,30 C240,20 300,10 360,20 C420,30 480,40 540,30 C600,20 660,10 720,20 C780,30 840,40 900,30 C960,20 1020,10 1080,20 C1140,30 1200,40 1260,30 C1320,20 1380,10 1440,20 L1440,0 Z"
-              fill="hsl(68, 65%, 48%)"
-            />
-          </svg>
-        </div>
+      </div>
+      {/* Golfje transition */}
+      <div className="w-full -mt-1">
+        <img src={golfje} alt="" className="w-full block" aria-hidden="true" />
       </div>
 
       <main className="flex-1 bg-[#FAF8F5]">
         <div className="container mx-auto px-4 py-8">
-          <div className="max-w-2xl mx-auto flex flex-col items-center">
+          <div className="max-w-4xl mx-auto">
 
-            <Card className="p-8 shadow-playful w-full max-w-xl bg-white">
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="ingredients" className="block text-sm font-medium mb-2">
-                    {isModifyMode ? "Wat wil je aanpassen?" : "Welke ingrediënten heb je?"}
-                  </label>
-                  <Input
-                    id="ingredients"
-                    value={ingredients}
-                    onChange={e => setIngredients(e.target.value)}
-                    placeholder={isModifyMode ? "Bijv: maak het vegetarisch, voeg noten toe..." : "Bijv: appels, bananen, aardbeien..."}
-                    className="text-lg"
-                    disabled={loading || imageLoading}
-                    onKeyDown={e => {
-                      if (e.key === "Enter" && !loading && !imageLoading) {
-                        handleSubmit();
-                      }
-                    }}
-                  />
-                </div>
+            {/* Intro section with Mandy */}
+            <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
+              <p className="text-sm md:text-base font-bold uppercase leading-relaxed md:flex-1">
+                Jij vertelt welke groente, fruit en andere ingrediënten je in huis hebt en ik bedenk daar een leuk en lekker recept mee dat je makkelijk kunt maken. Zo maken we samen een leuke maaltijd van wat er al in de keuken ligt!
+              </p>
+              <img
+                src={masterchefMandy}
+                alt="Masterchef Mandy Mandarijn"
+                className="w-40 h-40 md:w-48 md:h-48 object-contain"
+              />
+            </div>
 
+            {/* Recipe input section */}
+            <div className="max-w-xl mx-auto text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold uppercase mb-4 font-poster">
+                {isModifyMode ? "Wat wil je aanpassen?" : "Wat zullen we vandaag maken?"}
+              </h2>
+
+              <Input
+                id="ingredients"
+                value={ingredients}
+                onChange={e => setIngredients(e.target.value)}
+                placeholder={isModifyMode ? "Bijv: maak het vegetarisch, voeg noten toe..." : "Typ hier..."}
+                className="text-lg text-center border-2 border-mandy-orange text-mandy-orange placeholder:text-mandy-orange/60 bg-white py-6 font-poster"
+                disabled={loading || imageLoading}
+                onKeyDown={e => {
+                  if (e.key === "Enter" && !loading && !imageLoading) {
+                    handleSubmit();
+                  }
+                }}
+              />
+
+              <p className="text-sm mt-3 text-foreground">
+                Vertel mij wat je wilt eten óf welke groente, fruit en andere ingrediënten je al in huis heb, dan maak ik er een lekker recept van!
+              </p>
+
+              <div className="mt-4 space-y-2">
                 {!loading && !imageLoading ? (
                   <>
-                    <Button onClick={handleSubmit} className="w-full text-lg py-6" size="lg">
+                    <Button onClick={handleSubmit} className="w-full text-lg py-6 bg-mandy-orange hover:bg-mandy-orange/90 font-poster uppercase" size="lg">
                       <ChefHat className="mr-2 h-5 w-5" />
                       {isModifyMode ? "Pas recept aan!" : "Maak een recept!"}
                     </Button>
@@ -242,7 +252,7 @@ const Index = () => {
                     {isModifyMode && (
                       <div className="flex gap-2">
                         {recipeHistory.length > 0 && (
-                          <Button variant="outline" onClick={handleUndo} className="flex-1">
+                          <Button variant="outline" onClick={handleUndo} className="flex-1 border-mandy-orange text-mandy-orange hover:bg-mandy-orange/10">
                             <Undo2 className="mr-2 h-4 w-4" />
                             Vorige versie
                           </Button>
@@ -257,7 +267,7 @@ const Index = () => {
                             setIsModifyMode(false);
                             setIngredients("");
                           }}
-                          className="flex-1"
+                          className="flex-1 border-mandy-orange text-mandy-orange hover:bg-mandy-orange/10"
                         >
                           Nieuw recept maken
                         </Button>
@@ -265,23 +275,24 @@ const Index = () => {
                     )}
                   </>
                 ) : (
-                  <Button disabled className="w-full text-lg py-6" size="lg">
+                  <Button disabled className="w-full text-lg py-6 bg-mandy-orange font-poster uppercase" size="lg">
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                     {imageLoading ? "Foto maken..." : (isModifyMode ? "Recept aanpassen..." : "Recept maken...")}
                   </Button>
                 )}
               </div>
-            </Card>
+            </div>
 
+            {/* Recipe result */}
             {recipe && (
-              <Card className="mt-6 p-6 shadow-float animate-fade-in bg-card">
-                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                  <ChefHat className="h-6 w-6 text-primary" />
+              <Card className="max-w-xl mx-auto p-6 shadow-float animate-fade-in bg-white mb-8">
+                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 font-poster">
+                  <ChefHat className="h-6 w-6 text-mandy-orange" />
                   Jouw recept:
                 </h2>
                 {imageLoading && (
-                  <div className="flex items-center justify-center py-8 mb-4 bg-gray-100 rounded-xl">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary mr-2" />
+                  <div className="flex items-center justify-center py-8 mb-4 bg-mandy-orange-light rounded-xl">
+                    <Loader2 className="h-8 w-8 animate-spin text-mandy-orange mr-2" />
                     <span className="text-muted-foreground">Foto maken...</span>
                   </div>
                 )}
@@ -296,15 +307,27 @@ const Index = () => {
               </Card>
             )}
 
-            <div className="mt-8 p-4 bg-white rounded-2xl w-full max-w-xl">
-              <p className="text-sm text-center text-foreground">
-                ⚠️ Belangrijk: hou altijd toezicht op je kind (of kinderen)! Kook nooit alleen.
-                <strong> Belangrijk:</strong> Vraag altijd een volwassene om hulp bij het koken!
+            {/* Tip */}
+            <div className="max-w-xl mx-auto text-center mb-8">
+              <p className="text-xs font-bold uppercase">
+                Tip: Is het recept nog niet naar wens? Typ in wat je wilt wijzigen en Mandy past het aan!
               </p>
             </div>
           </div>
         </div>
       </main>
+
+      {/* Bottom green section with golfje on top */}
+      <div className="w-full rotate-180 -mb-1">
+        <img src={golfje} alt="" className="w-full block" aria-hidden="true" />
+      </div>
+      <div className="bg-background py-12 px-4">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-white font-poster uppercase">
+            Op zoek naar meer inspiratie? Bekijk onze recepten!
+          </h2>
+        </div>
+      </div>
 
       <Footer />
       <SchoolfruitChatbot />
