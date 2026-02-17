@@ -181,13 +181,13 @@ const Index = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction className="bg-background hover:bg-background/90 text-foreground">Begrepen!</AlertDialogAction>
+            <AlertDialogAction className="bg-brand-green hover:bg-brand-green/90 text-white">Begrepen!</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
       {/* Green banner */}
-      <div className="bg-background py-6 px-4">
+      <div className="bg-brand-green py-6 px-4">
         <div className="container mx-auto max-w-4xl">
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-1 font-poster uppercase">
             MANDY MANDARIJN
@@ -208,7 +208,7 @@ const Index = () => {
 
             {/* Intro section with Mandy */}
             <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
-              <p className="text-sm md:text-base font-bold uppercase leading-relaxed md:flex-1 text-background">
+              <p className="text-sm md:text-base font-bold uppercase leading-relaxed md:flex-1 text-brand-green">
                 Jij vertelt welke groente, fruit en andere ingrediënten je in huis hebt en ik bedenk daar een leuk en lekker recept mee dat je makkelijk kunt maken. Zo maken we samen een leuke maaltijd van wat er al in de keuken ligt!
               </p>
               <img
@@ -220,7 +220,7 @@ const Index = () => {
 
             {/* Recipe input section */}
             <div className="max-w-xl mx-auto text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold uppercase mb-4 font-poster text-background">
+              <h2 className="text-2xl md:text-3xl font-bold uppercase mb-4 font-poster text-brand-green">
                 {isModifyMode ? "Wat wil je aanpassen?" : "Wat zullen we vandaag maken?"}
               </h2>
 
@@ -310,7 +310,7 @@ const Index = () => {
 
             {/* Tip */}
             <div className="max-w-xl mx-auto text-center mb-8">
-              <p className="text-xs font-bold uppercase text-background">
+              <p className="text-xs font-bold uppercase text-brand-green">
                 Tip: Is het recept nog niet naar wens? Typ in wat je wilt wijzigen en Mandy past het aan!
               </p>
             </div>
@@ -322,7 +322,7 @@ const Index = () => {
       <div className="w-full -mb-1">
         <img src={golfjeBottom} alt="" className="w-full block" aria-hidden="true" />
       </div>
-      <div className="bg-background py-6 px-4">
+      <div className="bg-brand-green py-6 px-4">
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-white font-poster uppercase">
             Op zoek naar meer inspiratie? Bekijk onze recepten!
