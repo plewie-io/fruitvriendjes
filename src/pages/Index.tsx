@@ -12,6 +12,7 @@ import { generateRecipe as generateRecipeAI, generateRecipePhoto, modifyRecipe, 
 import ReactMarkdown from "react-markdown";
 import golfje from "@/assets/golfje-appel-dubbel.png";
 import masterchefMandy from "@/assets/masterchef-mandy.png";
+import golfjeBottom from "@/assets/golfje-bottom.png";
 
 type RecipeHistoryItem = {
   recipe: string;
@@ -317,9 +318,9 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Bottom green section with golfje on top */}
-      <div className="w-full rotate-180 -mb-1">
-        <img src={golfje} alt="" className="w-full block" aria-hidden="true" />
+      {/* Bottom golfje */}
+      <div className="w-full -mb-1">
+        <img src={golfjeBottom} alt="" className="w-full block" aria-hidden="true" />
       </div>
       <div className="bg-background py-6 px-4">
         <div className="container mx-auto max-w-4xl text-center">
