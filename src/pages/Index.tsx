@@ -10,7 +10,7 @@ import { Loader2, ChefHat, Undo2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateRecipe as generateRecipeAI, generateRecipePhoto, modifyRecipe, saveRecipeGeneration, getCurrentSessionId, signInAndCreateSession } from "@/lib/firebase";
 import ReactMarkdown from "react-markdown";
-import recipeBackground from "@/assets/recipe-background.jpg";
+
 
 type RecipeHistoryItem = {
   recipe: string;
@@ -160,7 +160,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#FAF8F5]">
       <SchoolfruitsHeader />
 
       <AlertDialog open={showSafetyDialog} onOpenChange={handleDialogClose}>
@@ -184,19 +184,34 @@ const Index = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      <main className="flex-1 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${recipeBackground})` }}>
+      {/* Green banner with wave */}
+      <div className="relative">
+        <div className="bg-background py-12 px-4">
+          <div className="container mx-auto max-w-2xl">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-1 font-fredoka">
+              MANDY MANDARIJN
+            </h1>
+            <p className="text-lg text-white font-bold font-fredoka">
+              IK HELP JOU IN DE KEUKEN!
+            </p>
+          </div>
+        </div>
+        {/* Wavy bottom edge */}
+        <div className="relative -mt-1">
+          <svg viewBox="0 0 1440 40" className="w-full block" preserveAspectRatio="none">
+            <path
+              d="M0,0 C60,30 120,40 180,30 C240,20 300,10 360,20 C420,30 480,40 540,30 C600,20 660,10 720,20 C780,30 840,40 900,30 C960,20 1020,10 1080,20 C1140,30 1200,40 1260,30 C1320,20 1380,10 1440,20 L1440,0 Z"
+              fill="hsl(68, 65%, 48%)"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <main className="flex-1 bg-[#FAF8F5]">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto flex flex-col items-center">
-            <div className="text-center mb-8 bg-white/80 backdrop-blur-sm rounded-2xl p-4 w-full max-w-xl">
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-1">
-                Hoi, ik ben Mandy Mandarijn!
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Vertel me welke groenten of fruit je hebt, en ik maak er een leuk recept van!
-              </p>
-            </div>
 
-            <Card className="p-8 shadow-playful w-full max-w-xl">
+            <Card className="p-8 shadow-playful w-full max-w-xl bg-white">
               <div className="space-y-4">
                 <div>
                   <label htmlFor="ingredients" className="block text-sm font-medium mb-2">
@@ -281,7 +296,7 @@ const Index = () => {
               </Card>
             )}
 
-            <div className="mt-8 p-4 bg-white/80 backdrop-blur-sm rounded-2xl w-full max-w-xl">
+            <div className="mt-8 p-4 bg-white rounded-2xl w-full max-w-xl">
               <p className="text-sm text-center text-foreground">
                 ⚠️ Belangrijk: hou altijd toezicht op je kind (of kinderen)! Kook nooit alleen.
                 <strong> Belangrijk:</strong> Vraag altijd een volwassene om hulp bij het koken!
