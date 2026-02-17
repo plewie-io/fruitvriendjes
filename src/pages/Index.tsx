@@ -208,7 +208,7 @@ const Index = () => {
 
             {/* Intro section with Mandy */}
             <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
-              <p className="text-sm md:text-base font-bold uppercase leading-relaxed md:flex-1">
+              <p className="text-sm md:text-base font-bold uppercase leading-relaxed md:flex-1 text-background">
                 Jij vertelt welke groente, fruit en andere ingrediënten je in huis hebt en ik bedenk daar een leuk en lekker recept mee dat je makkelijk kunt maken. Zo maken we samen een leuke maaltijd van wat er al in de keuken ligt!
               </p>
               <img
@@ -220,7 +220,7 @@ const Index = () => {
 
             {/* Recipe input section */}
             <div className="max-w-xl mx-auto text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold uppercase mb-4 font-poster">
+              <h2 className="text-2xl md:text-3xl font-bold uppercase mb-4 font-poster text-background">
                 {isModifyMode ? "Wat wil je aanpassen?" : "Wat zullen we vandaag maken?"}
               </h2>
 
@@ -310,7 +310,7 @@ const Index = () => {
 
             {/* Tip */}
             <div className="max-w-xl mx-auto text-center mb-8">
-              <p className="text-xs font-bold uppercase">
+              <p className="text-xs font-bold uppercase text-background">
                 Tip: Is het recept nog niet naar wens? Typ in wat je wilt wijzigen en Mandy past het aan!
               </p>
             </div>
