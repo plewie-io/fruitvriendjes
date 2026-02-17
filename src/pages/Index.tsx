@@ -198,8 +198,8 @@ const Index = () => {
         </div>
       </div>
       {/* Golfje transition */}
-      <div className="w-full -mt-1">
-        <img src={golfje} alt="" className="w-full block" aria-hidden="true" />
+      <div className="w-full -mt-1 rotate-180">
+        <img src={golfjeBottom} alt="" className="w-full block" aria-hidden="true" />
       </div>
 
       <main className="flex-1 bg-[#FAF8F5]">
