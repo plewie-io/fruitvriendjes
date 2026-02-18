@@ -6,20 +6,20 @@ const Footer = () => {
   return (
     <footer className="bg-background mt-auto">
       {/* Main Footer */}
-      <div className="container mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
           {/* Logo */}
           <div className="flex flex-col items-start">
             <a href="https://www.schoolfruit.nl/" target="_blank" rel="noopener noreferrer">
-              <img src={schoolfruitLogo} alt="Schoolfruit.nl" className="h-20 w-auto mb-2" />
+              <img src={schoolfruitLogo} alt="Schoolfruit.nl" className="h-14 w-auto mb-1" />
             </a>
-            <span className="text-xs text-mandy-orange font-poster uppercase italic">Voor een stralende dag</span>
+            <span className="text-[10px] text-mandy-orange font-poster uppercase italic">Voor een stralende dag</span>
           </div>
 
           {/* Eten op school */}
           <div>
-            <h4 className="font-poster uppercase text-foreground font-bold mb-3 text-sm">Eten op school</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <h4 className="font-poster uppercase text-foreground font-bold mb-2 text-xs">Eten op school</h4>
+            <ul className="space-y-1.5 text-xs text-muted-foreground">
               <li><a href="https://www.schoolfruit.nl/schoolfruit/" target="_blank" rel="noopener noreferrer" className="hover:text-mandy-orange transition-colors">Schoolfruit</a></li>
               <li><a href="https://www.schoolfruit.nl/lunchgroente/" target="_blank" rel="noopener noreferrer" className="hover:text-mandy-orange transition-colors">Lunchgroente</a></li>
               <li><a href="https://www.schoolfruit.nl/ontbijt-en-lunchboodschappen/" target="_blank" rel="noopener noreferrer" className="hover:text-mandy-orange transition-colors">Ontbijt- en Lunchboodschappen</a></li>
@@ -30,8 +30,8 @@ const Footer = () => {
 
           {/* Meer info */}
           <div>
-            <h4 className="font-poster uppercase text-foreground font-bold mb-3 text-sm">Meer info</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <h4 className="font-poster uppercase text-foreground font-bold mb-2 text-xs">Meer info</h4>
+            <ul className="space-y-1.5 text-xs text-muted-foreground">
               <li><a href="https://www.schoolfruit.nl/veelgestelde-vragen/" target="_blank" rel="noopener noreferrer" className="hover:text-mandy-orange transition-colors">Veelgestelde vragen</a></li>
               <li><a href="https://www.schoolfruit.nl/nieuws/" target="_blank" rel="noopener noreferrer" className="hover:text-mandy-orange transition-colors">Nieuws</a></li>
               <li><a href="https://www.schoolfruit.nl/recepten/" target="_blank" rel="noopener noreferrer" className="hover:text-mandy-orange transition-colors">Recepten</a></li>
@@ -42,8 +42,8 @@ const Footer = () => {
 
           {/* Over schoolfruit.nl */}
           <div>
-            <h4 className="font-poster uppercase text-foreground font-bold mb-3 text-sm">Over schoolfruit.nl</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <h4 className="font-poster uppercase text-foreground font-bold mb-2 text-xs">Over schoolfruit.nl</h4>
+            <ul className="space-y-1.5 text-xs text-muted-foreground">
               <li><a href="https://www.schoolfruit.nl/vacatures/" target="_blank" rel="noopener noreferrer" className="hover:text-mandy-orange transition-colors">Vacatures</a></li>
               <li><a href="https://www.schoolfruit.nl/ons-verhaal/" target="_blank" rel="noopener noreferrer" className="hover:text-mandy-orange transition-colors">Ons verhaal</a></li>
               <li><a href="https://www.schoolfruit.nl/contact/" target="_blank" rel="noopener noreferrer" className="hover:text-mandy-orange transition-colors">Neem contact op</a></li>
@@ -52,8 +52,8 @@ const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h4 className="font-poster uppercase text-foreground font-bold mb-3 text-sm">Contact</h4>
-            <ul className="space-y-3 text-sm text-muted-foreground">
+            <h4 className="font-poster uppercase text-foreground font-bold mb-2 text-xs">Contact</h4>
+            <ul className="space-y-2 text-xs text-muted-foreground">
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-mandy-orange flex-shrink-0" />
                 <span>085 06 40 761</span>
@@ -86,7 +86,7 @@ const Footer = () => {
       {/* Bottom Bar */}
       <div className="bg-mandy-orange text-white py-4">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 text-sm">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 text-xs">
             <a href="https://www.schoolfruit.nl/nl/pages/privacy/" target="_blank" rel="noopener noreferrer" className="hover:underline">Privacy Statement</a>
             <span>EDUrebls en HandiHow</span>
             <Link to="/admin" className="hover:underline flex items-center gap-1">
