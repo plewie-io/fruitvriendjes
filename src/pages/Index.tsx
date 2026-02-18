@@ -207,20 +207,28 @@ const Index = () => {
           <div className="max-w-4xl mx-auto">
 
             {/* Intro section with Mandy */}
-            <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
+            <div className="flex flex-col md:flex-row items-center gap-8 mb-4">
               <p className="text-sm md:text-base font-bold uppercase leading-relaxed md:flex-1 text-brand-green">
                 Jij vertelt welke groente, fruit en andere ingrediënten je in huis hebt en ik bedenk daar een leuk en lekker recept mee dat je makkelijk kunt maken. Zo maken we samen een leuke maaltijd van wat er al in de keuken ligt!
               </p>
-              <img
-                src={masterchefMandy}
-                alt="Masterchef Mandy Mandarijn"
-                className="w-40 h-40 md:w-48 md:h-48 object-contain"
-              />
+              <div className="flex flex-col items-center">
+                <img
+                  src={masterchefMandy}
+                  alt="Masterchef Mandy Mandarijn"
+                  className="w-40 h-40 md:w-48 md:h-48 object-contain"
+                />
+                {/* Green arrow pointing down */}
+                <svg width="50" height="60" viewBox="0 0 50 60" className="text-brand-green -mt-2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M25 0C25 0 20 30 15 40C12 46 8 48 8 48" stroke="currentColor" strokeWidth="4" strokeLinecap="round" fill="none"/>
+                  <path d="M8 48L4 38" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
+                  <path d="M8 48L18 44" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
+                </svg>
+              </div>
             </div>
 
             {/* Recipe input section */}
             <div className="max-w-xl mx-auto text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold uppercase mb-4 font-poster text-brand-green">
+              <h2 className="text-2xl md:text-3xl font-bold uppercase mb-4 font-poster text-foreground">
                 {isModifyMode ? "Wat wil je aanpassen?" : "Wat zullen we vandaag maken?"}
               </h2>
 
