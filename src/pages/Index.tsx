@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
 import Footer from "@/components/Footer";
-import { SchoolfruitChatbot } from "@/components/SchoolfruitChatbot";
+
 import { Loader2, ChefHat, Undo2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateRecipe as generateRecipeAI, generateRecipePhoto, modifyRecipe, saveRecipeGeneration, getCurrentSessionId, signInAndCreateSession } from "@/lib/firebase";
@@ -331,7 +331,7 @@ const Index = () => {
       </div>
 
       <Footer />
-      <SchoolfruitChatbot />
+      
     </div>
   );
 };
