@@ -218,10 +218,10 @@ const Index = () => {
                   className="w-40 h-40 md:w-48 md:h-48 object-contain"
                 />
                 {/* Green arrow pointing down */}
-                <svg width="50" height="60" viewBox="0 0 50 60" className="text-brand-green -mt-2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M25 0C25 0 20 30 15 40C12 46 8 48 8 48" stroke="currentColor" strokeWidth="4" strokeLinecap="round" fill="none"/>
-                  <path d="M8 48L4 38" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
-                  <path d="M8 48L18 44" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
+                <svg width="70" height="80" viewBox="0 0 70 80" className="text-brand-green -mt-2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M35 0C35 0 28 35 20 50C16 58 10 62 10 62" stroke="currentColor" strokeWidth="6" strokeLinecap="round" fill="none"/>
+                  <path d="M10 62L4 48" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/>
+                  <path d="M10 62L24 56" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/>
                 </svg>
               </div>
             </div>
