@@ -2,7 +2,7 @@ import schoolfruitLogo from "@/assets/schoolfruit-logo.png";
 
 export const SchoolfruitsHeader = () => {
   return (
-    <header className="bg-[#FAF8F5]">
+    <header className="bg-background">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-6">
           {/* Logo section */}
@@ -20,7 +20,7 @@ export const SchoolfruitsHeader = () => {
             href="https://www.schoolfruit.nl/"
             target="_blank"
             rel="noopener noreferrer"
-            className="border-2 border-mandy-orange text-mandy-orange px-6 py-3 font-bold text-sm tracking-wide hover:bg-mandy-orange hover:text-white transition-colors"
+            className="border-2 border-mandy-orange text-mandy-orange bg-white px-6 py-3 font-bold text-sm tracking-wide hover:bg-mandy-orange hover:text-white transition-colors font-poster uppercase"
           >
             NAAR SCHOOLFRUIT.NL
           </a>
