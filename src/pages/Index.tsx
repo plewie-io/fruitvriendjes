@@ -181,7 +181,7 @@ const Index = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction className="bg-brand-green hover:bg-brand-green/90 text-white">Begrepen!</AlertDialogAction>
+            <AlertDialogAction className="bg-[#DB7202] hover:bg-[#DB7202]/90 text-white">Begrepen!</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
