@@ -22,7 +22,7 @@ type RecipeHistoryItem = {
 
 const Index = () => {
   const [showSafetyDialog, setShowSafetyDialog] = useState(() => {
-    return !localStorage.getItem('safetyDialogShown');
+    return !sessionStorage.getItem('safetyDialogShown');
   });
   const [ingredients, setIngredients] = useState("");
   const [recipe, setRecipe] = useState<string | null>(null);
@@ -37,7 +37,7 @@ const Index = () => {
 
   // ... keep existing code (handleDialogClose, useEffect, handleUndo, handleSubmit, handleModifyRecipe, generateRecipe)
   const handleDialogClose = () => {
-    localStorage.setItem('safetyDialogShown', 'true');
+    sessionStorage.setItem('safetyDialogShown', 'true');
     setShowSafetyDialog(false);
   };
 
