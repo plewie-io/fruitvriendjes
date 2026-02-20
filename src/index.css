@@ -85,6 +85,6 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground font-poster;
+    @apply bg-background text-foreground font-sans text-lg;
   }
 }

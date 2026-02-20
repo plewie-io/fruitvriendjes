@@ -187,18 +187,18 @@ const Index = () => {
       </AlertDialog>
 
       {/* Green banner */}
-      <div className="py-6 px-4" style={{ backgroundColor: '#B3CA17' }}>
+      <div className="py-6 md:py-2 px-4" style={{ backgroundColor: '#B3CA17' }}>
         <div className="container mx-auto max-w-4xl">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-1 font-poster uppercase">
+          <h1 className="text-3xl md:text-2xl font-bold text-white mb-1 md:mb-0 font-poster uppercase">
             MANDY MANDARIJN
           </h1>
-          <p className="text-lg text-white font-bold font-poster uppercase">
+          <p className="text-lg md:text-base text-white font-bold font-poster uppercase">
             IK HELP JOU IN DE KEUKEN!
           </p>
         </div>
       </div>
       {/* Golfje transition */}
-      <div className="w-full -mt-1 rotate-180">
+      <div className="w-full -mt-1 rotate-180 md:max-h-12 overflow-hidden">
         <img src={golfjeBottom} alt="" className="w-full block" aria-hidden="true" />
       </div>
 
@@ -208,7 +208,7 @@ const Index = () => {
 
             {/* Intro section with Mandy */}
             <div className="flex flex-col md:flex-row items-center gap-8 mb-4">
-              <p className="text-sm md:text-base font-bold uppercase leading-relaxed md:flex-1 text-brand-green">
+              <p className="font-bold leading-relaxed md:flex-1 text-brand-green">
                 Jij vertelt welke groente, fruit en andere ingrediënten je in huis hebt en ik bedenk daar een leuk en lekker recept mee dat je makkelijk kunt maken. Zo maken we samen een leuke maaltijd van wat er al in de keuken ligt!
               </p>
               <div className="flex flex-col items-center">
@@ -237,7 +237,7 @@ const Index = () => {
                 value={ingredients}
                 onChange={e => setIngredients(e.target.value)}
                 placeholder={isModifyMode ? "Bijv: maak het vegetarisch, voeg noten toe..." : "Typ hier..."}
-                className="text-lg text-center border-2 border-mandy-orange text-mandy-orange placeholder:text-mandy-orange/60 bg-white py-6 font-poster"
+                className="text-lg text-center border-2 border-mandy-orange text-mandy-orange placeholder:text-mandy-orange/60 bg-white py-6"
                 disabled={loading || imageLoading}
                 onKeyDown={e => {
                   if (e.key === "Enter" && !loading && !imageLoading) {
@@ -246,7 +246,7 @@ const Index = () => {
                 }}
               />
 
-              <p className="text-sm mt-3 text-foreground">
+              <p className="text-sm mt-3 text-foreground font-sans">
                 Vertel mij wat je wilt eten óf welke groente, fruit en andere ingrediënten je al in huis heb, dan maak ik er een lekker recept van!
               </p>
 
@@ -318,7 +318,7 @@ const Index = () => {
 
             {/* Tip */}
             <div className="max-w-xl mx-auto text-center mb-8">
-              <p className="text-xs font-bold uppercase text-brand-green">
+              <p className="text-xs font-bold text-brand-green">
                 Tip: Is het recept nog niet naar wens? Typ in wat je wilt wijzigen en Mandy past het aan!
               </p>
             </div>
@@ -327,12 +327,12 @@ const Index = () => {
       </main>
 
       {/* Bottom golfje */}
-      <div className="w-full -mb-1">
+      <div className="w-full -mb-1 md:max-h-12 overflow-hidden">
         <img src={golfjeBottom} alt="" className="w-full block" aria-hidden="true" />
       </div>
-      <div className="py-6 px-4" style={{ backgroundColor: '#B3CA17' }}>
+      <div className="py-6 md:py-2 px-4" style={{ backgroundColor: '#B3CA17' }}>
         <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white font-poster uppercase">
+          <h2 className="text-2xl md:text-xl font-bold text-white font-poster uppercase">
             Op zoek naar meer inspiratie? Bekijk onze recepten!
           </h2>
         </div>
