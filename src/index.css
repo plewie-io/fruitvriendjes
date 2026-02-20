@@ -29,7 +29,7 @@ All colors MUST be HSL.
     --foreground: 24 70% 20%;
     
     /* Green brand color #9BB510 */
-    --brand-green: 69 84% 39%;
+    --brand-green: 69.5 83.8% 38.6%;
 
     /* Popup/dialog color */
     --popup-accent: 50 100% 46%;
@@ -50,7 +50,7 @@ All colors MUST be HSL.
     --primary-foreground: 0 0% 100%;
 
     /* Secondary: Fresh green #9BB510 */
-    --secondary: 69 84% 39%;
+    --secondary: 69.5 83.8% 38.6%;
     --secondary-foreground: 0 0% 100%;
 
     /* Muted: Soft peachy background */
@@ -72,8 +72,8 @@ All colors MUST be HSL.
 
     /* Gradient definitions */
     --gradient-warm: linear-gradient(135deg, hsl(24, 95%, 65%) 0%, hsl(48, 100%, 70%) 100%);
-    --gradient-fresh: linear-gradient(135deg, hsl(69, 84%, 44%) 0%, hsl(69, 84%, 39%) 100%);
-    --gradient-hero: linear-gradient(180deg, hsl(69, 84%, 39%) 0%, hsl(69, 84%, 44%) 100%);
+    --gradient-fresh: linear-gradient(135deg, hsl(69.5, 83.8%, 43.6%) 0%, hsl(69.5, 83.8%, 38.6%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(69.5, 83.8%, 38.6%) 0%, hsl(69.5, 83.8%, 43.6%) 100%);
     --shadow-playful: 0 8px 24px -4px hsl(24, 95%, 55% / 0.2);
     --shadow-float: 0 12px 32px -8px hsl(24, 95%, 55% / 0.25);
   }
