@@ -87,7 +87,7 @@ const Footer = () => {
       <div className="bg-mandy-orange text-white py-4">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 text-xs">
-            <a href="https://www.schoolfruit.nl/nl/pages/privacy/" target="_blank" rel="noopener noreferrer" className="hover:underline">Privacy Statement</a>
+            <Link to="/privacy" className="hover:underline">Privacy Statement & Disclaimer</Link>
             <span>EDUrebls en HandiHow</span>
             <Link to="/admin" className="hover:underline flex items-center gap-1">
               <Settings className="h-4 w-4" />
