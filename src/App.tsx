@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 import RecipeGenerator from "./pages/RecipeGenerator";
+import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 
 // Lazy load the admin panel
@@ -35,6 +36,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/recept" element={<RecipeGenerator />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/admin/*" element={<AdminWrapper />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
