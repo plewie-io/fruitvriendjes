@@ -1,11 +1,22 @@
+import { useNavigate } from "react-router-dom";
+import { X } from "lucide-react";
 import Footer from "@/components/Footer";
 import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
 
 const Privacy = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SchoolfruitsHeader />
-      <main className="flex-1 container mx-auto px-4 py-8 max-w-3xl">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-3xl relative">
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute top-8 right-4 p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+          aria-label="Sluiten"
+        >
+          <X className="h-6 w-6" />
+        </button>
         <h1 className="font-poster text-3xl text-foreground uppercase mb-6">Privacyverklaring de Fruitvriendjes</h1>
         <h2 className="font-poster text-xl text-mandy-orange uppercase mb-4">aangeboden door Schoolfruit</h2>
         <p className="text-xs text-muted-foreground mb-6">Versie: februari 2026</p>
