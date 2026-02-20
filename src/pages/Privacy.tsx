@@ -11,7 +11,7 @@ const Privacy = () => {
       <SchoolfruitsHeader />
       <main className="flex-1 container mx-auto px-4 py-8 max-w-3xl relative">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/")}
           className="absolute top-8 right-4 p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
           aria-label="Sluiten"
         >
