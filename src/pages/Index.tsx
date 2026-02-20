@@ -187,7 +187,7 @@ const Index = () => {
       </AlertDialog>
 
       {/* Green banner */}
-      <div className="bg-brand-green py-6 px-4">
+      <div className="py-6 px-4" style={{ backgroundColor: '#9BB510' }}>
         <div className="container mx-auto max-w-4xl">
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-1 font-poster uppercase">
             MANDY MANDARIJN
@@ -330,7 +330,7 @@ const Index = () => {
       <div className="w-full -mb-1">
         <img src={golfjeBottom} alt="" className="w-full block" aria-hidden="true" />
       </div>
-      <div className="bg-brand-green py-6 px-4">
+      <div className="py-6 px-4" style={{ backgroundColor: '#9BB510' }}>
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-white font-poster uppercase">
             Op zoek naar meer inspiratie? Bekijk onze recepten!
