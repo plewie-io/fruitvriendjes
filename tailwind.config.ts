@@ -6,9 +6,9 @@ export default {
   darkMode: ["class"],
   content: [
     "./index.html",
-    "./pages/**/*.{ts,tsx}", 
-    "./components/**/*.{ts,tsx}", 
-    "./app/**/*.{ts,tsx}", 
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
     "./node_modules/@firecms/**/*.{js,ts,jsx,tsx}"
   ],
@@ -28,7 +28,7 @@ export default {
     extend: {
       fontFamily: {
         'sans': ['Roboto', 'sans-serif'],
-        'poster': ['"Poster Cut Neue Italic"', '"Poster Cut Neue"', 'sans-serif'],
+        'poster': ['"Poster Cut Neue"', '"Poster Cut Neue Italic"', 'sans-serif'],
         'headers': ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
