@@ -267,8 +267,8 @@ const Index = () => {
           <h1 className="text-3xl md:text-2xl font-bold text-white mb-1 md:mb-0 font-poster uppercase whitespace-nowrap">
             MANDY MANDARIJN
           </h1>
-          <p className="text-lg md:text-base text-white font-bold font-poster uppercase">
-            IK HELP JOU IN DE KEUKEN!
+          <p className="text-lg md:text-base text-white font-bold">
+            Ik help jou in de keuken!
           </p>
         </div>
       </div>
@@ -298,12 +298,41 @@ const Index = () => {
                 makkelijk kunt maken. Zo maken we samen een leuke maaltijd van
                 wat er al in de keuken ligt!
               </p>
-              <div className="flex flex-col items-center">
+              <div className="relative w-56 h-56 md:w-64 md:h-64">
                 <img
                   src={masterchefMandy}
                   alt="Masterchef Mandy Mandarijn"
-                  className="w-40 h-40 md:w-48 md:h-48 object-contain"
+                  className="absolute top-0 left-0 w-36 h-36 md:w-40 md:h-40 object-contain"
                 />
+                {/* Green arrow pointing down */}
+                <svg
+                  width="70"
+                  height="80"
+                  viewBox="0 0 70 80"
+                  className="absolute bottom-0 right-0 text-brand-green"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M35 0C35 0 28 35 20 50C16 58 10 62 10 62"
+                    stroke="currentColor"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                  <path
+                    d="M10 62L4 48"
+                    stroke="currentColor"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M10 62L24 56"
+                    stroke="currentColor"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                  />
+                </svg>
               </div>
             </div>
 
@@ -404,14 +433,17 @@ const Index = () => {
                   <ChefHat className="h-6 w-6 text-mandy-orange" />
                   Jouw recept:
                 </h2>
+                <div className="prose prose-lg max-w-none">
+                  <ReactMarkdown>{recipe}</ReactMarkdown>
+                </div>
                 {imageLoading && (
-                  <div className="flex items-center justify-center py-8 mb-4 bg-mandy-orange-light rounded-xl">
+                  <div className="flex items-center justify-center py-8 mt-4 bg-mandy-orange-light rounded-xl">
                     <Loader2 className="h-8 w-8 animate-spin text-mandy-orange mr-2" />
                     <span className="text-muted-foreground">Foto maken...</span>
                   </div>
                 )}
                 {recipeImage && (
-                  <div className="mb-4">
+                  <div className="mt-4">
                     <img
                       src={recipeImage}
                       alt="Recept foto"
@@ -419,9 +451,6 @@ const Index = () => {
                     />
                   </div>
                 )}
-                <div className="prose prose-lg max-w-none">
-                  <ReactMarkdown>{recipe}</ReactMarkdown>
-                </div>
               </Card>
             )}
 
