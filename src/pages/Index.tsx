@@ -237,13 +237,17 @@ const Index = () => {
               <ul className="list-disc list-inside space-y-2 text-foreground">
                 <li>Kook altijd samen met een volwassene.</li>
                 <li>Lees het recept vooraf door.</li>
-                <li>Wees voorzichtig met scherpe keukenspullen, zoals messen en scharen.</li>
+                <li>
+                  Wees voorzichtig met scherpe keukenspullen, zoals messen en
+                  scharen.
+                </li>
                 <li>Let op met hete pannen, kookplaten en ovens.</li>
                 <li>Houd rekening met allergieën en intoleranties.</li>
                 <li>Was je handen voor je begint.</li>
               </ul>
               <p className="text-foreground">
-                Veel kookplezier! Recepten zijn slechts suggesties, dus controleer altijd zelf of ze geschikt zijn voor jouw kind.
+                Veel kookplezier! Recepten zijn slechts suggesties, dus
+                controleer altijd zelf of ze geschikt zijn voor jouw kind.
               </p>
             </AlertDialogDescription>
           </AlertDialogHeader>
