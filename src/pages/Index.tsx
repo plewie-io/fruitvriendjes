@@ -299,7 +299,7 @@ const Index = () => {
                 <img
                   src={masterchefMandy}
                   alt="Masterchef Mandy Mandarijn"
-                  className="absolute top-0 left-0 w-36 h-36 md:w-40 md:h-40 object-contain"
+                  className="absolute top-4 left-4 w-36 h-36 md:w-40 md:h-40 object-contain"
                 />
                 {/* Green arrow pointing down */}
                 <svg
