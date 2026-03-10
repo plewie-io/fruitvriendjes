@@ -267,7 +267,7 @@ const Index = () => {
           <h1 className="text-3xl md:text-2xl font-bold text-white mb-1 md:mb-0 font-poster uppercase whitespace-nowrap">
             MANDY MANDARIJN
           </h1>
-          <p className="text-lg md:text-base text-white font-bold">
+          <p className="text-lg md:text-base text-white font-bold font-poster">
             Ik help jou in de keuken!
           </p>
         </div>
@@ -309,7 +309,8 @@ const Index = () => {
                   width="70"
                   height="80"
                   viewBox="0 0 70 80"
-                  className="absolute bottom-0 right-0 text-brand-green"
+                  className="absolute bottom-0 right-0"
+                  style={{ color: "#B3CA17" }}
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
