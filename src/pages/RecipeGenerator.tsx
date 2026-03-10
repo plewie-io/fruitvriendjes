@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Loader2, ChefHat, ArrowLeft, Undo2 } from "lucide-react";
+import { Loader2, ChefHat, ArrowLeft, Undo2, Download } from "lucide-react";
+import { useRef, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import {
   generateRecipe as generateRecipeAI,
@@ -31,6 +32,60 @@ const RecipeGenerator = () => {
   const [imageLoading, setImageLoading] = useState(false);
   const [isModifyMode, setIsModifyMode] = useState(false);
   const { toast } = useToast();
+  const recipeCardRef = useRef<HTMLDivElement>(null);
+
+  const handleDownloadPdf = useCallback(async () => {
+    if (!recipeCardRef.current) return;
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const { jsPDF } = await import("jspdf");
+
+      const canvas = await html2canvas(recipeCardRef.current, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const imgWidth = 190;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      let position = 10;
+
+      if (imgHeight + 10 > pageHeight) {
+        // Multi-page
+        let remainingHeight = imgHeight;
+        let srcY = 0;
+        while (remainingHeight > 0) {
+          const sliceHeight = Math.min(remainingHeight, pageHeight - 20);
+          pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight, undefined, "FAST", 0);
+          remainingHeight -= sliceHeight;
+          if (remainingHeight > 0) {
+            pdf.addPage();
+            position = -(imgHeight - remainingHeight) + 10;
+          }
+        }
+      } else {
+        pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
+      }
+
+      pdf.save("recept-fruitvriendjes.pdf");
+
+      toast({
+        title: "PDF gedownload! 📄",
+        description: "Je recept is opgeslagen als PDF.",
+      });
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast({
+        title: "Oeps!",
+        description: "Er ging iets mis bij het downloaden.",
+        variant: "destructive",
+      });
+    }
+  }, [toast]);
 
   const handleUndo = () => {
     if (recipeHistory.length === 0) return;
@@ -334,7 +389,7 @@ const RecipeGenerator = () => {
           </Card>
 
           {recipe && (
-            <Card className="mt-6 p-6 shadow-float animate-fade-in bg-card">
+            <Card className="mt-6 p-6 shadow-float animate-fade-in bg-card" ref={recipeCardRef}>
               <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
                 <ChefHat className="h-6 w-6 text-primary" />
                 Jouw recept:
@@ -360,6 +415,15 @@ const RecipeGenerator = () => {
                   />
                 </div>
               )}
+
+              <Button
+                onClick={handleDownloadPdf}
+                variant="outline"
+                className="w-full mt-4"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Download als PDF
+              </Button>
             </Card>
           )}
 
