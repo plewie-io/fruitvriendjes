@@ -390,22 +390,21 @@ const RecipeGenerator = () => {
 
           {recipe && (
             <Card className="mt-6 p-6 shadow-float animate-fade-in bg-card" ref={recipeCardRef}>
-              <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                <ChefHat className="h-6 w-6 text-primary" />
-                Jouw recept:
-              </h2>
-
-              <div className="prose prose-lg max-w-none">
-                <ReactMarkdown>{recipe}</ReactMarkdown>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold flex items-center gap-2">
+                  <ChefHat className="h-6 w-6 text-primary" />
+                  Jouw recept:
+                </h2>
+                <Button
+                  onClick={handleDownloadPdf}
+                  variant="outline"
+                  size="sm"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download PDF
+                </Button>
               </div>
-
-              {/* Recipe Image */}
-              {imageLoading && (
-                <div className="flex items-center justify-center py-8 mt-4 bg-gray-100 rounded-xl">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary mr-2" />
-                  <span className="text-muted-foreground">Foto maken...</span>
-                </div>
-              )}
+...
               {recipeImage && (
                 <div className="mt-4">
                   <img
@@ -415,15 +414,6 @@ const RecipeGenerator = () => {
                   />
                 </div>
               )}
-
-              <Button
-                onClick={handleDownloadPdf}
-                variant="outline"
-                className="w-full mt-4"
-              >
-                <Download className="mr-2 h-4 w-4" />
-                Download als PDF
-              </Button>
             </Card>
           )}
 
