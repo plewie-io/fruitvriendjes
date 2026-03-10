@@ -389,7 +389,7 @@ const RecipeGenerator = () => {
           </Card>
 
           {recipe && (
-            <Card className="mt-6 p-6 shadow-float animate-fade-in bg-card">
+            <Card className="mt-6 p-6 shadow-float animate-fade-in bg-card" ref={recipeCardRef}>
               <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
                 <ChefHat className="h-6 w-6 text-primary" />
                 Jouw recept:
