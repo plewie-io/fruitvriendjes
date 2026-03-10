@@ -234,20 +234,17 @@ const Index = () => {
               ⚠️ Veilig koken met kinderen
             </AlertDialogTitle>
             <AlertDialogDescription className="space-y-3 text-base">
-              <p>
-                Leuk dat je samen met je kind (of kinderen) gaat koken! Houd
-                hierbij rekening met het volgende:
-              </p>
               <ul className="list-disc list-inside space-y-2 text-foreground">
-                <li>
-                  Wees voorzichtig met scherpe keukenartikelen zoals messen en
-                  scharen
-                </li>
-                <li>Let op hete pannen en ovens</li>
-                <li>Houd rekening met allergieën en voedselintoleranties</li>
-                <li>Was altijd je handen voordat je begint</li>
+                <li>Kook altijd samen met een volwassene.</li>
+                <li>Lees het recept vooraf door.</li>
+                <li>Wees voorzichtig met scherpe keukenspullen, zoals messen en scharen.</li>
+                <li>Let op met hete pannen, kookplaten en ovens.</li>
+                <li>Houd rekening met allergieën en intoleranties.</li>
+                <li>Was je handen voor je begint.</li>
               </ul>
-              <p className="font-semibold">Veel kookplezier! 🍊🍎🍓</p>
+              <p className="text-foreground">
+                Veel kookplezier! Recepten zijn slechts suggesties, dus controleer altijd zelf of ze geschikt zijn voor jouw kind.
+              </p>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
