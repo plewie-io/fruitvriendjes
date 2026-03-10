@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Loader2, ChefHat, ArrowLeft, Undo2 } from "lucide-react";
+import { Loader2, ChefHat, ArrowLeft, Undo2, Download } from "lucide-react";
+import { useRef, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import {
   generateRecipe as generateRecipeAI,
