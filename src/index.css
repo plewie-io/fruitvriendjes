@@ -3,28 +3,40 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Poster Cut Neue';
-  src: url('/fonts/PosterCutNeue-Regular.otf') format('opentype');
+  font-family: "Poster Cut Neue";
+  src: url("/fonts/PosterCutNeue-Regular.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Poster Cut Neue Italic';
-  src: url('/fonts/PosterCutNeue-Italic.otf') format('opentype');
+  font-family: "Poster Cut Neue Italic";
+  src: url("/fonts/PosterCutNeue-Italic.otf") format("opentype");
   font-weight: normal;
   font-style: italic;
   font-display: swap;
 }
 
 @keyframes arrow-wiggle {
-  0%   { transform: rotate(0deg); }
-  50%  { transform: rotate(0deg); }
-  50.001% { transform: rotate(-15deg); }
-  75%  { transform: rotate(-15deg); }
-  75.001% { transform: rotate(-30deg); }
-  100% { transform: rotate(-30deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  50.001% {
+    transform: rotate(-15deg);
+  }
+  75% {
+    transform: rotate(-15deg);
+  }
+  75.001% {
+    transform: rotate(-30deg);
+  }
+  100% {
+    transform: rotate(-30deg);
+  }
 }
 
 .arrow-wiggle {
@@ -40,13 +52,13 @@ All colors MUST be HSL.
     /* Page background */
     --background: 40 33% 97%;
     --foreground: 24 70% 20%;
-    
+
     /* Green brand color #9BB510 */
     --brand-green: 69.5 83.8% 38.6%;
 
     /* Popup/dialog color */
     --popup-accent: 50 100% 46%;
-    
+
     /* Mandy orange #F08400 */
     --mandy-orange: 33 100% 47%;
     --mandy-orange-light: 33 100% 92%;
@@ -84,9 +96,21 @@ All colors MUST be HSL.
     --radius: 1rem;
 
     /* Gradient definitions */
-    --gradient-warm: linear-gradient(135deg, hsl(24, 95%, 65%) 0%, hsl(48, 100%, 70%) 100%);
-    --gradient-fresh: linear-gradient(135deg, hsl(69.5, 83.8%, 43.6%) 0%, hsl(69.5, 83.8%, 38.6%) 100%);
-    --gradient-hero: linear-gradient(180deg, hsl(69.5, 83.8%, 38.6%) 0%, hsl(69.5, 83.8%, 43.6%) 100%);
+    --gradient-warm: linear-gradient(
+      135deg,
+      hsl(24, 95%, 65%) 0%,
+      hsl(48, 100%, 70%) 100%
+    );
+    --gradient-fresh: linear-gradient(
+      135deg,
+      hsl(69.5, 83.8%, 43.6%) 0%,
+      hsl(69.5, 83.8%, 38.6%) 100%
+    );
+    --gradient-hero: linear-gradient(
+      180deg,
+      hsl(69.5, 83.8%, 38.6%) 0%,
+      hsl(69.5, 83.8%, 43.6%) 100%
+    );
     --shadow-playful: 0 8px 24px -4px hsl(24, 95%, 55% / 0.2);
     --shadow-float: 0 12px 32px -8px hsl(24, 95%, 55% / 0.25);
   }
