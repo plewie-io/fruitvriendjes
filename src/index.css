@@ -18,6 +18,19 @@
   font-display: swap;
 }
 
+@keyframes arrow-wiggle {
+  0%   { transform: rotate(0deg); }
+  50%  { transform: rotate(0deg); }
+  50.001% { transform: rotate(-15deg); }
+  75%  { transform: rotate(-15deg); }
+  75.001% { transform: rotate(-30deg); }
+  100% { transform: rotate(-30deg); }
+}
+
+.arrow-wiggle {
+  animation: arrow-wiggle 4s steps(1, end) 1 forwards;
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */

@@ -28,6 +28,7 @@ import ReactMarkdown from "react-markdown";
 import golfje from "@/assets/golfje-appel-dubbel.png";
 import masterchefMandy from "@/assets/masterchef-mandy.png";
 import golfjeBottom from "@/assets/golfje-bottom.png";
+import arrowLimoen from "@/assets/SF_doodle_arrow6_limoen_PNG.png";
 
 type RecipeHistoryItem = {
   recipe: string;
@@ -305,36 +306,11 @@ const Index = () => {
                   alt="Masterchef Mandy Mandarijn"
                   className="absolute top-4 left-4 w-36 h-36 md:w-40 md:h-40 object-contain"
                 />
-                {/* Green arrow pointing down */}
-                <svg
-                  width="70"
-                  height="80"
-                  viewBox="0 0 70 80"
-                  className="absolute bottom-0 right-0"
-                  style={{ color: "#B3CA17" }}
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M35 0C35 0 28 35 20 50C16 58 10 62 10 62"
-                    stroke="currentColor"
-                    strokeWidth="6"
-                    strokeLinecap="round"
-                    fill="none"
-                  />
-                  <path
-                    d="M10 62L4 48"
-                    stroke="currentColor"
-                    strokeWidth="6"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M10 62L24 56"
-                    stroke="currentColor"
-                    strokeWidth="6"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <img
+                  src={arrowLimoen}
+                  alt=""
+                  className="absolute bottom-0 right-0 w-16 h-20 object-contain arrow-wiggle"
+                />
               </div>
             </div>
 

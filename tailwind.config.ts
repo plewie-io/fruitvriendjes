@@ -12,10 +12,6 @@ export default {
     "./src/**/*.{ts,tsx}",
     "./node_modules/@firecms/**/*.{js,ts,jsx,tsx}"
   ],
-  safelist: [
-    "ease-[cubic-bezier(0,0,0.2,1)]",
-    "ease-[cubic-bezier(0.4,0,0.2,1)]",
-  ],
   prefix: "",
   theme: {
     container: {
