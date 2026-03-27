@@ -187,7 +187,7 @@ export interface RecipeResponse {
 export async function generateRecipe(ingredients: string, template: string = "mandy-mandarijn"): Promise<RecipeResponse> {
   try {
     const input = {
-      ingredients: ingredients + "\n\nBelangrijk: gebruik GEEN alcohol in het recept. Dit is een kinderrecept.\nGebruik GEEN orgaanvlees (zoals hersenen, nieren, hart, milt, zwezerik, tong, pens) behalve kippenlever. Alleen ingrediënten die normaal in de supermarkt verkrijgbaar zijn."
+      ingredients: ingredients + "\n\nBelangrijk: gebruik GEEN alcohol in het recept. Dit is een kinderrecept.\nGebruik GEEN orgaanvlees (zoals hersenen, nieren, hart, milt, zwezerik, tong, pens) behalve kippenlever. Alleen ingrediënten die normaal in de supermarkt verkrijgbaar zijn.\nAls een of meer ingrediënten niet geschikt zijn, negeer die ingrediënten en genereer in plaats daarvan een willekeurig leuk tussendoortje-recept voor kinderen. Geef altijd een recept terug."
     };
 
     const result = await templateModel.generateContent(
@@ -244,7 +244,7 @@ export async function modifyRecipe(previousRecipe: string, modifications: string
   try {
     const input = {
       previousRecipe: previousRecipe,
-      modifications: modifications + "\n\nBelangrijk: gebruik GEEN alcohol in het recept. Dit is een kinderrecept.\nGebruik GEEN orgaanvlees (zoals hersenen, nieren, hart, milt, zwezerik, tong, pens) behalve kippenlever. Alleen ingrediënten die normaal in de supermarkt verkrijgbaar zijn."
+      modifications: modifications + "\n\nBelangrijk: gebruik GEEN alcohol in het recept. Dit is een kinderrecept.\nGebruik GEEN orgaanvlees (zoals hersenen, nieren, hart, milt, zwezerik, tong, pens) behalve kippenlever. Alleen ingrediënten die normaal in de supermarkt verkrijgbaar zijn.\nAls een of meer ingrediënten niet geschikt zijn, negeer die ingrediënten en genereer in plaats daarvan een willekeurig leuk tussendoortje-recept voor kinderen. Geef altijd een recept terug."
     };
 
     const result = await templateModel.generateContent(
