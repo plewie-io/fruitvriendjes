@@ -295,7 +295,7 @@ const Index = () => {
             {/* Intro section with Mandy */}
             <div className="flex flex-col md:flex-row items-center gap-8 mb-4">
               <p className="font-poster leading-relaxed md:flex-1 text-black">
-                Jij vertelt welke groente, fruit en andere ingrediënten je in
+                Jij vertelt welke groente, fruit en andere boodschappen je in
                 huis hebt en ik bedenk daar een leuk en lekker recept mee dat je
                 makkelijk kunt maken. Zo maken we samen een leuke maaltijd van
                 wat er al in de keuken ligt!
