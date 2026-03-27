@@ -99,6 +99,10 @@ const Index = () => {
     if (isModifyMode && recipe) {
       await handleModifyRecipe();
     } else {
+      // If in modify mode but no recipe exists (e.g. previous attempt failed), generate fresh
+      if (isModifyMode && !recipe) {
+        setIsModifyMode(false);
+      }
       await generateRecipe();
     }
   };
