@@ -187,7 +187,7 @@ export interface RecipeResponse {
 export async function generateRecipe(ingredients: string, template: string = "mandy-mandarijn"): Promise<RecipeResponse> {
   try {
     const input = {
-      ingredients: ingredients + "\n\nBelangrijk: gebruik GEEN alcohol in het recept. Dit is een kinderrecept.\nGebruik GEEN orgaanvlees (zoals hersenen, nieren, hart, milt, zwezerik, tong, pens) behalve kippenlever. Alleen ingrediënten die normaal in de supermarkt verkrijgbaar zijn.\nAls een of meer ingrediënten niet geschikt zijn, negeer die ingrediënten en genereer in plaats daarvan een willekeurig leuk tussendoortje-recept voor kinderen. Geef altijd een recept terug."
+      ingredients: ingredients + "\n\nBelangrijk: gebruik GEEN alcohol in het recept. Dit is een kinderrecept.\nGebruik GEEN orgaanvlees (zoals hersenen, nieren, hart, milt, zwezerik, tong, pens) behalve kippenlever. Alleen ingrediënten die normaal in de supermarkt verkrijgbaar zijn.\nAls een of meer ingrediënten niet geschikt zijn, negeer die ingrediënten en genereer in plaats daarvan een willekeurig leuk tussendoortje-recept voor kinderen. Geef altijd een recept terug.\nAls de gebruiker een algemene term invoert zoals 'tussendoortje', 'snack', 'hapje' of iets dergelijks (zonder specifieke ingrediënten), bedenk dan zelf een leuk en gezond tussendoortje-recept voor kinderen met fruit of groenten. Dit is een geldige aanvraag."
     };
 
     const result = await templateModel.generateContent(
