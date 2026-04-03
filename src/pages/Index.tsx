@@ -439,16 +439,11 @@ const Index = () => {
       {/* Inspiratie section with inline SVG waves - no image gaps */}
       <div>
         {/* Wave: cream → green */}
-        <div style={{ backgroundColor: "#FAF8F5", lineHeight: 0 }}>
-          <div
-            style={{
-              display: "block",
-              width: "100%",
-              height: "16px",
-              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 16' preserveAspectRatio='none' height='16'%3E%3Cpath d='M0,8 C3,16 27,0 30,8 L30,16 L0,16 Z' fill='%23B3CA17'/%3E%3C/svg%3E")`,
-              backgroundRepeat: "repeat-x",
-              backgroundSize: "30px 16px",
-            }}
+        <div style={{ lineHeight: 0 }}>
+          <img
+            src={golfje}
+            alt=""
+            className="w-full block"
           />
         </div>
 
