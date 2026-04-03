@@ -270,7 +270,7 @@ const Index = () => {
           src={golfje}
           alt=""
           className="absolute inset-x-0 bottom-0 w-full block pointer-events-none"
-          style={{ opacity: 0.5 }}
+          style={{ opacity: 1 }}
         />
         <div className="container relative z-10 mx-auto max-w-4xl text-left px-4 py-3">
           <h1 className="text-3xl md:text-2xl leading-none font-bold text-white mb-0 font-poster uppercase whitespace-nowrap">
