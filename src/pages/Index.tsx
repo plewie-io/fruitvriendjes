@@ -350,11 +350,6 @@ const Index = () => {
                 }}
               />
 
-              <p className="text-sm mt-3 text-foreground font-sans">
-                Vertel mij wat je wilt eten óf welke groente, fruit en andere
-                ingrediënten je al in huis heb, dan maak ik er een lekker recept
-                van!
-              </p>
 
               <div className="mt-4 space-y-2">
                 {!loading && !imageLoading ? (
