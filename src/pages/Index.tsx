@@ -264,15 +264,9 @@ const Index = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Groene header met golfjes */}
-      <div style={{ backgroundColor: "#B3CA17", position: "relative", overflow: "hidden" }}>
-        <img
-          src={golfje}
-          alt=""
-          className="absolute inset-x-0 bottom-0 w-full block pointer-events-none"
-          style={{ opacity: 1 }}
-        />
-        <div className="container relative z-10 mx-auto max-w-4xl text-left px-4 py-3">
+      {/* Groene header balk */}
+      <div style={{ backgroundColor: "#B3CA17" }}>
+        <div className="container mx-auto max-w-4xl text-left px-4 py-3">
           <h1 className="text-3xl md:text-2xl leading-none font-bold text-white mb-0 font-poster uppercase whitespace-nowrap">
             MANDY MANDARIJN
           </h1>
@@ -280,6 +274,14 @@ const Index = () => {
             Ik help jou in de keuken!
           </p>
         </div>
+      </div>
+      {/* Golfjes als overgang van groen naar crème */}
+      <div style={{ lineHeight: 0, marginTop: "-2px" }}>
+        <img
+          src={golfje}
+          alt=""
+          className="w-full block"
+        />
       </div>
 
       <main className="flex-1 bg-[#FAF8F5]">
