@@ -444,7 +444,6 @@ const Index = () => {
       <div>
         {/* Wave: cream → green */}
         <div style={{ backgroundColor: "#FAF8F5", lineHeight: 0 }}>
-          <svg
           <div
             style={{
               display: "block",
