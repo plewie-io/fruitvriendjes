@@ -275,7 +275,7 @@ const Index = () => {
           </p>
         </div>
       </div>
-      <div style={{ lineHeight: 0, marginTop: "-70px", position: "relative", zIndex: 0, height: "70px", overflow: "hidden" }}>
+      <div style={{ lineHeight: 0, marginTop: "-35px", position: "relative", zIndex: 0, height: "35px", overflow: "hidden" }}>
         <img
           src={golfje}
           alt=""
