@@ -326,9 +326,10 @@ const Index = () => {
                   : "Wat zullen we vandaag maken?"}
               </h2>
               {!isModifyMode && (
-                <p className="text-foreground/80 mb-4">
-                  Vertel mij wat je wilt eten óf welke groente, fruit en andere ingrediënten je al in huis heb, dan maak ik er een lekker recept van!
-                </p>
+                <div className="text-foreground/80 mb-4">
+                  <p>Typ in waar je trek in hebt of welke boodschappen je nog in huis hebt, dan maak ik een lekker recept voor je!</p>
+                  <p className="mt-2 font-semibold">Tip van de Masterchef: <span className="font-normal">Is mijn recept nog niet helemaal naar wens? Typ gewoon in wat je wilt wijzigen of toevoegen, dan pas ik het voor je aan!</span></p>
+                </div>
               )}
 
               <Input
