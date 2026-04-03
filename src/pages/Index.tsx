@@ -327,7 +327,7 @@ const Index = () => {
               </h2>
               {!isModifyMode && (
                 <div className="text-foreground/80 mb-4">
-                  <p>Typ in waar je trek in hebt of welke boodschappen je nog in huis hebt, dan maak ik een lekker recept voor je!</p>
+                  <p className="font-semibold">Typ in waar je trek in hebt of welke boodschappen je nog in huis hebt, dan maak ik een lekker recept voor je!</p>
                   <p className="mt-2 font-semibold">Tip van de Masterchef: <span className="font-normal">Is mijn recept nog niet helemaal naar wens? Typ gewoon in wat je wilt wijzigen of toevoegen, dan pas ik het voor je aan!</span></p>
                 </div>
               )}
