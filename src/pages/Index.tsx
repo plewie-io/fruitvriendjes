@@ -264,28 +264,24 @@ const Index = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Green banner */}
-      <div
-        className="py-12 md:py-8 px-4"
-        style={{ backgroundColor: "#B3CA17" }}
-      >
-        <div className="container mx-auto max-w-4xl text-left">
-          <h1 className="text-3xl md:text-2xl font-bold text-white mb-1 md:mb-0 font-poster uppercase whitespace-nowrap">
+      {/* Green banner with wave as bottom edge */}
+      <div className="relative" style={{ backgroundColor: "#B3CA17" }}>
+        <div className="container mx-auto max-w-4xl text-left px-4 py-3">
+          <h1 className="text-3xl md:text-2xl font-bold text-white mb-0 font-poster uppercase whitespace-nowrap">
             MANDY MANDARIJN
           </h1>
           <p className="text-lg md:text-base text-white font-bold font-poster">
             Ik help jou in de keuken!
           </p>
         </div>
-      </div>
-      {/* SVG wave: green → cream */}
-      <div style={{ lineHeight: 0 }}>
-        <img
-          src={golfje}
-          alt=""
-          className="w-full block"
-          style={{ transform: "scaleY(-1)" }}
-        />
+        <div style={{ lineHeight: 0 }}>
+          <img
+            src={golfje}
+            alt=""
+            className="w-full block"
+            style={{ transform: "scaleY(-1)" }}
+          />
+        </div>
       </div>
 
       <main className="flex-1 bg-[#FAF8F5]">
