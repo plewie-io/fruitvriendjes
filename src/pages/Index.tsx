@@ -264,24 +264,28 @@ const Index = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Green banner with wave as bottom edge */}
-      <div style={{ backgroundColor: "#B3CA17", position: "relative", zIndex: 1 }}>
-        <div className="container mx-auto max-w-4xl text-left px-4 py-3">
-          <h1 className="text-3xl md:text-2xl font-bold text-white mb-0 font-poster uppercase whitespace-nowrap">
-            MANDY MANDARIJN
-          </h1>
-          <p className="text-lg md:text-base text-white font-bold font-poster">
-            Ik help jou in de keuken!
-          </p>
-        </div>
-      </div>
-      <div style={{ lineHeight: 0, marginTop: "-35px", position: "relative", zIndex: 0, height: "35px", overflow: "hidden" }}>
+      {/* Compacte groene header met golf achter de tekst */}
+      <div
+        style={{
+          backgroundColor: "#B3CA17",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
         <img
           src={golfje}
           alt=""
-          className="w-full block"
-          style={{ transform: "scaleY(0.5)", transformOrigin: "top" }}
+          className="absolute inset-x-0 bottom-[-8px] w-full block pointer-events-none"
+          style={{ transform: "scaleY(0.35)", transformOrigin: "bottom" }}
         />
+        <div className="container relative z-10 mx-auto max-w-4xl text-left px-4 py-1.5 md:py-2">
+          <h1 className="text-3xl md:text-2xl leading-none font-bold text-white mb-0 font-poster uppercase whitespace-nowrap">
+            MANDY MANDARIJN
+          </h1>
+          <p className="mt-0.5 text-lg md:text-base leading-none text-white font-bold font-poster">
+            Ik help jou in de keuken!
+          </p>
+        </div>
       </div>
 
       <main className="flex-1 bg-[#FAF8F5]">
