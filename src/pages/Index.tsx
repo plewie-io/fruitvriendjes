@@ -276,11 +276,12 @@ const Index = () => {
         </div>
       </div>
       {/* Golfjes als overgang van groen naar crème */}
-      <div style={{ lineHeight: 0, marginTop: "-2px" }}>
+      <div style={{ lineHeight: 0, marginTop: "-2px", backgroundColor: "#B3CA17" }}>
         <img
           src={golfje}
           alt=""
           className="w-full block"
+          style={{ transform: "scaleY(-1)" }}
         />
       </div>
 
