@@ -276,11 +276,12 @@ const Index = () => {
         </div>
       </div>
       {/* Golfjes overgang groen → crème */}
-      <div style={{ lineHeight: 0, marginTop: "-1px", height: "25px", overflow: "hidden" }}>
+      <div style={{ lineHeight: 0, marginTop: "-1px" }}>
         <img
           src={golfje}
           alt=""
           className="w-full block"
+          style={{ height: "25px", width: "100%", objectFit: "fill" }}
         />
       </div>
 
