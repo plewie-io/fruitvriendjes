@@ -265,8 +265,8 @@ const Index = () => {
       </AlertDialog>
 
       {/* Green banner with wave as bottom edge */}
-      <div className="relative overflow-hidden" style={{ backgroundColor: "#B3CA17" }}>
-        <div className="container mx-auto max-w-4xl text-left px-4 py-3 relative z-10">
+      <div style={{ backgroundColor: "#B3CA17" }}>
+        <div className="container mx-auto max-w-4xl text-left px-4 py-3">
           <h1 className="text-3xl md:text-2xl font-bold text-white mb-0 font-poster uppercase whitespace-nowrap">
             MANDY MANDARIJN
           </h1>
@@ -274,14 +274,13 @@ const Index = () => {
             Ik help jou in de keuken!
           </p>
         </div>
-        <div style={{ lineHeight: 0, height: "50px", overflow: "hidden", position: "relative" }}>
-          <img
-            src={golfje}
-            alt=""
-            className="w-full block absolute bottom-0 left-0"
-            style={{ transform: "scaleY(-1)", height: "auto" }}
-          />
-        </div>
+      </div>
+      <div style={{ lineHeight: 0, marginTop: "-1px" }}>
+        <img
+          src={golfje}
+          alt=""
+          className="w-full block"
+        />
       </div>
 
       <main className="flex-1 bg-[#FAF8F5]">
