@@ -25,7 +25,7 @@ import {
   signInAndCreateSession,
 } from "@/lib/firebase";
 import ReactMarkdown from "react-markdown";
-import golfje from "@/assets/golfje-appel-dubbel.png";
+import golfje from "@/assets/Golfje_Appel_dubbel.svg";
 import masterchefMandy from "@/assets/masterchef-mandy.png";
 import golfjeBottom from "@/assets/golfje-bottom.png";
 import arrowLimoen from "@/assets/SF_doodle_arrow6_limoen_PNG.png";
