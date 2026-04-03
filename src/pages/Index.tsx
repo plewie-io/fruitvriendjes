@@ -274,12 +274,12 @@ const Index = () => {
             Ik help jou in de keuken!
           </p>
         </div>
-        <div style={{ lineHeight: 0, height: "40px", overflow: "hidden" }}>
+        <div style={{ lineHeight: 0, height: "50px", overflow: "hidden", position: "relative" }}>
           <img
             src={golfje}
             alt=""
-            className="w-full block"
-            style={{ transform: "scaleY(-1)", height: "40px", objectFit: "cover", objectPosition: "top" }}
+            className="w-full block absolute bottom-0 left-0"
+            style={{ transform: "scaleY(-1)", height: "auto" }}
           />
         </div>
       </div>
