@@ -275,11 +275,12 @@ const Index = () => {
           </p>
         </div>
       </div>
-      <div style={{ lineHeight: 0, marginTop: "-1px" }}>
+      <div style={{ lineHeight: 0, marginTop: "-1px", height: "30px", overflow: "hidden" }}>
         <img
           src={golfje}
           alt=""
           className="w-full block"
+          style={{ height: "auto", maxHeight: "none" }}
         />
       </div>
 
