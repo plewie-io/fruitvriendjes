@@ -265,7 +265,7 @@ const Index = () => {
       </AlertDialog>
 
       {/* Green banner with wave as bottom edge */}
-      <div style={{ backgroundColor: "#B3CA17" }}>
+      <div style={{ backgroundColor: "#B3CA17", position: "relative", zIndex: 1 }}>
         <div className="container mx-auto max-w-4xl text-left px-4 py-3">
           <h1 className="text-3xl md:text-2xl font-bold text-white mb-0 font-poster uppercase whitespace-nowrap">
             MANDY MANDARIJN
@@ -275,12 +275,11 @@ const Index = () => {
           </p>
         </div>
       </div>
-      <div style={{ lineHeight: 0, marginTop: "-1px", height: "30px", overflow: "hidden" }}>
+      <div style={{ lineHeight: 0, marginTop: "-70px", position: "relative", zIndex: 0, height: "70px", overflow: "hidden" }}>
         <img
           src={golfje}
           alt=""
           className="w-full block"
-          style={{ height: "auto", maxHeight: "none" }}
         />
       </div>
 
