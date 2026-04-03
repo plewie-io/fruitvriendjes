@@ -325,6 +325,11 @@ const Index = () => {
                   ? "Wat wil je aanpassen?"
                   : "Wat zullen we vandaag maken?"}
               </h2>
+              {!isModifyMode && (
+                <p className="text-foreground/80 mb-4">
+                  Vertel mij wat je wilt eten óf welke groente, fruit en andere ingrediënten je al in huis heb, dan maak ik er een lekker recept van!
+                </p>
+              )}
 
               <Input
                 id="ingredients"
