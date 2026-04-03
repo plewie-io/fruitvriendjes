@@ -265,7 +265,7 @@ const Index = () => {
       </AlertDialog>
 
       {/* Green banner with wave as bottom edge */}
-      <div style={{ backgroundColor: "#B3CA17" }}>
+      <div style={{ backgroundColor: "#B3CA17", position: "relative", zIndex: 1 }}>
         <div className="container mx-auto max-w-4xl text-left px-4 py-3">
           <h1 className="text-3xl md:text-2xl font-bold text-white mb-0 font-poster uppercase whitespace-nowrap">
             MANDY MANDARIJN
