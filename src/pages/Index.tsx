@@ -437,13 +437,6 @@ const Index = () => {
               </Card>
             )}
 
-            {/* Tip */}
-            <div className="max-w-xl mx-auto text-center mb-8">
-              <p className="text-xs font-bold text-brand-green">
-                Tip: Is het recept nog niet naar wens? Typ in wat je wilt
-                wijzigen en Mandy past het aan!
-              </p>
-            </div>
           </div>
         </div>
       </main>
