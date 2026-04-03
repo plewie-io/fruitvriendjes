@@ -25,7 +25,7 @@ import {
   signInAndCreateSession,
 } from "@/lib/firebase";
 import ReactMarkdown from "react-markdown";
-import golfje from "@/assets/Golfje_Appel_dubbel.svg";
+import golfje from "@/assets/golfje-appel-dubbel.png";
 import masterchefMandy from "@/assets/masterchef-mandy.png";
 import golfjeBottom from "@/assets/golfje-bottom.png";
 import arrowLimoen from "@/assets/SF_doodle_arrow6_limoen_PNG.png";
@@ -264,24 +264,31 @@ const Index = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Groene header balk */}
-      <div style={{ backgroundColor: "#B3CA17" }}>
-        <div className="container mx-auto max-w-4xl text-left px-4 py-3">
-          <h1 className="text-3xl md:text-2xl leading-none font-bold text-white mb-0 font-poster uppercase whitespace-nowrap">
+      {/* Green banner */}
+      <div
+        className="py-12 md:py-8 px-4"
+        style={{ backgroundColor: "#B3CA17" }}
+      >
+        <div className="container mx-auto max-w-4xl text-left">
+          <h1 className="text-3xl md:text-2xl font-bold text-white mb-1 md:mb-0 font-poster uppercase whitespace-nowrap">
             MANDY MANDARIJN
           </h1>
-          <p className="mt-1 text-lg md:text-base leading-none text-white font-bold font-poster">
+          <p className="text-lg md:text-base text-white font-bold font-poster">
             Ik help jou in de keuken!
           </p>
         </div>
       </div>
-      {/* Golfjes overgang groen → crème */}
-      <div style={{ lineHeight: 0, marginTop: "-1px" }}>
-        <img
-          src={golfje}
-          alt=""
-          className="w-full block"
-          style={{ height: "25px", width: "100%", objectFit: "fill" }}
+      {/* SVG wave: green → cream */}
+      <div style={{ backgroundColor: "#B3CA17", lineHeight: 0 }}>
+        <div
+          style={{
+            display: "block",
+            width: "100%",
+            height: "16px",
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 16' preserveAspectRatio='none' height='16'%3E%3Cpath d='M0,8 C3,0 27,16 30,8 L30,16 L0,16 Z' fill='%23FAF8F5'/%3E%3C/svg%3E")`,
+            backgroundRepeat: "repeat-x",
+            backgroundSize: "30px 16px",
+          }}
         />
       </div>
 
@@ -436,11 +443,16 @@ const Index = () => {
       {/* Inspiratie section with inline SVG waves - no image gaps */}
       <div>
         {/* Wave: cream → green */}
-        <div style={{ lineHeight: 0 }}>
-          <img
-            src={golfje}
-            alt=""
-            className="w-full block"
+        <div style={{ backgroundColor: "#FAF8F5", lineHeight: 0 }}>
+          <div
+            style={{
+              display: "block",
+              width: "100%",
+              height: "16px",
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 16' preserveAspectRatio='none' height='16'%3E%3Cpath d='M0,8 C3,16 27,0 30,8 L30,16 L0,16 Z' fill='%23B3CA17'/%3E%3C/svg%3E")`,
+              backgroundRepeat: "repeat-x",
+              backgroundSize: "30px 16px",
+            }}
           />
         </div>
 
