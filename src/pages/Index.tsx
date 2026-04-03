@@ -276,14 +276,12 @@ const Index = () => {
         </div>
       </div>
       {/* Golfjes overgang groen → crème */}
-      <div style={{ lineHeight: 0, marginTop: "-1px" }}>
+      <div style={{ lineHeight: 0, marginTop: "-1px", height: "25px", overflow: "hidden" }}>
         <img
           src={golfje}
           alt=""
           className="w-full block"
-          style={{ marginBottom: "-95%"  }}
         />
-      </div>
       </div>
 
       <main className="flex-1 bg-[#FAF8F5]">
