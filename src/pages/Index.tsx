@@ -320,7 +320,7 @@ const Index = () => {
 
             {/* Recipe input section */}
             <div className="max-w-xl mx-auto text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold uppercase mb-4 font-poster text-foreground">
+              <h2 className="text-2xl md:text-3xl font-bold uppercase mb-4 font-poster text-black">
                 {isModifyMode
                   ? "Wat wil je aanpassen?"
                   : "Wat zullen we vandaag maken?"}
