@@ -264,25 +264,19 @@ const Index = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Compacte groene header met golf achter de tekst */}
-      <div
-        style={{
-          backgroundColor: "#B3CA17",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
+      {/* Groene header met golfjes */}
+      <div style={{ backgroundColor: "#B3CA17", position: "relative", overflow: "hidden" }}>
         <img
           src={golfje}
           alt=""
-          className="absolute inset-x-0 bottom-[-8px] w-full block pointer-events-none"
-          style={{ transform: "scaleY(0.35)", transformOrigin: "bottom" }}
+          className="absolute inset-x-0 bottom-0 w-full block pointer-events-none"
+          style={{ opacity: 0.5 }}
         />
-        <div className="container relative z-10 mx-auto max-w-4xl text-left px-4 py-1.5 md:py-2">
+        <div className="container relative z-10 mx-auto max-w-4xl text-left px-4 py-3">
           <h1 className="text-3xl md:text-2xl leading-none font-bold text-white mb-0 font-poster uppercase whitespace-nowrap">
             MANDY MANDARIJN
           </h1>
-          <p className="mt-0.5 text-lg md:text-base leading-none text-white font-bold font-poster">
+          <p className="mt-1 text-lg md:text-base leading-none text-white font-bold font-poster">
             Ik help jou in de keuken!
           </p>
         </div>
