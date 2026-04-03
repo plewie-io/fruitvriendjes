@@ -320,13 +320,13 @@ const Index = () => {
 
             {/* Recipe input section */}
             <div className="max-w-xl mx-auto text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold uppercase mb-4 font-poster text-foreground">
+              <h2 className="text-2xl md:text-3xl font-bold uppercase mb-4 font-poster text-black">
                 {isModifyMode
                   ? "Wat wil je aanpassen?"
                   : "Wat zullen we vandaag maken?"}
               </h2>
               {!isModifyMode && (
-                <div className="text-foreground/80 mb-4">
+                <div className="text-black mb-4">
                   <p className="font-semibold">Typ in waar je trek in hebt of welke boodschappen je nog in huis hebt, dan maak ik een lekker recept voor je!</p>
                   <p className="mt-2 font-semibold">Tip van de Masterchef: <span className="font-normal">Is mijn recept nog niet helemaal naar wens? Typ gewoon in wat je wilt wijzigen of toevoegen, dan pas ik het voor je aan!</span></p>
                 </div>
@@ -350,11 +350,6 @@ const Index = () => {
                 }}
               />
 
-              <p className="text-sm mt-3 text-foreground font-sans">
-                Vertel mij wat je wilt eten óf welke groente, fruit en andere
-                ingrediënten je al in huis heb, dan maak ik er een lekker recept
-                van!
-              </p>
 
               <div className="mt-4 space-y-2">
                 {!loading && !imageLoading ? (
@@ -442,13 +437,6 @@ const Index = () => {
               </Card>
             )}
 
-            {/* Tip */}
-            <div className="max-w-xl mx-auto text-center mb-8">
-              <p className="text-xs font-bold text-brand-green">
-                Tip: Is het recept nog niet naar wens? Typ in wat je wilt
-                wijzigen en Mandy past het aan!
-              </p>
-            </div>
           </div>
         </div>
       </main>
