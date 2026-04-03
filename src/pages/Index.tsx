@@ -280,6 +280,7 @@ const Index = () => {
           src={golfje}
           alt=""
           className="w-full block"
+          style={{ transform: "scaleY(0.5)", transformOrigin: "top" }}
         />
       </div>
 
