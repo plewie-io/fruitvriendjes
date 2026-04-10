@@ -69,8 +69,8 @@ const safetySettings = [
 ];
 
 // Create a GenerativeModel instance for chat with Google Search grounding
-export const chatModel = getGenerativeModel(ai, { 
-  model: "gemini-2.5-flash",
+export const chatModel = getGenerativeModel(ai, {
+  model: "gemini-3-flash-preview",
   tools: [{ googleSearch: {} }],
   safetySettings
 });
@@ -187,7 +187,7 @@ export interface RecipeResponse {
 export async function generateRecipe(ingredients: string, template: string = "mandy-mandarijn"): Promise<RecipeResponse> {
   try {
     const input = {
-      ingredients: ingredients + "\n\nBelangrijk: gebruik GEEN alcohol in het recept. Dit is een kinderrecept.\nGebruik GEEN orgaanvlees (zoals hersenen, nieren, hart, milt, zwezerik, tong, pens) behalve kippenlever. Alleen ingrediënten die normaal in de supermarkt verkrijgbaar zijn.\nAls een of meer ingrediënten niet geschikt zijn, negeer die ingrediënten en genereer in plaats daarvan een willekeurig leuk tussendoortje-recept voor kinderen. Geef altijd een recept terug.\nAls de gebruiker een algemene term invoert zoals 'tussendoortje', 'snack', 'hapje' of iets dergelijks (zonder specifieke ingrediënten), bedenk dan zelf een leuk en gezond tussendoortje-recept voor kinderen met fruit of groenten. Dit is een geldige aanvraag."
+      ingredients: ingredients
     };
 
     const result = await templateModel.generateContent(
@@ -198,7 +198,7 @@ export async function generateRecipe(ingredients: string, template: string = "ma
     const response = result.response;
     const text = response.text();
     console.log("📝 Raw recipe response:", text);
-    
+
     // Parse the JSON response
     const parsedResponse = JSON.parse(text);
     return {
@@ -216,13 +216,13 @@ export async function generateRecipe(ingredients: string, template: string = "ma
 export async function generateRecipePhoto(prompt: string): Promise<string> {
   try {
     console.log("🖼️ Generating image with prompt:", prompt);
-    
+
     const result = await templateImagenModel.generateImages(
       "afbeelding-genereren",
       { prompt: prompt }
     );
     console.log("🖼️ Image generation response:", result);
-    
+
     // Get the first generated image
     const image = result.images[0];
     if (image) {
@@ -231,7 +231,7 @@ export async function generateRecipePhoto(prompt: string): Promise<string> {
       const mimeType = image.mimeType || "image/png";
       return `data:${mimeType};base64,${imageData}`;
     }
-    
+
     throw new Error("No image found in response");
   } catch (error) {
     console.error("Firebase AI photo generation error:", error);
@@ -255,7 +255,7 @@ export async function modifyRecipe(previousRecipe: string, modifications: string
     const response = result.response;
     const text = response.text();
     console.log("📝 Raw modified recipe response:", text);
-    
+
     // Parse the JSON response
     const parsedResponse = JSON.parse(text);
     return {
@@ -357,7 +357,7 @@ export async function startChatSession(existingHistory: ChatMessage[] = []): Pro
 
 // Send a message in the chat (with optional streaming callback)
 export async function sendChatMessage(
-  message: string, 
+  message: string,
   onChunk?: (text: string) => void
 ): Promise<string> {
   // Start a new chat session if we don't have one
@@ -367,7 +367,7 @@ export async function sendChatMessage(
 
   try {
     let responseText = '';
-    
+
     if (onChunk) {
       // Use streaming for real-time updates
       const result = await currentChatSession!.sendMessageStream(message);
@@ -386,7 +386,7 @@ export async function sendChatMessage(
     if (currentChatSessionId) {
       const chatSessionRef = doc(db, "chatSessions", currentChatSessionId);
       const chatSessionDoc = await getDoc(chatSessionRef);
-      
+
       if (chatSessionDoc.exists()) {
         const existingMessages = chatSessionDoc.data().messages || [];
         await updateDoc(chatSessionRef, {
@@ -404,17 +404,17 @@ export async function sendChatMessage(
     return responseText;
   } catch (error: any) {
     console.error("Chat error:", error);
-    
+
     // Check if this is a safety block error
     if (error?.message?.includes('SAFETY') || error?.code === 'AI/response-error') {
       // Reset chat session to prevent malformed history from blocking subsequent messages
       currentChatSession = null;
-      
+
       const safetyError = new Error('SAFETY_BLOCK');
       safetyError.name = 'SafetyBlockError';
       throw safetyError;
     }
-    
+
     throw error;
   }
 }
