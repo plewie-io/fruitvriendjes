@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAI, getGenerativeModel, getTemplateGenerativeModel, getTemplateImagenModel, VertexAIBackend, HarmCategory, HarmBlockThreshold } from "firebase/ai";
+import { getAI, getGenerativeModel, getTemplateGenerativeModel, VertexAIBackend, HarmCategory, HarmBlockThreshold, ResponseModality } from "firebase/ai";
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { getAuth, signInAnonymously, onAuthStateChanged, User } from "firebase/auth";
 import { getFirestore, collection, doc, addDoc, updateDoc, serverTimestamp, Timestamp, getDoc, setDoc } from "firebase/firestore";
@@ -39,14 +39,19 @@ export const appCheck = initializeAppCheck(app, {
   isTokenAutoRefreshEnabled: true
 });
 
-// Initialize the Vertex AI Gemini API backend service with European region
-export const ai = getAI(app, { backend: new VertexAIBackend('europe-west4') });
+// Initialize the Vertex AI Gemini API backend service
+export const ai = getAI(app, { backend: new VertexAIBackend('global') });
 
 // Create a TemplateGenerativeModel instance
 export const templateModel = getTemplateGenerativeModel(ai);
 
-// Create a TemplateImagenModel instance for image generation
-export const templateImagenModel = getTemplateImagenModel(ai);
+// Create a GenerativeModel instance for image generation (Gemini Nano Banana)
+export const imageModel = getGenerativeModel(ai, {
+  model: "gemini-2.5-flash-image",
+  generationConfig: {
+    responseModalities: [ResponseModality.TEXT, ResponseModality.IMAGE],
+  },
+});
 
 // Safety settings for the chat model
 const safetySettings = [
@@ -217,19 +222,14 @@ export async function generateRecipePhoto(prompt: string): Promise<string> {
   try {
     console.log("🖼️ Generating image with prompt:", prompt);
 
-    const result = await templateImagenModel.generateImages(
-      "afbeelding-genereren",
-      { prompt: prompt }
-    );
+    const result = await imageModel.generateContent(prompt);
     console.log("🖼️ Image generation response:", result);
 
-    // Get the first generated image
-    const image = result.images[0];
-    if (image) {
-      // Return as data URL
-      const imageData = image.bytesBase64Encoded;
-      const mimeType = image.mimeType || "image/png";
-      return `data:${mimeType};base64,${imageData}`;
+    // Get the generated image from inline data parts
+    const inlineDataParts = result.response.inlineDataParts();
+    if (inlineDataParts?.[0]) {
+      const image = inlineDataParts[0].inlineData;
+      return `data:${image.mimeType};base64,${image.data}`;
     }
 
     throw new Error("No image found in response");
