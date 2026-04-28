@@ -86,10 +86,15 @@ export const recipesCollection = buildCollection<Recipe>({
       dataType: "string",
       readOnly: true,
       enumValues: {
-        up: "👍 Positief",
-        down: "👎 Negatief",
+        up: "👍",
+        down: "👎",
       },
-      columnWidth: 140,
+      columnWidth: 100,
+      Preview: ({ value }: { value: string | null | undefined }) => {
+        if (value === "up") return <span style={{ fontSize: 20 }}>👍</span>;
+        if (value === "down") return <span style={{ fontSize: 20 }}>👎</span>;
+        return <span style={{ color: "#999" }}>-</span>;
+      },
     }),
     feedbackAt: buildProperty({
       name: "Feedback op",
