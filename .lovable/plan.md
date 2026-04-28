@@ -1,60 +1,87 @@
-## Wat gaan we doen
+## Waarom de huidige PDF zo slecht is
 
-1. **Twee groene balken oranje maken** (#F08400)
-2. **"Download je recept als PDF" knop** onderaan de receptenkaart
-3. **Feedback met duimpjes** (👍 groen / 👎 rood) opgeslagen in de backend, uitleesbaar in het admin paneel
+De PDF die je hebt getest komt van de oude route `/recept`, waar nog `html2canvas` wordt gebruikt. Die maakt één grote PNG-screenshot van de hele receptkaart en plakt die in de PDF. Daardoor:
 
----
+- bestand wordt ~15 MB;
+- tekst is een afbeelding (niet selecteerbaar);
+- inhoud kan dubbel verschijnen door verkeerde paginabreaks;
+- bestandsnaam klopt niet (vaste naam i.p.v. recepttitel).
 
-## 1. Banners van groen naar oranje
+De nieuwe versie wordt volledig tekstgebaseerd met `jsPDF`, met de receptfoto als enige afbeelding (gecomprimeerd).
 
-In `src/pages/Index.tsx`:
-- Bovenste banner (regel ~270): `backgroundColor: "#B3CA17"` → `"#F08400"`
-- SVG-golf eronder (regel ~282): zelfde achtergrondkleur aanpassen
-- Onderste "Inspiratie" banner (regel ~464): zelfde aanpassing
-- Bovenliggende SVG-golf (regel ~447, fill `#B3CA17`): fill naar `#F08400`
+## Plan
 
-De witte tekst en onderstreepte link blijven zichtbaar tegen oranje.
+### 1. Eén centrale PDF-functie
 
-## 2. PDF-download knop
+Ik maak `src/lib/recipePdf.ts` met één functie `downloadRecipePdf(recipeMarkdown, recipeImage)` die overal gebruikt wordt.
 
-In `src/pages/Index.tsx`, in de receptkaart (regel ~414, na de `recipeImage` blok):
-- Knop **"Download je recept als PDF"** onderaan toevoegen met `ChefHat`/`Download` icoon, oranje stijl passend bij de bestaande "Maak een recept!" knop
-- Gebruikt `html2canvas` + `jspdf` (al eerder ingezet volgens project memory) om de complete receptkaart inclusief titel, tekst en afbeelding naar A4 PDF te renderen
-- Bestandsnaam: `mandy-recept.pdf`
+### 2. Oude screenshot-code verwijderen
 
-## 3. Feedback knoppen + opslag in backend
+In `src/pages/RecipeGenerator.tsx` haal ik de `html2canvas`-aanpak weg en laat die ook de nieuwe centrale functie gebruiken. Daardoor kan er nooit meer per ongeluk een screenshot-PDF uit de app komen.
 
-**UI** (in receptkaart, boven de PDF-knop):
-- Tekst **"Wat vond je van dit recept?"**
-- Daarnaast een **groene knop** met `ThumbsUp` icoon (kleur `#9BB510` / brand-green)
-- Daarnaast een **rode knop** met `ThumbsDown` icoon (`bg-destructive` / rood)
-- Na klikken: knop wordt actief gemarkeerd, andere uitgeschakeld, bedankje-toast tonen
-- Per recept slechts 1x feedback; als de gebruiker een nieuw recept genereert, reset de feedbackstatus
+In `src/pages/Index.tsx` vervang ik de huidige inline PDF-code door een aanroep naar de nieuwe functie.
 
-**Backend (Firestore)**:
-- In `src/lib/firebase.ts` een nieuwe functie `saveRecipeFeedback(recipeId, feedback: "up" | "down")` die:
-  - het bestaande recept-document in de `recipes` collectie updatet met velden `feedback` (string: `"up"` / `"down"`) en `feedbackAt` (timestamp)
-- Aanroepen vanuit `Index.tsx` met `currentRecipeId`
+### 3. Recepttitel goed extraheren
 
-**Admin paneel** (`src/admin/collections/recipes.ts`):
-- Twee nieuwe properties toevoegen aan de `Recipe` type en `properties`:
-  - `feedback`: enum/select met `up` (👍 Positief) / `down` (👎 Negatief), readOnly
-  - `feedbackAt`: date, readOnly
-- Hierdoor zie je in het admin paneel per recept direct of de gebruiker positief/negatief reageerde
+- Eerste markdown-kop (`#`, `##` of `###`) wordt de titel.
+- Markdown-tekens en emoji worden opgeruimd.
+- Generieke koppen zoals “Jouw recept” worden overgeslagen.
+- Titel wordt zowel in de PDF-kop als in de bestandsnaam gebruikt, bijvoorbeeld:
 
----
+```text
+# Appel-banaan pannenkoekjes  ->  appel-banaan-pannenkoekjes.pdf
+```
+
+### 4. Dubbele tekst voorkomen
+
+- De PDF leest de markdown direct, niet de zichtbare HTML-kaart, dus “Jouw recept:” uit de UI komt er niet meer in.
+- De titel wordt maar één keer geplaatst.
+- Lege en exact herhaalde regels worden gefilterd.
+
+### 5. Nette opmaak in merkstijl
+
+- Smalle oranje (#F08400) bovenbalk.
+- Grote recepttitel in oranje.
+- Kopjes oranje en vet, tekst zwart.
+- Bullets met oranje punt.
+- Genummerde stappen met oranje nummer.
+- Goede marges, regelafstand en automatische paginabreaks.
+- Footer met “Fruitvriendjes • Mandy Mandarijn” en paginanummer.
+
+### 6. Receptfoto blijft behouden, maar klein
+
+De foto blijft in de PDF, maar wordt sterk geoptimaliseerd:
+
+- automatisch verkleind tot max ~700 px aan de langste zijde;
+- opgeslagen als JPEG met ~55% kwaliteit;
+- één keer geplaatst, gecentreerd onder de titel met een maximale hoogte zodat hij niet de hele pagina vult;
+- bij CORS-problemen wordt de foto netjes overgeslagen zonder dat de hele PDF faalt.
+
+Hierdoor wordt de PDF normaal gesproken een paar honderd KB tot maximaal ~1–2 MB in plaats van 15 MB.
+
+### 7. Knop en gebruikerservaring
+
+- Knop blijft onderaan met tekst “Download je recept als PDF”.
+- Tijdens genereren toont de knop een laadstatus.
+- Na succes een korte bevestiging via toast; bij fout een nette foutmelding.
+
+### 8. Opruimen
+
+Als `html2canvas` na de wijzigingen nergens meer gebruikt wordt, verwijder ik de dependency uit `package.json` om de bundle kleiner te maken.
 
 ## Technische details
 
-- Dependencies `html2canvas` en `jspdf` toevoegen indien nog niet aanwezig (`bun add html2canvas jspdf`)
-- Receptkaart krijgt een `ref` zodat html2canvas precies dat element kan capturen
-- Feedback-status (`"up" | "down" | null`) als lokale state in `Index.tsx`, gereset bij nieuw recept
-- Geen RLS / Lovable Cloud nodig: de data leeft in Firestore en wordt automatisch zichtbaar in FireCMS
+- Tekst wordt geschreven met `jsPDF.text(...)` op A4, marges ~18 mm.
+- Markdown-parsing herkent: `#`/`##`/`###` koppen, `-`/`*`/`+` bullets, `1.` nummering, paragrafen.
+- Inline `**vet**`, `*cursief*` en backticks worden gestript.
+- Foto wordt via een offscreen `<canvas>` herschaald en als JPEG (`toDataURL("image/jpeg", 0.55)`) ingevoegd met `pdf.addImage(..., "JPEG", ..., "FAST")`.
+- Geheugen: alleen één gecomprimeerde foto, geen volledige paginascreenshot, dus geen 15 MB meer.
+- Geen backend- of databasewijzigingen.
 
-## Bestanden die wijzigen
+## Verwacht resultaat
 
-- `src/pages/Index.tsx` — banners, PDF knop, feedback UI + state
-- `src/lib/firebase.ts` — `saveRecipeFeedback` functie
-- `src/admin/collections/recipes.ts` — feedback velden in admin
-- `package.json` — `html2canvas`, `jspdf` (indien nodig)
+- PDF bevat selecteerbare tekst plus de receptfoto.
+- Bestandsgrootte normaal gesproken onder de 2 MB.
+- Titel en bestandsnaam komen overeen met de echte receptnaam.
+- Geen dubbele tekst.
+- Werkt consistent op elke plek waar je het recept kunt downloaden.
