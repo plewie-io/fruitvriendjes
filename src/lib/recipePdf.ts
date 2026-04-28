@@ -1,20 +1,93 @@
 import jsPDF from "jspdf";
+import RobotoRegularUrl from "@/assets/fonts/Roboto-Regular.ttf?url";
+import RobotoBoldUrl from "@/assets/fonts/Roboto-Bold.ttf?url";
 
 const ORANGE: [number, number, number] = [240, 132, 0]; // #F08400
 const DARK: [number, number, number] = [0, 0, 0];
 const MUTED: [number, number, number] = [110, 110, 110];
 
-const stripInline = (s: string) =>
-  s
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
-    .replace(/\*\*(.+?)\*\*/g, "$1")
-    .replace(/__(.+?)__/g, "$1")
-    .replace(/\*(.+?)\*/g, "$1")
-    .replace(/_(.+?)_/g, "$1")
-    .replace(/`(.+?)`/g, "$1")
-    .replace(/[#>]+\s*/g, "")
+const BODY_SIZE = 12;
+const FONT = "Roboto";
+
+// Cache fonts so we only fetch once per session
+let fontsLoaded: Promise<{ regular: string; bold: string }> | null = null;
+
+const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
+  let binary = "";
+  const bytes = new Uint8Array(buffer);
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode.apply(
+      null,
+      Array.from(bytes.subarray(i, i + chunk))
+    );
+  }
+  return btoa(binary);
+};
+
+const loadFonts = async () => {
+  if (!fontsLoaded) {
+    fontsLoaded = (async () => {
+      const [r, b] = await Promise.all([
+        fetch(RobotoRegularUrl).then((res) => res.arrayBuffer()),
+        fetch(RobotoBoldUrl).then((res) => res.arrayBuffer()),
+      ]);
+      return {
+        regular: arrayBufferToBase64(r),
+        bold: arrayBufferToBase64(b),
+      };
+    })();
+  }
+  return fontsLoaded;
+};
+
+const registerFonts = async (pdf: jsPDF) => {
+  try {
+    const { regular, bold } = await loadFonts();
+    pdf.addFileToVFS("Roboto-Regular.ttf", regular);
+    pdf.addFont("Roboto-Regular.ttf", FONT, "normal");
+    pdf.addFileToVFS("Roboto-Bold.ttf", bold);
+    pdf.addFont("Roboto-Bold.ttf", FONT, "bold");
+    return true;
+  } catch (e) {
+    console.warn("Recipe PDF: kon Roboto niet laden, val terug op helvetica", e);
+    return false;
+  }
+};
+
+// Verwijder emoji's, niet-printbare en exotische tekens die jsPDF niet
+// correct kan renderen (Ø=Þ, Ø<ßL, etc. zijn emoji-codepoints in WinAnsi).
+const cleanText = (s: string): string => {
+  return s
+    // Emoji & symbol blocks
+    .replace(/[\u{1F300}-\u{1FAFF}]/gu, "")
+    .replace(/[\u{2600}-\u{27BF}]/gu, "")
+    .replace(/[\u{1F000}-\u{1F2FF}]/gu, "")
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, "") // variation selectors
+    .replace(/[\u{1F1E6}-\u{1F1FF}]/gu, "") // flags
+    .replace(/\uFFFD/g, "")
+    // Smart quotes / dashes -> ascii equivalents
+    .replace(/[\u2018\u2019\u201A\u201B]/g, "'")
+    .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
+    .replace(/[\u2013\u2014]/g, "-")
+    .replace(/\u2026/g, "...")
+    // Collapse whitespace
+    .replace(/[ \t]+/g, " ")
     .trim();
+};
+
+const stripInline = (s: string) =>
+  cleanText(
+    s
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+      .replace(/\*\*(.+?)\*\*/g, "$1")
+      .replace(/__(.+?)__/g, "$1")
+      .replace(/\*(.+?)\*/g, "$1")
+      .replace(/_(.+?)_/g, "$1")
+      .replace(/`(.+?)`/g, "$1")
+      .replace(/[#>]+\s*/g, "")
+  );
 
 const isGenericTitle = (t: string) => {
   const lower = t.toLowerCase();
@@ -26,6 +99,16 @@ const isGenericTitle = (t: string) => {
   );
 };
 
+// Regels die nooit in de PDF horen (afsluitende AI-vraag e.d.)
+const SKIP_PATTERNS: RegExp[] = [
+  /wil je dit gerecht veganistisch/i,
+  /ik kan het recept voor je aanpassen/i,
+  /wil je dat ik het recept aanpas/i,
+];
+
+const shouldSkipLine = (text: string): boolean =>
+  SKIP_PATTERNS.some((re) => re.test(text));
+
 export const extractRecipeTitle = (markdown: string): string => {
   const lines = markdown.split("\n");
   for (const raw of lines) {
@@ -35,7 +118,6 @@ export const extractRecipeTitle = (markdown: string): string => {
       if (cleaned && !isGenericTitle(cleaned)) return cleaned;
     }
   }
-  // Fallback: first non-empty plain line
   for (const raw of lines) {
     const cleaned = stripInline(raw);
     if (cleaned && !isGenericTitle(cleaned)) return cleaned;
@@ -94,6 +176,12 @@ export const downloadRecipePdf = async (
   recipeImage: string | null
 ): Promise<void> => {
   const pdf = new jsPDF("p", "mm", "a4");
+  const hasRoboto = await registerFonts(pdf);
+  const fontFamily = hasRoboto ? FONT : "helvetica";
+
+  const setFont = (weight: "normal" | "bold") =>
+    pdf.setFont(fontFamily, weight);
+
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
   const marginX = 18;
@@ -115,7 +203,7 @@ export const downloadRecipePdf = async (
 
   // Title
   const recipeTitle = extractRecipeTitle(recipe);
-  pdf.setFont("helvetica", "bold");
+  setFont("bold");
   pdf.setFontSize(20);
   pdf.setTextColor(...ORANGE);
   const titleWrapped = pdf.splitTextToSize(recipeTitle, contentWidth);
@@ -127,12 +215,12 @@ export const downloadRecipePdf = async (
   pdf.line(marginX, y, pageWidth - marginX, y);
   y += 6;
 
-  // Optional recipe photo (compressed)
+  // Optional recipe photo
   if (recipeImage) {
     const img = await compressImage(recipeImage, 700, 0.55);
     if (img) {
       const ratio = img.h / img.w;
-      let drawW = Math.min(contentWidth, 110); // cap width
+      let drawW = Math.min(contentWidth, 110);
       let drawH = drawW * ratio;
       const maxH = 70;
       if (drawH > maxH) {
@@ -146,7 +234,6 @@ export const downloadRecipePdf = async (
     }
   }
 
-  // Body parsing
   const titleKey = `t:${recipeTitle.toLowerCase()}`;
   const seen = new Set<string>([titleKey]);
   let lastKey = "";
@@ -163,6 +250,8 @@ export const downloadRecipePdf = async (
     y += wrapped.length * lineHeight + 1;
   };
 
+  const lineHeightBody = BODY_SIZE * 0.5; // ~6mm
+
   const lines = recipe.split("\n");
   for (const raw of lines) {
     const line = raw.replace(/\r/g, "");
@@ -176,15 +265,15 @@ export const downloadRecipePdf = async (
     const hMatch = line.match(/^(#{1,6})\s+(.*)$/);
     if (hMatch) {
       const text = stripInline(hMatch[2]);
-      if (!text || isGenericTitle(text)) continue;
+      if (!text || isGenericTitle(text) || shouldSkipLine(text)) continue;
       const key = `h:${text.toLowerCase()}`;
       if (seen.has(key) || key === titleKey) continue;
       seen.add(key);
       lastKey = key;
       const level = Math.min(hMatch[1].length, 3);
-      const size = level === 1 ? 15 : level === 2 ? 13 : 11;
+      const size = level === 1 ? 15 : level === 2 ? 13 : 12;
       y += 2;
-      pdf.setFont("helvetica", "bold");
+      setFont("bold");
       pdf.setFontSize(size);
       pdf.setTextColor(...ORANGE);
       writeWrapped(text, marginX, contentWidth, size * 0.5);
@@ -195,20 +284,20 @@ export const downloadRecipePdf = async (
     const bMatch = line.match(/^\s*[-*+]\s+(.*)$/);
     if (bMatch) {
       const text = stripInline(bMatch[1]);
-      if (!text) continue;
+      if (!text || shouldSkipLine(text)) continue;
       const key = `b:${text.toLowerCase()}`;
       if (seen.has(key) || key === lastKey) continue;
       seen.add(key);
       lastKey = key;
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(11);
+      setFont("normal");
+      pdf.setFontSize(BODY_SIZE);
       const wrapped = pdf.splitTextToSize(text, contentWidth - 6);
-      ensureSpace(wrapped.length * 5 + 1);
+      ensureSpace(wrapped.length * lineHeightBody + 1);
       pdf.setTextColor(...ORANGE);
       pdf.text("•", marginX, y);
       pdf.setTextColor(...DARK);
       pdf.text(wrapped, marginX + 5, y);
-      y += wrapped.length * 5 + 1;
+      y += wrapped.length * lineHeightBody + 1;
       continue;
     }
 
@@ -216,56 +305,49 @@ export const downloadRecipePdf = async (
     const nMatch = line.match(/^\s*(\d+)[.)]\s+(.*)$/);
     if (nMatch) {
       const text = stripInline(nMatch[2]);
-      if (!text) continue;
+      if (!text || shouldSkipLine(text)) continue;
       const key = `n:${text.toLowerCase()}`;
       if (seen.has(key) || key === lastKey) continue;
       seen.add(key);
       lastKey = key;
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(11);
+      setFont("normal");
+      pdf.setFontSize(BODY_SIZE);
       const wrapped = pdf.splitTextToSize(text, contentWidth - 8);
-      ensureSpace(wrapped.length * 5 + 1);
-      pdf.setFont("helvetica", "bold");
+      ensureSpace(wrapped.length * lineHeightBody + 1);
+      setFont("bold");
       pdf.setTextColor(...ORANGE);
       pdf.text(`${nMatch[1]}.`, marginX, y);
-      pdf.setFont("helvetica", "normal");
+      setFont("normal");
       pdf.setTextColor(...DARK);
       pdf.text(wrapped, marginX + 7, y);
-      y += wrapped.length * 5 + 1;
+      y += wrapped.length * lineHeightBody + 1;
       continue;
     }
 
     // Paragraph
     const text = stripInline(line);
-    if (!text || isGenericTitle(text)) continue;
+    if (!text || isGenericTitle(text) || shouldSkipLine(text)) continue;
     const key = `p:${text.toLowerCase()}`;
     if (seen.has(key) || key === lastKey) continue;
     seen.add(key);
     lastKey = key;
-    pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(11);
+    setFont("normal");
+    pdf.setFontSize(BODY_SIZE);
     pdf.setTextColor(...DARK);
-    writeWrapped(text, marginX, contentWidth, 5);
+    writeWrapped(text, marginX, contentWidth, lineHeightBody);
   }
 
-  // Footer per page
+  // Footer
   const pageCount = pdf.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     pdf.setPage(i);
-    pdf.setFont("helvetica", "italic");
+    setFont("normal");
     pdf.setFontSize(9);
     pdf.setTextColor(...MUTED);
-    pdf.text(
-      "Fruitvriendjes • Mandy Mandarijn",
-      marginX,
-      pageHeight - 8
-    );
-    pdf.text(
-      `${i} / ${pageCount}`,
-      pageWidth - marginX,
-      pageHeight - 8,
-      { align: "right" }
-    );
+    pdf.text("Fruitvriendjes • Mandy Mandarijn", marginX, pageHeight - 8);
+    pdf.text(`${i} / ${pageCount}`, pageWidth - marginX, pageHeight - 8, {
+      align: "right",
+    });
   }
 
   pdf.save(`${sanitizeFilename(recipeTitle)}.pdf`);
