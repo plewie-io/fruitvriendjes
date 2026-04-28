@@ -52,7 +52,68 @@ const Index = () => {
   const [imageLoading, setImageLoading] = useState(false);
   const [isModifyMode, setIsModifyMode] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
+  const [feedback, setFeedback] = useState<"up" | "down" | null>(null);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const recipeCardRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  const handleFeedback = async (value: "up" | "down") => {
+    if (!currentRecipeId || feedback) return;
+    setFeedback(value);
+    try {
+      await saveRecipeFeedback(currentRecipeId, value);
+      toast({
+        title: "Bedankt voor je feedback! 🙏",
+        description: value === "up" ? "Fijn dat je het recept leuk vond!" : "We doen ons best om beter te worden.",
+      });
+    } catch (error) {
+      console.error("Error saving feedback:", error);
+      setFeedback(null);
+      toast({ title: "Oeps!", description: "Feedback kon niet worden opgeslagen.", variant: "destructive" });
+    }
+  };
+
+  const handleDownloadPdf = async () => {
+    if (!recipeCardRef.current) return;
+    setDownloadingPdf(true);
+    try {
+      const canvas = await html2canvas(recipeCardRef.current, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        useCORS: true,
+      });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 10;
+      const imgWidth = pageWidth - margin * 2;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      if (imgHeight <= pageHeight - margin * 2) {
+        pdf.addImage(imgData, "PNG", margin, margin, imgWidth, imgHeight);
+      } else {
+        // multi-page
+        let remainingHeight = imgHeight;
+        let position = margin;
+        const maxPageHeight = pageHeight - margin * 2;
+        while (remainingHeight > 0) {
+          pdf.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
+          remainingHeight -= maxPageHeight;
+          if (remainingHeight > 0) {
+            pdf.addPage();
+            position = margin - (imgHeight - remainingHeight);
+          }
+        }
+      }
+      pdf.save("mandy-recept.pdf");
+    } catch (error) {
+      console.error("PDF error:", error);
+      toast({ title: "Oeps!", description: "PDF maken is niet gelukt.", variant: "destructive" });
+    } finally {
+      setDownloadingPdf(false);
+    }
+  };
 
   // ... keep existing code (handleDialogClose, useEffect, handleUndo, handleSubmit, handleModifyRecipe, generateRecipe)
   const handleDialogClose = () => {
