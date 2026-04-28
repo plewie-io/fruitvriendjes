@@ -181,6 +181,7 @@ const Index = () => {
     ]);
     setRecipe(null);
     setRecipeImage(null);
+    setFeedback(null);
     setLoading(true);
     try {
       const recipeResponse = await modifyRecipe(
@@ -447,6 +448,7 @@ const Index = () => {
                             setRecipeImage(null);
                             setRecipeHistory([]);
                             setCurrentRecipeId(null);
+                            setFeedback(null);
                             setIsModifyMode(false);
                             setIngredients("");
                           }}
