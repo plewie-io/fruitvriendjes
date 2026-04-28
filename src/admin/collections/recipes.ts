@@ -1,3 +1,4 @@
+import { createElement } from "react";
 import { buildCollection, buildProperty } from "@firecms/core";
 
 export type Recipe = {
@@ -91,9 +92,9 @@ export const recipesCollection = buildCollection<Recipe>({
       },
       columnWidth: 100,
       Preview: ({ value }: { value: string | null | undefined }) => {
-        if (value === "up") return <span style={{ fontSize: 20 }}>👍</span>;
-        if (value === "down") return <span style={{ fontSize: 20 }}>👎</span>;
-        return <span style={{ color: "#999" }}>-</span>;
+        if (value === "up") return createElement("span", { style: { fontSize: 20 } }, "👍");
+        if (value === "down") return createElement("span", { style: { fontSize: 20 } }, "👎");
+        return createElement("span", { style: { color: "#999" } }, "-");
       },
     }),
     feedbackAt: buildProperty({
