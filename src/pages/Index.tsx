@@ -26,7 +26,7 @@ import {
   signInAndCreateSession,
 } from "@/lib/firebase";
 import ReactMarkdown from "react-markdown";
-import jsPDF from "jspdf";
+import { downloadRecipePdf } from "@/lib/recipePdf";
 import golfje from "@/assets/golfje-appel-dubbel.png";
 import masterchefMandy from "@/assets/masterchef-mandy.png";
 import golfjeBottom from "@/assets/golfje-bottom.png";
@@ -76,213 +76,18 @@ const Index = () => {
     if (!recipe) return;
     setDownloadingPdf(true);
     try {
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const marginX = 18;
-      const marginTop = 20;
-      const marginBottom = 20;
-      const contentWidth = pageWidth - marginX * 2;
-      let y = marginTop;
-
-      // Brand colors
-      const orange: [number, number, number] = [219, 114, 2];
-      const dark: [number, number, number] = [0, 0, 0];
-      const muted: [number, number, number] = [90, 90, 90];
-
-      const ensureSpace = (needed: number) => {
-        if (y + needed > pageHeight - marginBottom) {
-          pdf.addPage();
-          y = marginTop;
-        }
-      };
-
-      // Strip markdown formatting from a line
-      const cleanInline = (s: string) =>
-        s
-          .replace(/\*\*(.+?)\*\*/g, "$1")
-          .replace(/\*(.+?)\*/g, "$1")
-          .replace(/`(.+?)`/g, "$1")
-          .replace(/^[-*+]\s+/, "")
-          .replace(/^\d+\.\s+/, "")
-          .trim();
-
-      // Extract recipe title from first markdown heading
-      const titleMatch = recipe.match(/^\s*#{1,3}\s+(.+)$/m);
-      const recipeTitle = titleMatch
-        ? cleanInline(titleMatch[1])
-        : "Recept";
-
-      // Header bar
-      pdf.setFillColor(...orange);
-      pdf.rect(0, 0, pageWidth, 12, "F");
-
-      // Title
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(22);
-      pdf.setTextColor(...orange);
-      const titleWrapped = pdf.splitTextToSize(recipeTitle, contentWidth);
-      pdf.text(titleWrapped, marginX, y);
-      y += titleWrapped.length * 9;
-
-      pdf.setDrawColor(...orange);
-      pdf.setLineWidth(0.5);
-      pdf.line(marginX, y, pageWidth - marginX, y);
-      y += 6;
-
-      // Mark title as seen so it isn't repeated
-      const titleKey = `h:${recipeTitle.toLowerCase()}`;
-
-      // Optional image — downscaled and compressed to keep PDF small
-      if (recipeImage) {
-        try {
-          const imgProps = await new Promise<{ w: number; h: number; data: string }>((resolve, reject) => {
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-            img.onload = () => {
-              // Downscale to max 800px on longest side
-              const maxDim = 800;
-              const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
-              const w = Math.round(img.width * scale);
-              const h = Math.round(img.height * scale);
-              const canvas = document.createElement("canvas");
-              canvas.width = w;
-              canvas.height = h;
-              const ctx = canvas.getContext("2d");
-              if (!ctx) return reject(new Error("no ctx"));
-              ctx.drawImage(img, 0, 0, w, h);
-              resolve({ w, h, data: canvas.toDataURL("image/jpeg", 0.6) });
-            };
-            img.onerror = reject;
-            img.src = recipeImage;
-          });
-          const imgW = contentWidth;
-          const imgH = (imgProps.h * imgW) / imgProps.w;
-          const maxH = 80;
-          const finalH = Math.min(imgH, maxH);
-          const finalW = (imgProps.w * finalH) / imgProps.h;
-          ensureSpace(finalH + 6);
-          pdf.addImage(imgProps.data, "JPEG", (pageWidth - finalW) / 2, y, finalW, finalH, undefined, "FAST");
-          y += finalH + 6;
-        } catch (e) {
-          console.warn("image skip", e);
-        }
-      }
-
-      // Parse markdown lines
-      const lines = recipe.split("\n");
-      const seen = new Set<string>();
-      seen.add(titleKey);
-
-      for (let raw of lines) {
-        const line = raw.replace(/\r/g, "");
-        if (!line.trim()) {
-          y += 3;
-          continue;
-        }
-
-        // Heading
-        const hMatch = line.match(/^(#{1,3})\s+(.*)$/);
-        if (hMatch) {
-          const level = hMatch[1].length;
-          const text = cleanInline(hMatch[2]);
-          const key = `h:${text.toLowerCase()}`;
-          if (seen.has(key)) continue;
-          seen.add(key);
-          const size = level === 1 ? 16 : level === 2 ? 13 : 11;
-          ensureSpace(size * 0.5 + 6);
-          y += 2;
-          pdf.setFont("helvetica", "bold");
-          pdf.setFontSize(size);
-          pdf.setTextColor(...orange);
-          const wrapped = pdf.splitTextToSize(text, contentWidth);
-          pdf.text(wrapped, marginX, y);
-          y += wrapped.length * (size * 0.45) + 2;
-          continue;
-        }
-
-        // Bullet
-        const bMatch = line.match(/^\s*[-*+]\s+(.*)$/);
-        if (bMatch) {
-          const text = cleanInline(bMatch[1]);
-          if (!text) continue;
-          const key = `b:${text.toLowerCase()}`;
-          if (seen.has(key)) continue;
-          seen.add(key);
-          pdf.setFont("helvetica", "normal");
-          pdf.setFontSize(11);
-          pdf.setTextColor(...dark);
-          const wrapped = pdf.splitTextToSize(text, contentWidth - 6);
-          ensureSpace(wrapped.length * 5 + 1);
-          pdf.setTextColor(...orange);
-          pdf.text("•", marginX, y);
-          pdf.setTextColor(...dark);
-          pdf.text(wrapped, marginX + 5, y);
-          y += wrapped.length * 5 + 1;
-          continue;
-        }
-
-        // Numbered
-        const nMatch = line.match(/^\s*(\d+)\.\s+(.*)$/);
-        if (nMatch) {
-          const text = cleanInline(nMatch[2]);
-          if (!text) continue;
-          const key = `n:${text.toLowerCase()}`;
-          if (seen.has(key)) continue;
-          seen.add(key);
-          pdf.setFont("helvetica", "normal");
-          pdf.setFontSize(11);
-          pdf.setTextColor(...dark);
-          const num = `${nMatch[1]}.`;
-          const wrapped = pdf.splitTextToSize(text, contentWidth - 8);
-          ensureSpace(wrapped.length * 5 + 1);
-          pdf.setFont("helvetica", "bold");
-          pdf.setTextColor(...orange);
-          pdf.text(num, marginX, y);
-          pdf.setFont("helvetica", "normal");
-          pdf.setTextColor(...dark);
-          pdf.text(wrapped, marginX + 7, y);
-          y += wrapped.length * 5 + 1;
-          continue;
-        }
-
-        // Paragraph
-        const text = cleanInline(line);
-        if (!text) continue;
-        const key = `p:${text.toLowerCase()}`;
-        if (seen.has(key)) continue;
-        seen.add(key);
-        pdf.setFont("helvetica", "normal");
-        pdf.setFontSize(11);
-        pdf.setTextColor(...dark);
-        const wrapped = pdf.splitTextToSize(text, contentWidth);
-        ensureSpace(wrapped.length * 5 + 2);
-        pdf.text(wrapped, marginX, y);
-        y += wrapped.length * 5 + 2;
-      }
-
-      // Footer on every page
-      const pageCount = pdf.getNumberOfPages();
-      for (let i = 1; i <= pageCount; i++) {
-        pdf.setPage(i);
-        pdf.setFont("helvetica", "italic");
-        pdf.setFontSize(9);
-        pdf.setTextColor(...muted);
-        pdf.text("Fruitvriendjes • Mandy Mandarijn", marginX, pageHeight - 8);
-        pdf.text(`${i} / ${pageCount}`, pageWidth - marginX, pageHeight - 8, { align: "right" });
-      }
-
-      const safeFilename =
-        recipeTitle
-          .toLowerCase()
-          .replace(/[^a-z0-9\s-]/gi, "")
-          .trim()
-          .replace(/\s+/g, "-")
-          .slice(0, 60) || "recept";
-      pdf.save(`${safeFilename}.pdf`);
+      await downloadRecipePdf(recipe, recipeImage);
+      toast({
+        title: "PDF gedownload! 📄",
+        description: "Je recept is opgeslagen als PDF.",
+      });
     } catch (error) {
       console.error("PDF error:", error);
-      toast({ title: "Oeps!", description: "PDF maken is niet gelukt.", variant: "destructive" });
+      toast({
+        title: "Oeps!",
+        description: "PDF maken is niet gelukt.",
+        variant: "destructive",
+      });
     } finally {
       setDownloadingPdf(false);
     }

@@ -14,6 +14,7 @@ import {
 } from "@/lib/firebase";
 import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import { downloadRecipePdf } from "@/lib/recipePdf";
 import recipeBackground from "@/assets/recipe-background.jpg";
 type RecipeHistoryItem = {
   recipe: string;
@@ -35,44 +36,9 @@ const RecipeGenerator = () => {
   const recipeCardRef = useRef<HTMLDivElement>(null);
 
   const handleDownloadPdf = useCallback(async () => {
-    if (!recipeCardRef.current) return;
+    if (!recipe) return;
     try {
-      const html2canvas = (await import("html2canvas")).default;
-      const { jsPDF } = await import("jspdf");
-
-      const canvas = await html2canvas(recipeCardRef.current, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-      });
-
-      const imgData = canvas.toDataURL("image/png");
-      const imgWidth = 190;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      let position = 10;
-
-      if (imgHeight + 10 > pageHeight) {
-        // Multi-page
-        let remainingHeight = imgHeight;
-        let srcY = 0;
-        while (remainingHeight > 0) {
-          const sliceHeight = Math.min(remainingHeight, pageHeight - 20);
-          pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight, undefined, "FAST", 0);
-          remainingHeight -= sliceHeight;
-          if (remainingHeight > 0) {
-            pdf.addPage();
-            position = -(imgHeight - remainingHeight) + 10;
-          }
-        }
-      } else {
-        pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
-      }
-
-      pdf.save("recept-fruitvriendjes.pdf");
-
+      await downloadRecipePdf(recipe, recipeImage);
       toast({
         title: "PDF gedownload! 📄",
         description: "Je recept is opgeslagen als PDF.",
@@ -85,7 +51,7 @@ const RecipeGenerator = () => {
         variant: "destructive",
       });
     }
-  }, [toast]);
+  }, [toast, recipe, recipeImage]);
 
   const handleUndo = () => {
     if (recipeHistory.length === 0) return;
