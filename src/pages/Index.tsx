@@ -107,6 +107,12 @@ const Index = () => {
           .replace(/^\d+\.\s+/, "")
           .trim();
 
+      // Extract recipe title from first markdown heading
+      const titleMatch = recipe.match(/^\s*#{1,3}\s+(.+)$/m);
+      const recipeTitle = titleMatch
+        ? cleanInline(titleMatch[1])
+        : "Recept";
+
       // Header bar
       pdf.setFillColor(...orange);
       pdf.rect(0, 0, pageWidth, 12, "F");
@@ -115,28 +121,37 @@ const Index = () => {
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(22);
       pdf.setTextColor(...orange);
-      pdf.text("Mandy Mandarijn's Recept", marginX, y);
-      y += 9;
+      const titleWrapped = pdf.splitTextToSize(recipeTitle, contentWidth);
+      pdf.text(titleWrapped, marginX, y);
+      y += titleWrapped.length * 9;
 
       pdf.setDrawColor(...orange);
       pdf.setLineWidth(0.5);
       pdf.line(marginX, y, pageWidth - marginX, y);
       y += 6;
 
-      // Optional image
+      // Mark title as seen so it isn't repeated
+      const titleKey = `h:${recipeTitle.toLowerCase()}`;
+
+      // Optional image — downscaled and compressed to keep PDF small
       if (recipeImage) {
         try {
           const imgProps = await new Promise<{ w: number; h: number; data: string }>((resolve, reject) => {
             const img = new Image();
             img.crossOrigin = "anonymous";
             img.onload = () => {
+              // Downscale to max 800px on longest side
+              const maxDim = 800;
+              const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+              const w = Math.round(img.width * scale);
+              const h = Math.round(img.height * scale);
               const canvas = document.createElement("canvas");
-              canvas.width = img.width;
-              canvas.height = img.height;
+              canvas.width = w;
+              canvas.height = h;
               const ctx = canvas.getContext("2d");
               if (!ctx) return reject(new Error("no ctx"));
-              ctx.drawImage(img, 0, 0);
-              resolve({ w: img.width, h: img.height, data: canvas.toDataURL("image/jpeg", 0.85) });
+              ctx.drawImage(img, 0, 0, w, h);
+              resolve({ w, h, data: canvas.toDataURL("image/jpeg", 0.6) });
             };
             img.onerror = reject;
             img.src = recipeImage;
@@ -147,7 +162,7 @@ const Index = () => {
           const finalH = Math.min(imgH, maxH);
           const finalW = (imgProps.w * finalH) / imgProps.h;
           ensureSpace(finalH + 6);
-          pdf.addImage(imgProps.data, "JPEG", (pageWidth - finalW) / 2, y, finalW, finalH);
+          pdf.addImage(imgProps.data, "JPEG", (pageWidth - finalW) / 2, y, finalW, finalH, undefined, "FAST");
           y += finalH + 6;
         } catch (e) {
           console.warn("image skip", e);
