@@ -172,6 +172,7 @@ const Index = () => {
       // Parse markdown lines
       const lines = recipe.split("\n");
       const seen = new Set<string>();
+      seen.add(titleKey);
 
       for (let raw of lines) {
         const line = raw.replace(/\r/g, "");
