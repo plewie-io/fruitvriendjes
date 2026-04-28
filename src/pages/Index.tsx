@@ -479,28 +479,76 @@ const Index = () => {
             {/* Recipe result */}
             {recipe && (
               <Card className="max-w-xl mx-auto p-6 shadow-float animate-fade-in bg-white mb-8">
-                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 font-poster">
-                  <ChefHat className="h-6 w-6 text-mandy-orange" />
-                  Jouw recept:
-                </h2>
-                <div className="prose prose-lg max-w-none">
-                  <ReactMarkdown>{recipe}</ReactMarkdown>
+                <div ref={recipeCardRef} className="bg-white">
+                  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 font-poster">
+                    <ChefHat className="h-6 w-6 text-mandy-orange" />
+                    Jouw recept:
+                  </h2>
+                  <div className="prose prose-lg max-w-none">
+                    <ReactMarkdown>{recipe}</ReactMarkdown>
+                  </div>
+                  {imageLoading && (
+                    <div className="flex items-center justify-center py-8 mt-4 bg-mandy-orange-light rounded-xl">
+                      <Loader2 className="h-8 w-8 animate-spin text-mandy-orange mr-2" />
+                      <span className="text-muted-foreground">Foto maken...</span>
+                    </div>
+                  )}
+                  {recipeImage && (
+                    <div className="mt-4">
+                      <img
+                        src={recipeImage}
+                        alt="Recept foto"
+                        className="w-full rounded-xl shadow-md"
+                      />
+                    </div>
+                  )}
                 </div>
-                {imageLoading && (
-                  <div className="flex items-center justify-center py-8 mt-4 bg-mandy-orange-light rounded-xl">
-                    <Loader2 className="h-8 w-8 animate-spin text-mandy-orange mr-2" />
-                    <span className="text-muted-foreground">Foto maken...</span>
+
+                {/* Feedback */}
+                <div className="mt-6 pt-6 border-t border-border">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-3">
+                    <span className="font-poster font-bold text-black text-center sm:text-left">
+                      Wat vond je van dit recept?
+                    </span>
+                    <div className="flex gap-2 justify-center">
+                      <Button
+                        onClick={() => handleFeedback("up")}
+                        disabled={!!feedback || !currentRecipeId}
+                        className={`bg-brand-green hover:bg-brand-green/90 text-white ${feedback === "up" ? "ring-2 ring-offset-2 ring-brand-green" : ""} ${feedback === "down" ? "opacity-40" : ""}`}
+                        size="icon"
+                        aria-label="Duim omhoog"
+                      >
+                        <ThumbsUp className="h-5 w-5" />
+                      </Button>
+                      <Button
+                        onClick={() => handleFeedback("down")}
+                        disabled={!!feedback || !currentRecipeId}
+                        className={`bg-destructive hover:bg-destructive/90 text-destructive-foreground ${feedback === "down" ? "ring-2 ring-offset-2 ring-destructive" : ""} ${feedback === "up" ? "opacity-40" : ""}`}
+                        size="icon"
+                        aria-label="Duim omlaag"
+                      >
+                        <ThumbsDown className="h-5 w-5" />
+                      </Button>
+                    </div>
                   </div>
-                )}
-                {recipeImage && (
-                  <div className="mt-4">
-                    <img
-                      src={recipeImage}
-                      alt="Recept foto"
-                      className="w-full rounded-xl shadow-md"
-                    />
-                  </div>
-                )}
+                </div>
+
+                {/* Download PDF */}
+                <div className="mt-4">
+                  <Button
+                    onClick={handleDownloadPdf}
+                    disabled={downloadingPdf}
+                    className="w-full text-lg py-6 bg-mandy-orange hover:bg-mandy-orange/90 font-poster uppercase"
+                    size="lg"
+                  >
+                    {downloadingPdf ? (
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    ) : (
+                      <Download className="mr-2 h-5 w-5" />
+                    )}
+                    Download je recept als PDF
+                  </Button>
+                </div>
               </Card>
             )}
 
