@@ -181,6 +181,23 @@ export async function saveRecipeGeneration(
   }
 }
 
+// Save user feedback (thumbs up/down) for a generated recipe
+export async function saveRecipeFeedback(
+  recipeId: string,
+  feedback: "up" | "down"
+): Promise<void> {
+  try {
+    await updateDoc(doc(db, "recipes", recipeId), {
+      feedback: feedback,
+      feedbackAt: serverTimestamp(),
+    });
+    console.log("👍 Feedback saved:", recipeId, feedback);
+  } catch (error) {
+    console.error("Error saving feedback:", error);
+    throw error;
+  }
+}
+
 // Type for the structured recipe response
 export interface RecipeResponse {
   recipe: string;

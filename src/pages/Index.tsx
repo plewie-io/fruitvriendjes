@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -14,17 +14,20 @@ import {
 import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
 import Footer from "@/components/Footer";
 
-import { Loader2, ChefHat, Undo2 } from "lucide-react";
+import { Loader2, ChefHat, Undo2, Download, ThumbsUp, ThumbsDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   generateRecipe as generateRecipeAI,
   generateRecipePhoto,
   modifyRecipe,
   saveRecipeGeneration,
+  saveRecipeFeedback,
   getCurrentSessionId,
   signInAndCreateSession,
 } from "@/lib/firebase";
 import ReactMarkdown from "react-markdown";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import golfje from "@/assets/golfje-appel-dubbel.png";
 import masterchefMandy from "@/assets/masterchef-mandy.png";
 import golfjeBottom from "@/assets/golfje-bottom.png";
@@ -49,7 +52,68 @@ const Index = () => {
   const [imageLoading, setImageLoading] = useState(false);
   const [isModifyMode, setIsModifyMode] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
+  const [feedback, setFeedback] = useState<"up" | "down" | null>(null);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const recipeCardRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  const handleFeedback = async (value: "up" | "down") => {
+    if (!currentRecipeId || feedback) return;
+    setFeedback(value);
+    try {
+      await saveRecipeFeedback(currentRecipeId, value);
+      toast({
+        title: "Bedankt voor je feedback! 🙏",
+        description: value === "up" ? "Fijn dat je het recept leuk vond!" : "We doen ons best om beter te worden.",
+      });
+    } catch (error) {
+      console.error("Error saving feedback:", error);
+      setFeedback(null);
+      toast({ title: "Oeps!", description: "Feedback kon niet worden opgeslagen.", variant: "destructive" });
+    }
+  };
+
+  const handleDownloadPdf = async () => {
+    if (!recipeCardRef.current) return;
+    setDownloadingPdf(true);
+    try {
+      const canvas = await html2canvas(recipeCardRef.current, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        useCORS: true,
+      });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 10;
+      const imgWidth = pageWidth - margin * 2;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      if (imgHeight <= pageHeight - margin * 2) {
+        pdf.addImage(imgData, "PNG", margin, margin, imgWidth, imgHeight);
+      } else {
+        // multi-page
+        let remainingHeight = imgHeight;
+        let position = margin;
+        const maxPageHeight = pageHeight - margin * 2;
+        while (remainingHeight > 0) {
+          pdf.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
+          remainingHeight -= maxPageHeight;
+          if (remainingHeight > 0) {
+            pdf.addPage();
+            position = margin - (imgHeight - remainingHeight);
+          }
+        }
+      }
+      pdf.save("mandy-recept.pdf");
+    } catch (error) {
+      console.error("PDF error:", error);
+      toast({ title: "Oeps!", description: "PDF maken is niet gelukt.", variant: "destructive" });
+    } finally {
+      setDownloadingPdf(false);
+    }
+  };
 
   // ... keep existing code (handleDialogClose, useEffect, handleUndo, handleSubmit, handleModifyRecipe, generateRecipe)
   const handleDialogClose = () => {
@@ -117,6 +181,7 @@ const Index = () => {
     ]);
     setRecipe(null);
     setRecipeImage(null);
+    setFeedback(null);
     setLoading(true);
     try {
       const recipeResponse = await modifyRecipe(
@@ -178,6 +243,7 @@ const Index = () => {
     setRecipeImage(null);
     setRecipeHistory([]);
     setCurrentRecipeId(null);
+    setFeedback(null);
     try {
       const recipeResponse = await generateRecipeAI(
         userIngredients,
@@ -267,7 +333,7 @@ const Index = () => {
       {/* Green banner */}
       <div
         className="py-12 md:py-8 px-4"
-        style={{ backgroundColor: "#B3CA17" }}
+        style={{ backgroundColor: "#F08400" }}
       >
         <div className="container mx-auto max-w-4xl text-left">
           <h1 className="text-3xl md:text-2xl font-bold text-white mb-1 md:mb-0 font-poster uppercase whitespace-nowrap">
@@ -279,7 +345,7 @@ const Index = () => {
         </div>
       </div>
       {/* SVG wave: green → cream */}
-      <div style={{ backgroundColor: "#B3CA17", lineHeight: 0 }}>
+      <div style={{ backgroundColor: "#F08400", lineHeight: 0 }}>
         <svg
           viewBox="0 0 1440 16"
           xmlns="http://www.w3.org/2000/svg"
@@ -382,6 +448,7 @@ const Index = () => {
                             setRecipeImage(null);
                             setRecipeHistory([]);
                             setCurrentRecipeId(null);
+                            setFeedback(null);
                             setIsModifyMode(false);
                             setIngredients("");
                           }}
@@ -412,28 +479,76 @@ const Index = () => {
             {/* Recipe result */}
             {recipe && (
               <Card className="max-w-xl mx-auto p-6 shadow-float animate-fade-in bg-white mb-8">
-                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 font-poster">
-                  <ChefHat className="h-6 w-6 text-mandy-orange" />
-                  Jouw recept:
-                </h2>
-                <div className="prose prose-lg max-w-none">
-                  <ReactMarkdown>{recipe}</ReactMarkdown>
+                <div ref={recipeCardRef} className="bg-white">
+                  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 font-poster">
+                    <ChefHat className="h-6 w-6 text-mandy-orange" />
+                    Jouw recept:
+                  </h2>
+                  <div className="prose prose-lg max-w-none">
+                    <ReactMarkdown>{recipe}</ReactMarkdown>
+                  </div>
+                  {imageLoading && (
+                    <div className="flex items-center justify-center py-8 mt-4 bg-mandy-orange-light rounded-xl">
+                      <Loader2 className="h-8 w-8 animate-spin text-mandy-orange mr-2" />
+                      <span className="text-muted-foreground">Foto maken...</span>
+                    </div>
+                  )}
+                  {recipeImage && (
+                    <div className="mt-4">
+                      <img
+                        src={recipeImage}
+                        alt="Recept foto"
+                        className="w-full rounded-xl shadow-md"
+                      />
+                    </div>
+                  )}
                 </div>
-                {imageLoading && (
-                  <div className="flex items-center justify-center py-8 mt-4 bg-mandy-orange-light rounded-xl">
-                    <Loader2 className="h-8 w-8 animate-spin text-mandy-orange mr-2" />
-                    <span className="text-muted-foreground">Foto maken...</span>
+
+                {/* Feedback */}
+                <div className="mt-6 pt-6 border-t border-border">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-3">
+                    <span className="font-poster font-bold text-black text-center sm:text-left">
+                      Wat vond je van dit recept?
+                    </span>
+                    <div className="flex gap-2 justify-center">
+                      <Button
+                        onClick={() => handleFeedback("up")}
+                        disabled={!!feedback || !currentRecipeId}
+                        className={`bg-brand-green hover:bg-brand-green/90 text-white ${feedback === "up" ? "ring-2 ring-offset-2 ring-brand-green" : ""} ${feedback === "down" ? "opacity-40" : ""}`}
+                        size="icon"
+                        aria-label="Duim omhoog"
+                      >
+                        <ThumbsUp className="h-5 w-5" />
+                      </Button>
+                      <Button
+                        onClick={() => handleFeedback("down")}
+                        disabled={!!feedback || !currentRecipeId}
+                        className={`bg-destructive hover:bg-destructive/90 text-destructive-foreground ${feedback === "down" ? "ring-2 ring-offset-2 ring-destructive" : ""} ${feedback === "up" ? "opacity-40" : ""}`}
+                        size="icon"
+                        aria-label="Duim omlaag"
+                      >
+                        <ThumbsDown className="h-5 w-5" />
+                      </Button>
+                    </div>
                   </div>
-                )}
-                {recipeImage && (
-                  <div className="mt-4">
-                    <img
-                      src={recipeImage}
-                      alt="Recept foto"
-                      className="w-full rounded-xl shadow-md"
-                    />
-                  </div>
-                )}
+                </div>
+
+                {/* Download PDF */}
+                <div className="mt-4">
+                  <Button
+                    onClick={handleDownloadPdf}
+                    disabled={downloadingPdf}
+                    className="w-full text-lg py-6 bg-mandy-orange hover:bg-mandy-orange/90 font-poster uppercase"
+                    size="lg"
+                  >
+                    {downloadingPdf ? (
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    ) : (
+                      <Download className="mr-2 h-5 w-5" />
+                    )}
+                    Download je recept als PDF
+                  </Button>
+                </div>
               </Card>
             )}
 
@@ -453,7 +568,7 @@ const Index = () => {
           >
             <path
               d="M0,8 C3,16 27,0 30,8 C37,16 53,0 60,8 C74,16 76,0 90,8 C97,13 113,3 120,8 C122,16 148,0 150,8 C157,16 173,0 180,8 C183,16 207,0 210,8 C217,16 233,0 240,8 C254,16 256,0 270,8 C277,13 293,3 300,8 C302,16 328,0 330,8 C337,16 353,0 360,8 C363,16 387,0 390,8 C397,16 413,0 420,8 C434,16 436,0 450,8 C457,13 473,3 480,8 C482,16 508,0 510,8 C517,16 533,0 540,8 C543,16 567,0 570,8 C577,16 593,0 600,8 C614,16 616,0 630,8 C637,13 653,3 660,8 C662,16 688,0 690,8 C697,16 713,0 720,8 C723,16 747,0 750,8 C757,16 773,0 780,8 C794,16 796,0 810,8 C817,13 833,3 840,8 C842,16 868,0 870,8 C877,16 893,0 900,8 C903,16 927,0 930,8 C937,16 953,0 960,8 C974,16 976,0 990,8 C997,13 1013,3 1020,8 C1022,16 1048,0 1050,8 C1057,16 1073,0 1080,8 C1083,16 1107,0 1110,8 C1117,16 1133,0 1140,8 C1154,16 1156,0 1170,8 C1177,13 1193,3 1200,8 C1202,16 1228,0 1230,8 C1237,16 1253,0 1260,8 C1263,16 1287,0 1290,8 C1297,16 1313,0 1320,8 C1334,16 1336,0 1350,8 C1357,13 1373,3 1380,8 C1382,16 1408,0 1410,8 C1417,16 1433,0 1440,8 L1440,16 L0,16 Z"
-              fill="#B3CA17"
+              fill="#F08400"
             />
           </svg>
         </div>
@@ -461,7 +576,7 @@ const Index = () => {
         {/* Green inspiratie section */}
         <div
           className="py-12 md:py-10 px-4"
-          style={{ backgroundColor: "#B3CA17" }}
+          style={{ backgroundColor: "#F08400" }}
         >
           <div className="container mx-auto max-w-4xl text-center">
             <h2 className="text-2xl md:text-xl font-bold text-white font-poster uppercase">
