@@ -26,7 +26,6 @@ import {
   signInAndCreateSession,
 } from "@/lib/firebase";
 import ReactMarkdown from "react-markdown";
-import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import golfje from "@/assets/golfje-appel-dubbel.png";
 import masterchefMandy from "@/assets/masterchef-mandy.png";
