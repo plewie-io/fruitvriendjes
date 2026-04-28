@@ -272,7 +272,14 @@ const Index = () => {
         pdf.text(`${i} / ${pageCount}`, pageWidth - marginX, pageHeight - 8, { align: "right" });
       }
 
-      pdf.save("mandy-recept.pdf");
+      const safeFilename =
+        recipeTitle
+          .toLowerCase()
+          .replace(/[^a-z0-9\s-]/gi, "")
+          .trim()
+          .replace(/\s+/g, "-")
+          .slice(0, 60) || "recept";
+      pdf.save(`${safeFilename}.pdf`);
     } catch (error) {
       console.error("PDF error:", error);
       toast({ title: "Oeps!", description: "PDF maken is niet gelukt.", variant: "destructive" });
