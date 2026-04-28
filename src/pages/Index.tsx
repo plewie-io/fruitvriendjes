@@ -242,6 +242,7 @@ const Index = () => {
     setRecipeImage(null);
     setRecipeHistory([]);
     setCurrentRecipeId(null);
+    setFeedback(null);
     try {
       const recipeResponse = await generateRecipeAI(
         userIngredients,
