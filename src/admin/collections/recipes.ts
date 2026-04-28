@@ -9,6 +9,8 @@ export type Recipe = {
   imageUrl: string | null;
   isModification: boolean;
   previousRecipeId: string | null;
+  feedback: "up" | "down" | null;
+  feedbackAt: Date | null;
   createdAt: Date;
 };
 
@@ -78,6 +80,22 @@ export const recipesCollection = buildCollection<Recipe>({
       name: "Vorige recept-ID",
       dataType: "string",
       hideFromCollection: true,
+    }),
+    feedback: buildProperty({
+      name: "Feedback",
+      dataType: "string",
+      readOnly: true,
+      enumValues: {
+        up: "👍 Positief",
+        down: "👎 Negatief",
+      },
+      columnWidth: 140,
+    }),
+    feedbackAt: buildProperty({
+      name: "Feedback op",
+      dataType: "date",
+      readOnly: true,
+      mode: "date_time",
     }),
     createdAt: buildProperty({
       name: "Aangemaakt op",
