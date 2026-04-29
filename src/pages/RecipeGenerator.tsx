@@ -15,6 +15,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { downloadRecipePdf } from "@/lib/recipePdf";
+import { RecipeLoadingDialog } from "@/components/RecipeLoadingDialog";
 import recipeBackground from "@/assets/recipe-background.jpg";
 type RecipeHistoryItem = {
   recipe: string;
@@ -254,6 +255,10 @@ const RecipeGenerator = () => {
         backgroundImage: `url(${recipeBackground})`,
       }}
     >
+      <RecipeLoadingDialog
+        open={loading || imageLoading}
+        phase={imageLoading ? "image" : "recipe"}
+      />
       <div className="container mx-auto px-4 py-8">
         <Button variant="ghost" onClick={() => navigate("/")} className="mb-6">
           <ArrowLeft className="mr-2 h-4 w-4" />
