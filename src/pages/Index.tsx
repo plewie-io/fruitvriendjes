@@ -280,6 +280,7 @@ const Index = () => {
       <RecipeLoadingDialog
         open={loading || imageLoading}
         phase={imageLoading ? "image" : "recipe"}
+        context={recipe ?? ingredients}
       />
 
       <AlertDialog open={showSafetyDialog} onOpenChange={handleDialogClose}>

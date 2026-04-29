@@ -258,6 +258,7 @@ const RecipeGenerator = () => {
       <RecipeLoadingDialog
         open={loading || imageLoading}
         phase={imageLoading ? "image" : "recipe"}
+        context={recipe}
       />
       <div className="container mx-auto px-4 py-8">
         <Button variant="ghost" onClick={() => navigate("/")} className="mb-6">
