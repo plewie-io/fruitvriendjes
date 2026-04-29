@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
 import Footer from "@/components/Footer";
+import { RecipeLoadingDialog } from "@/components/RecipeLoadingDialog";
 
 import { Loader2, ChefHat, Undo2, Download, ThumbsUp, ThumbsDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -275,6 +276,11 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF8F5]">
       <SchoolfruitsHeader />
+
+      <RecipeLoadingDialog
+        open={loading || imageLoading}
+        phase={imageLoading ? "image" : "recipe"}
+      />
 
       <AlertDialog open={showSafetyDialog} onOpenChange={handleDialogClose}>
         <AlertDialogContent>
