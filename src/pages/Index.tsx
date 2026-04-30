@@ -30,7 +30,7 @@ import ReactMarkdown from "react-markdown";
 import { downloadRecipePdf } from "@/lib/recipePdf";
 import masterchefMandy from "@/assets/masterchef-mandy.png";
 import arrowLimoen from "@/assets/SF_doodle_arrow6_limoen_PNG.png";
-import golfjeMandarijn from "@/assets/golfje-mandarijn-dubbel.svg";
+import golfjeMandarijn from "@/assets/golfje-mandarijn-rand.png";
 
 type RecipeHistoryItem = {
   recipe: string;
@@ -328,18 +328,16 @@ const Index = () => {
           </p>
         </div>
       </div>
-      {/* Golfje boven de cream-sectie (geflipt zodat de gerafelde rand naar beneden wijst) */}
-      <div
+      {/* Golfje boven de cream-sectie: gerafelde rand hangt naar beneden in het cream */}
+      <img
+        src={golfjeMandarijn}
+        alt=""
         aria-hidden="true"
         style={{
-          height: 36,
+          display: "block",
           width: "100%",
-          backgroundImage: `url(${golfjeMandarijn})`,
-          backgroundRepeat: "repeat-x",
-          backgroundPosition: "center top",
-          backgroundSize: "auto 100%",
+          height: "auto",
           transform: "scaleY(-1)",
-          lineHeight: 0,
         }}
       />
 
@@ -542,17 +540,15 @@ const Index = () => {
 
       {/* Inspiratie section with inline SVG waves - no image gaps */}
       <div>
-        {/* Golfje onder de cream-sectie (rechtop, gerafelde rand wijst naar boven) */}
-        <div
+        {/* Golfje onder de cream-sectie: gerafelde rand wijst omhoog in het cream */}
+        <img
+          src={golfjeMandarijn}
+          alt=""
           aria-hidden="true"
           style={{
-            height: 36,
+            display: "block",
             width: "100%",
-            backgroundImage: `url(${golfjeMandarijn})`,
-            backgroundRepeat: "repeat-x",
-            backgroundPosition: "center top",
-            backgroundSize: "auto 100%",
-            lineHeight: 0,
+            height: "auto",
           }}
         />
 
