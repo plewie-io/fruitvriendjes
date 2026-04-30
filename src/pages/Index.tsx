@@ -30,7 +30,7 @@ import ReactMarkdown from "react-markdown";
 import { downloadRecipePdf } from "@/lib/recipePdf";
 import masterchefMandy from "@/assets/masterchef-mandy.png";
 import arrowLimoen from "@/assets/SF_doodle_arrow6_limoen_PNG.png";
-import golfjeMandarijn from "@/assets/golfje-mandarijn-dubbel.svg";
+import golfjeMandarijn from "@/assets/golfje-mandarijn-rand.png";
 
 type RecipeHistoryItem = {
   recipe: string;
