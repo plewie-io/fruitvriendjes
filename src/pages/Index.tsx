@@ -314,9 +314,21 @@ const Index = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Green banner */}
+      {/* Golfje boven de oranje hero: gerafelde rand hangt naar beneden in het oranje. */}
+      <img
+        src={golfjeMandarijn}
+        alt=""
+        aria-hidden="true"
+        style={{
+          display: "block",
+          width: "100%",
+          height: "auto",
+          marginBottom: "-1px",
+        }}
+      />
+      {/* Oranje hero */}
       <div
-        className="py-16 md:py-12 px-4"
+        className="px-4 pt-4 pb-20 md:pt-2 md:pb-16"
         style={{ backgroundColor: "#F08400" }}
       >
         <div className="container mx-auto max-w-4xl text-left">
@@ -328,9 +340,7 @@ const Index = () => {
           </p>
         </div>
       </div>
-      {/* Golfje boven de cream-sectie: gerafelde rand hangt naar beneden in het cream.
-          Negative margin-top zorgt dat de img 1px over de oranje hero schuift,
-          zodat sub-pixel rounding nooit een cream kier laat zien. */}
+      {/* Golfje onder de oranje hero: gespiegeld zodat rand in cream hangt. */}
       <img
         src={golfjeMandarijn}
         alt=""
