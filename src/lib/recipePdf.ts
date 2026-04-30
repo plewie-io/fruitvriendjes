@@ -113,38 +113,63 @@ const shouldSkipLine = (text: string): boolean =>
 // nooit recept-titels.
 const INSTRUCTION_STARTERS = /^(verwarm|snij|snijd|hak|bak|kook|roer|meng|doe|voeg|giet|schil|was|breng|laat|zet|leg|strooi|besprenkel|garneer|serveer|proef|klop|prak|verkruimel|pureer|pers|rasp|smelt|verdeel|vouw|kruid|controleer|even|tip|let)\b/i;
 
+// Sectie-koppen die in een recept voorkomen — nooit een titel.
+const SECTION_HEADINGS = /^(ingredi[eë]nten|boodschappen|bereiding(swijze)?|bereidingstijd|werkwijze|instructies|tips?|notities?|voorbereiding|benodigdheden|materiaal|nodig|stappen|serveer(tip|suggestie)s?|variatie(s|tips)?|allergenen|voedingswaarde)\b/i;
+
+// Intro-zinnen waarmee de AI vaak begint — geen titel.
+const INTRO_STARTERS = /^(wat leuk|hier is|hieronder|natuurlijk|zeker|graag|leuk dat|jippie|super|geweldig|top|ok[eé]|oké)\b/i;
+
+const isSectionHeading = (t: string): boolean => SECTION_HEADINGS.test(t);
+
 const looksLikeTitle = (raw: string): boolean => {
   const cleaned = stripInline(raw);
   if (!cleaned) return false;
-  if (cleaned.length > 70) return false;
+  if (cleaned.length < 8 || cleaned.length > 80) return false;
   if (isGenericTitle(cleaned)) return false;
-  if (cleaned.endsWith(".") || cleaned.endsWith(":")) return false;
+  if (isSectionHeading(cleaned)) return false;
+  if (cleaned.endsWith(".") || cleaned.endsWith(":") || cleaned.endsWith(",")) return false;
   if (INSTRUCTION_STARTERS.test(cleaned)) return false;
+  if (INTRO_STARTERS.test(cleaned)) return false;
   // Geen lijst-/instructie-prefix
   if (/^\s*(\d+[.)]|[-*+])\s/.test(raw)) return false;
+  // Moet minstens 2 woorden hebben
+  if (cleaned.split(/\s+/).length < 2) return false;
   return true;
+};
+
+const cleanHeading = (raw: string): string | null => {
+  const cleaned = stripInline(raw);
+  if (!cleaned) return null;
+  if (isGenericTitle(cleaned)) return null;
+  if (isSectionHeading(cleaned)) return null;
+  if (cleaned.endsWith(":")) return null;
+  return cleaned;
 };
 
 export const extractRecipeTitle = (markdown: string): string => {
   const lines = markdown.split("\n");
-  // 1) Markdown heading (# / ## / ###)
+
+  // 1) Markdown heading (# / ## / ###) — maar geen sectie-kop
   for (const raw of lines) {
     const m = raw.match(/^\s*#{1,3}\s+(.+?)\s*#*\s*$/);
     if (m) {
-      const cleaned = stripInline(m[1]);
-      if (cleaned && !isGenericTitle(cleaned)) return cleaned;
+      const cleaned = cleanHeading(m[1]);
+      if (cleaned) return cleaned;
     }
   }
   // 2) Eerste regel die volledig **bold** is — vaak gebruikt als titel
-  for (const raw of lines.slice(0, 8)) {
+  for (const raw of lines.slice(0, 15)) {
     const m = raw.match(/^\s*\*\*(.+?)\*\*\s*$/);
     if (m) {
       const cleaned = stripInline(m[1]);
-      if (cleaned && !isGenericTitle(cleaned)) return cleaned;
+      if (cleaned && !isGenericTitle(cleaned) && !isSectionHeading(cleaned)) {
+        return cleaned;
+      }
     }
   }
   // 3) Eerste regel die op een titel lijkt (kort, geen punt, geen werkwoord)
-  for (const raw of lines.slice(0, 8)) {
+  //    Doorzoek wat meer regels — de titel komt soms na een intro-zin.
+  for (const raw of lines.slice(0, 20)) {
     if (looksLikeTitle(raw)) {
       return stripInline(raw);
     }
