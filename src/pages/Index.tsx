@@ -328,7 +328,9 @@ const Index = () => {
           </p>
         </div>
       </div>
-      {/* Golfje boven de cream-sectie: gerafelde rand hangt naar beneden in het cream */}
+      {/* Golfje boven de cream-sectie: gerafelde rand hangt naar beneden in het cream.
+          Negative margin-top zorgt dat de img 1px over de oranje hero schuift,
+          zodat sub-pixel rounding nooit een cream kier laat zien. */}
       <img
         src={golfjeMandarijn}
         alt=""
@@ -338,6 +340,7 @@ const Index = () => {
           width: "100%",
           height: "auto",
           transform: "scaleY(-1)",
+          marginTop: "-1px",
         }}
       />
 
