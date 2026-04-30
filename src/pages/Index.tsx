@@ -316,10 +316,10 @@ const Index = () => {
 
       {/* Green banner */}
       <div
-        className="py-12 md:py-8 px-4"
+        className="py-16 md:py-12 px-4"
         style={{ backgroundColor: "#F08400" }}
       >
-        <div className="container mx-auto max-w-4xl text-center">
+        <div className="container mx-auto max-w-4xl text-left">
           <h1 className="text-3xl md:text-2xl font-bold text-white mb-1 md:mb-0 font-poster uppercase whitespace-nowrap">
             MANDY MANDARIJN
           </h1>
