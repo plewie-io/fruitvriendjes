@@ -543,7 +543,9 @@ const Index = () => {
 
       {/* Inspiratie section with inline SVG waves - no image gaps */}
       <div>
-        {/* Golfje onder de cream-sectie: gerafelde rand wijst omhoog in het cream */}
+        {/* Golfje onder de cream-sectie: gerafelde rand wijst omhoog in het cream.
+            Negative margin-bottom zorgt dat de img 1px over de oranje sectie eronder
+            schuift, zodat sub-pixel rounding nooit een cream kier laat zien. */}
         <img
           src={golfjeMandarijn}
           alt=""
@@ -552,6 +554,7 @@ const Index = () => {
             display: "block",
             width: "100%",
             height: "auto",
+            marginBottom: "-1px",
           }}
         />
 
