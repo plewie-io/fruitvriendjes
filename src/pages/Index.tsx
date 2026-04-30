@@ -314,31 +314,35 @@ const Index = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Hero met oranje balk + golfje. Tekst staat verticaal gecentreerd
-          rondom het midden van de gecombineerde hoogte (oranje + golfje),
-          zodat titel boven en ondertitel onder die middenlijn vallen. */}
-      <div className="relative" style={{ backgroundColor: "#F08400" }}>
-        <div className="container mx-auto max-w-4xl px-4 text-left py-16 md:py-12">
-          <h1 className="text-3xl md:text-2xl font-bold text-white mb-6 md:mb-8 font-poster uppercase whitespace-nowrap">
+      {/* Green banner */}
+      <div
+        className="py-16 md:py-12 px-4"
+        style={{ backgroundColor: "#F08400" }}
+      >
+        <div className="container mx-auto max-w-4xl text-left">
+          <h1 className="text-3xl md:text-2xl font-bold text-white mb-1 md:mb-0 font-poster uppercase whitespace-nowrap">
             MANDY MANDARIJN
           </h1>
           <p className="text-lg md:text-base text-white font-bold font-poster">
             Ik help jou in de keuken!
           </p>
         </div>
-        <img
-          src={golfjeMandarijn}
-          alt=""
-          aria-hidden="true"
-          style={{
-            display: "block",
-            width: "100%",
-            height: "auto",
-            transform: "scaleY(-1)",
-            marginTop: "-1px",
-          }}
-        />
       </div>
+      {/* Golfje boven de cream-sectie: gerafelde rand hangt naar beneden in het cream.
+          Negative margin-top zorgt dat de img 1px over de oranje hero schuift,
+          zodat sub-pixel rounding nooit een cream kier laat zien. */}
+      <img
+        src={golfjeMandarijn}
+        alt=""
+        aria-hidden="true"
+        style={{
+          display: "block",
+          width: "100%",
+          height: "auto",
+          transform: "scaleY(-1)",
+          marginTop: "-1px",
+        }}
+      />
 
       <main className="flex-1 bg-[#FAF8F5]">
         <div className="container mx-auto px-4 py-8">
