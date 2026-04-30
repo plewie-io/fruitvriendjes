@@ -328,18 +328,16 @@ const Index = () => {
           </p>
         </div>
       </div>
-      {/* Golfje boven de cream-sectie (geflipt zodat de gerafelde rand naar beneden wijst) */}
-      <div
+      {/* Golfje boven de cream-sectie: gerafelde rand hangt naar beneden in het cream */}
+      <img
+        src={golfjeMandarijn}
+        alt=""
         aria-hidden="true"
         style={{
-          height: 36,
+          display: "block",
           width: "100%",
-          backgroundImage: `url(${golfjeMandarijn})`,
-          backgroundRepeat: "repeat-x",
-          backgroundPosition: "center top",
-          backgroundSize: "auto 100%",
+          height: "auto",
           transform: "scaleY(-1)",
-          lineHeight: 0,
         }}
       />
 
