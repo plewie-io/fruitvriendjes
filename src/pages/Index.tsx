@@ -540,17 +540,15 @@ const Index = () => {
 
       {/* Inspiratie section with inline SVG waves - no image gaps */}
       <div>
-        {/* Golfje onder de cream-sectie (rechtop, gerafelde rand wijst naar boven) */}
-        <div
+        {/* Golfje onder de cream-sectie: gerafelde rand wijst omhoog in het cream */}
+        <img
+          src={golfjeMandarijn}
+          alt=""
           aria-hidden="true"
           style={{
-            height: 36,
+            display: "block",
             width: "100%",
-            backgroundImage: `url(${golfjeMandarijn})`,
-            backgroundRepeat: "repeat-x",
-            backgroundPosition: "center top",
-            backgroundSize: "auto 100%",
-            lineHeight: 0,
+            height: "auto",
           }}
         />
 
