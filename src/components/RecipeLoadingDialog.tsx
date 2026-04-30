@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { CarrotHourglassLoader } from "./CarrotHourglassLoader";
+import { BlenderLoader } from "./BlenderLoader";
 
 interface RecipeLoadingDialogProps {
   open: boolean;
@@ -10,7 +10,7 @@ interface RecipeLoadingDialogProps {
 
 /** Generic cooking steps, always safe to show. */
 const GENERIC_STEPS = [
-  "De ingrediënten klaarzetten...",
+  "De boodschappen klaarzetten...",
   "Alles netjes afwegen...",
   "De keuken opruimen tussendoor...",
   "Een schoon snijplankje pakken...",
@@ -94,7 +94,7 @@ export const RecipeLoadingDialog = ({ open, phase, context }: RecipeLoadingDialo
 
   const title =
     phase === "image"
-      ? "Mandy tekent nu een mooie foto..."
+      ? "Mandy genereert nu een mooie foto..."
       : "Mandy bedenkt een lekker recept...";
 
   return (
@@ -106,7 +106,7 @@ export const RecipeLoadingDialog = ({ open, phase, context }: RecipeLoadingDialo
     >
       <div className="bg-[#FAF8F5] rounded-3xl shadow-2xl max-w-md w-full p-8 text-center border-4 border-[#F08400]">
         <div className="flex justify-center mb-4">
-          <CarrotHourglassLoader size={160} />
+          <BlenderLoader size={160} intervalMs={600} />
         </div>
         <h2 className="text-2xl font-bold font-poster uppercase text-[#F08400] mb-3">
           {title}

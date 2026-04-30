@@ -1,69 +1,70 @@
-## Doel
+## Plan: 4 aanpassingen
 
-Tijdens het genereren van een recept én de bijbehorende foto verschijnt er een vrolijke wacht-popup met een geanimeerde zandloper in wortelvorm (zoals de geüploade afbeelding). Dit verbetert de klantbeleving zodat de gebruiker ziet dat er iets gebeurt en niet ongeduldig wordt.
+### 1. Oranje golfje SVG inzetten (boven & onder cream-sectie)
+- `user-uploads://Golfje_Mandarijn_dubbel.svg` kopiëren naar `src/assets/golfje-mandarijn-dubbel.svg`.
+- In `src/pages/Index.tsx` de twee inline SVG-`<path>`-golven (regels ~333-345 en ~547-559) vervangen door:
+  - **Bovenste rand** (boven cream-sectie, onder oranje hero): `<img>` met de SVG, `transform: scaleY(-1)` zodat de gerafelde rand naar beneden wijst, `display: block`, `width: 100%`, `height: auto`. Achtergrond eronder = cream `#FAF8F5`.
+  - **Onderste rand** (onder cream, boven oranje "inspiratie"-sectie): zelfde SVG zonder flip, `width: 100%`, `height: auto`. Achtergrond eronder = oranje.
+- De SVG is 1920px breed met `preserveAspectRatio` standaard — door `width:100%; height:auto` schaalt hij proportioneel mee zonder uitrekken. Op heel brede schermen valt hij netjes binnen 1920px; voor zekerheid gebruik ik `background-image` met `repeat-x` + `background-size: auto 100%` op een wrapper-div met vaste hoogte (~40-60px), zodat de golf bij hele brede schermen herhaalt in plaats van te schalen, en de oorspronkelijke vorm/golfgrootte behouden blijft.
 
-## Wat de gebruiker ziet
+### 2. Loader-tekst: "tekent" → "genereert"
+In `src/components/RecipeLoadingDialog.tsx`:
+- `phase === "image"` titel wordt: **"Mandy genereert nu een mooie foto..."**
+- Recept-fase blijft: "Mandy bedenkt een lekker recept..."
 
-- Zodra je op "Maak een recept!" of "Pas recept aan!" klikt, opent een centrale popup (overlay) die niet weg te klikken is.
-- In de popup staat:
-  - Een geanimeerde wortel-zandloper (3 standen: leeg bovenin → zand stroomt → vol onderin), die continu loopt.
-  - Een vrolijke titel die meeloopt met de fase:
-    - Fase 1 ("Recept maken..."): "Mandy bedenkt een lekker recept..."
-    - Fase 2 ("Foto maken..."): "Mandy tekent nu een mooie foto..."
-  - Een korte ondertekst met een wisselend leuk weetje/fruittip (elke ~4s een ander zinnetje) zodat het wachten leuker voelt.
-- Popup sluit automatisch zodra zowel recept als foto klaar zijn (of bij een fout).
+**Lijst met laadzinnetjes** (rouleren elke 3.5s, gebaseerd op de boodschappen — zie `CONDITIONAL_STEPS` in `RecipeLoadingDialog.tsx`):
 
-## Visueel ontwerp van de zandloper
+*Generieke zinnen (altijd zichtbaar):*
+- De boodschappen klaarzetten...
+- Alles netjes afwegen...
+- De keuken opruimen tussendoor...
+- Een schoon snijplankje pakken...
+- Even proeven of het lekker is...
+- De tafel dekken...
+- Serveren met een glimlach!
 
-Geïnspireerd op de geüploade afbeelding: oranje wortel met groen loof bovenaan, en in het lichaam een zandloper-vorm. We bouwen dit met **pure SVG + CSS animaties** (geen extra dependencies, geen externe afbeelding nodig). 
+*Conditioneel op basis van trefwoorden in het recept:*
+- "oven/bak/pizza/quiche/taart" → De oven voorverwarmen...
+- "groente/wortel/ui/paprika/..." → De groenten wassen en snijden...
+- "fruit/appel/banaan/..." → Het fruit wassen en in stukjes snijden...
+- "kip" → De kip mooi bruin bakken...
+- "rundvlees/gehakt" → Het vlees aanbakken in de pan...
+- "varken/spek/ham" → Het vlees rustig laten garen...
+- "vis/zalm/garnaal" → De vis voorzichtig bakken...
+- "ei/eieren" → De eieren losslaan...
+- "pasta/spaghetti/lasagne" → Een grote pan water aan de kook brengen...
+- "rijst/risotto" → De rijst spoelen en koken...
+- "aardappel/puree" → De aardappels schillen...
+- "saus/pesto/room" → De saus zachtjes laten pruttelen...
+- "knoflook/ui" → Knoflook en ui fijn snijden...
+- "verse kruiden" → Verse kruiden hakken...
+- "kaas/mozzarella/feta" → De kaas raspen...
+- "deeg/brood/pannenkoek" → Het beslag goed mengen...
+- "soep" → De soep laten trekken...
+- "smoothie/shake/sap" → Alles in de blender doen...
+- "sla/salade" → De salade luchtig mengen...
 
-- Wortel: oranje (`#F08400`) met groen loof (`#9BB510`).
-- Zandloper-uitsparing: wit/transparant binnen de wortel.
-- Zand: oranje gestippeld (`#DB7202`).
-- Animatie (loop, ~3s):
-  1. Zand vol bovenin
-  2. Zand stroomt door de smalle hals (dunne lijn van stippen)
-  3. Zand vol onderin
-  4. Wortel "kantelt" 180° met een zachte tween en herstart
-- Subtiele bobbel/wiebel animatie op het loof voor speelsheid.
+Tekst "Even geduld, dit duurt meestal maar een paar seconden!" blijft eronder staan.
 
-## Bestanden die we toevoegen/aanpassen
+### 3. PDF-bestandsnaam = recept-titel (fix)
+In `src/lib/recipePdf.ts` de `extractRecipeTitle` functie verbeteren zodat hij niet de eerste recept-zin pakt:
+- Eerst zoeken naar `# / ## / ###` heading (huidig gedrag).
+- **Nieuwe fallback**: zoek naar een regel die er uitziet als een echte titel — kort (≤ ~70 tekens), geen punt aan het einde, geen werkwoordsvorm zoals "Verwarm/Snijd/Doe". Als die regel bovenaan staat en `**bold**` markdown bevat, ook accepteren.
+- Daarna pas terug naar "Recept" als fallback.
+- Hierdoor pakt hij niet langer "Verwarm de oven voor op 180°C..." als bestandsnaam.
 
-**Nieuw bestand: `src/components/CarrotHourglassLoader.tsx`**
-- Bevat de SVG-wortel met de zandloper-animatie (CSS keyframes inline of via Tailwind `@keyframes` in `index.css`).
-- Props: `size?: number` zodat het herbruikbaar is.
+### 4. Blender-animatie i.p.v. zandloper
+- Geüploade afbeelding (3 blenders naast elkaar) wordt opgesplitst in **3 losse PNG's** via een Node-script in build-tijd → `src/assets/blender-1.png`, `blender-2.png`, `blender-3.png` (lege blender, blender met inhoud + beginnende swirl, blender met volle wervelende inhoud).
+- **Nieuwe component** `src/components/BlenderLoader.tsx`:
+  - Toont één blender-afbeelding tegelijk
+  - `setInterval` van **600ms** wisselt cyclus 1 → 2 → 3 → 1 → 2 → 3 → ...
+  - Subtiele `transition-opacity` voor zachte cross-fade tussen frames
+- In `RecipeLoadingDialog.tsx`: `<CarrotHourglassLoader>` vervangen door `<BlenderLoader size={160} />`. `CarrotHourglassLoader.tsx` blijft staan maar wordt niet meer gebruikt (kan later opgeruimd).
 
-**Nieuw bestand: `src/components/RecipeLoadingDialog.tsx`**
-- Een `<Dialog>` (van shadcn) of een eigen overlay (`fixed inset-0 bg-black/50 z-50 flex items-center justify-center`) met daarin:
-  - De `CarrotHourglassLoader`
-  - Titel die afhangt van `phase: "recipe" | "image"`
-  - Roterende leuke weetjes (array van ~5 zinnen, om de 4 sec wisselen via `setInterval`).
-- Props: `open: boolean`, `phase: "recipe" | "image"`.
-- Niet sluitbaar door erbuiten te klikken of Esc (forceer `onOpenChange` no-op tijdens loading).
-
-**Aanpassing: `src/pages/Index.tsx`**
-- Importeer `RecipeLoadingDialog`.
-- Render `<RecipeLoadingDialog open={loading || imageLoading} phase={imageLoading ? "image" : "recipe"} />` ergens bovenin de return (na de bestaande safety dialog).
-- Houd de bestaande knop-loader (spinner in de knop) intact als secundaire indicatie — of verwijder deze; we kiezen om de spinner-tekst in de knop te behouden zodat er geen layout shift is, maar de popup is de hoofdindicator.
-
-**Aanpassing: `src/pages/RecipeGenerator.tsx`**
-- Hetzelfde: importeer en render `RecipeLoadingDialog` met `open={loading || imageLoading}` en juiste `phase`.
-
-## Technische details
-
-- **Geen nieuwe dependencies** nodig. SVG + Tailwind/CSS keyframes volstaan.
-- Animaties via `@keyframes` in `src/index.css` (bv. `carrot-flip`, `sand-fall`) of inline `<style>` in de component.
-- Toegankelijkheid: `role="dialog"`, `aria-live="polite"` met de huidige fase-tekst zodat screenreaders meegaan.
-- Body scroll lock tijdens open (gebruikt shadcn Dialog standaard al).
-- Z-index hoger dan andere content, lager dan toasts.
-- Geen wijzigingen aan de Firebase-calls of generatielogica zelf — alleen UI-laag.
-
-## Edge cases
-
-- Als generatie faalt: `loading`/`imageLoading` worden `false` in `finally`, dus popup sluit automatisch en de bestaande error-toast verschijnt.
-- Bij "modify recipe" (recept aanpassen) gebruikt dezelfde popup, met `phase="recipe"` en daarna `phase="image"` als er ook een nieuwe foto wordt gemaakt.
-- De huidige toasts ("Recept klaar! 🎉", "Nu maken we een foto...") blijven bestaan; ze geven context naast de popup.
-
-## Resultaat
-
-De gebruiker krijgt direct visuele feedback met een speelse, on-brand wacht-animatie die past bij Mandy Mandarijn en Schoolfruit. Wachten voelt korter en leuker.
+### Te wijzigen / nieuwe bestanden
+- nieuw: `src/assets/golfje-mandarijn-dubbel.svg` (gekopieerd)
+- nieuw: `src/assets/blender-1.png`, `blender-2.png`, `blender-3.png` (gegenereerd door split-script)
+- nieuw: `src/components/BlenderLoader.tsx`
+- bewerkt: `src/pages/Index.tsx` (golf-randen)
+- bewerkt: `src/components/RecipeLoadingDialog.tsx` (titel + loader-component)
+- bewerkt: `src/lib/recipePdf.ts` (extractRecipeTitle fallback)

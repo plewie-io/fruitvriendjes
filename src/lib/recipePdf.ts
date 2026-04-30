@@ -109,8 +109,25 @@ const SKIP_PATTERNS: RegExp[] = [
 const shouldSkipLine = (text: string): boolean =>
   SKIP_PATTERNS.some((re) => re.test(text));
 
+// Werkwoorden waarmee een instructie- of zinregel vaak begint — dit zijn
+// nooit recept-titels.
+const INSTRUCTION_STARTERS = /^(verwarm|snij|snijd|hak|bak|kook|roer|meng|doe|voeg|giet|schil|was|breng|laat|zet|leg|strooi|besprenkel|garneer|serveer|proef|klop|prak|verkruimel|pureer|pers|rasp|smelt|verdeel|vouw|kruid|controleer|even|tip|let)\b/i;
+
+const looksLikeTitle = (raw: string): boolean => {
+  const cleaned = stripInline(raw);
+  if (!cleaned) return false;
+  if (cleaned.length > 70) return false;
+  if (isGenericTitle(cleaned)) return false;
+  if (cleaned.endsWith(".") || cleaned.endsWith(":")) return false;
+  if (INSTRUCTION_STARTERS.test(cleaned)) return false;
+  // Geen lijst-/instructie-prefix
+  if (/^\s*(\d+[.)]|[-*+])\s/.test(raw)) return false;
+  return true;
+};
+
 export const extractRecipeTitle = (markdown: string): string => {
   const lines = markdown.split("\n");
+  // 1) Markdown heading (# / ## / ###)
   for (const raw of lines) {
     const m = raw.match(/^\s*#{1,3}\s+(.+?)\s*#*\s*$/);
     if (m) {
@@ -118,9 +135,19 @@ export const extractRecipeTitle = (markdown: string): string => {
       if (cleaned && !isGenericTitle(cleaned)) return cleaned;
     }
   }
-  for (const raw of lines) {
-    const cleaned = stripInline(raw);
-    if (cleaned && !isGenericTitle(cleaned)) return cleaned;
+  // 2) Eerste regel die volledig **bold** is — vaak gebruikt als titel
+  for (const raw of lines.slice(0, 8)) {
+    const m = raw.match(/^\s*\*\*(.+?)\*\*\s*$/);
+    if (m) {
+      const cleaned = stripInline(m[1]);
+      if (cleaned && !isGenericTitle(cleaned)) return cleaned;
+    }
+  }
+  // 3) Eerste regel die op een titel lijkt (kort, geen punt, geen werkwoord)
+  for (const raw of lines.slice(0, 8)) {
+    if (looksLikeTitle(raw)) {
+      return stripInline(raw);
+    }
   }
   return "Recept";
 };

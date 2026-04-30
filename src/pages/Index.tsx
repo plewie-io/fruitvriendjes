@@ -28,10 +28,9 @@ import {
 } from "@/lib/firebase";
 import ReactMarkdown from "react-markdown";
 import { downloadRecipePdf } from "@/lib/recipePdf";
-import golfje from "@/assets/golfje-appel-dubbel.png";
 import masterchefMandy from "@/assets/masterchef-mandy.png";
-import golfjeBottom from "@/assets/golfje-bottom.png";
 import arrowLimoen from "@/assets/SF_doodle_arrow6_limoen_PNG.png";
+import golfjeMandarijn from "@/assets/golfje-mandarijn-dubbel.svg";
 
 type RecipeHistoryItem = {
   recipe: string;
@@ -329,20 +328,20 @@ const Index = () => {
           </p>
         </div>
       </div>
-      {/* SVG wave: green → cream */}
-      <div style={{ backgroundColor: "#F08400", lineHeight: 0 }}>
-        <svg
-          viewBox="0 0 1440 16"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-          style={{ display: "block", width: "100%", height: "16px" }}
-        >
-          <path
-            d="M0,8 C3,0 27,16 30,8 C37,0 53,16 60,8 C74,0 76,16 90,8 C97,3 113,13 120,8 C122,0 148,16 150,8 C157,0 173,16 180,8 C183,0 207,16 210,8 C217,0 233,16 240,8 C254,0 256,16 270,8 C277,3 293,13 300,8 C302,0 328,16 330,8 C337,0 353,16 360,8 C363,0 387,16 390,8 C397,0 413,16 420,8 C434,0 436,16 450,8 C457,3 473,13 480,8 C482,0 508,16 510,8 C517,0 533,16 540,8 C543,0 567,16 570,8 C577,0 593,16 600,8 C614,0 616,16 630,8 C637,3 653,13 660,8 C662,0 688,16 690,8 C697,0 713,16 720,8 C723,0 747,16 750,8 C757,0 773,16 780,8 C794,0 796,16 810,8 C817,3 833,13 840,8 C842,0 868,16 870,8 C877,0 893,16 900,8 C903,0 927,16 930,8 C937,0 953,16 960,8 C974,0 976,16 990,8 C997,3 1013,13 1020,8 C1022,0 1048,16 1050,8 C1057,0 1073,16 1080,8 C1083,0 1107,16 1110,8 C1117,0 1133,16 1140,8 C1154,0 1156,16 1170,8 C1177,3 1193,13 1200,8 C1202,0 1228,16 1230,8 C1237,0 1253,16 1260,8 C1263,0 1287,16 1290,8 C1297,0 1313,16 1320,8 C1334,0 1336,16 1350,8 C1357,3 1373,13 1380,8 C1382,0 1408,16 1410,8 C1417,0 1433,16 1440,8 L1440,16 L0,16 Z"
-            fill="#FAF8F5"
-          />
-        </svg>
-      </div>
+      {/* Golfje boven de cream-sectie (geflipt zodat de gerafelde rand naar beneden wijst) */}
+      <div
+        aria-hidden="true"
+        style={{
+          height: 36,
+          width: "100%",
+          backgroundImage: `url(${golfjeMandarijn})`,
+          backgroundRepeat: "repeat-x",
+          backgroundPosition: "center top",
+          backgroundSize: "auto 100%",
+          transform: "scaleY(-1)",
+          lineHeight: 0,
+        }}
+      />
 
       <main className="flex-1 bg-[#FAF8F5]">
         <div className="container mx-auto px-4 py-8">
@@ -543,20 +542,19 @@ const Index = () => {
 
       {/* Inspiratie section with inline SVG waves - no image gaps */}
       <div>
-        {/* Wave: cream → green */}
-        <div style={{ backgroundColor: "#FAF8F5", lineHeight: 0 }}>
-          <svg
-            viewBox="0 0 1440 16"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-            style={{ display: "block", width: "100%", height: "16px" }}
-          >
-            <path
-              d="M0,8 C3,16 27,0 30,8 C37,16 53,0 60,8 C74,16 76,0 90,8 C97,13 113,3 120,8 C122,16 148,0 150,8 C157,16 173,0 180,8 C183,16 207,0 210,8 C217,16 233,0 240,8 C254,16 256,0 270,8 C277,13 293,3 300,8 C302,16 328,0 330,8 C337,16 353,0 360,8 C363,16 387,0 390,8 C397,16 413,0 420,8 C434,16 436,0 450,8 C457,13 473,3 480,8 C482,16 508,0 510,8 C517,16 533,0 540,8 C543,16 567,0 570,8 C577,16 593,0 600,8 C614,16 616,0 630,8 C637,13 653,3 660,8 C662,16 688,0 690,8 C697,16 713,0 720,8 C723,16 747,0 750,8 C757,16 773,0 780,8 C794,16 796,0 810,8 C817,13 833,3 840,8 C842,16 868,0 870,8 C877,16 893,0 900,8 C903,16 927,0 930,8 C937,16 953,0 960,8 C974,16 976,0 990,8 C997,13 1013,3 1020,8 C1022,16 1048,0 1050,8 C1057,16 1073,0 1080,8 C1083,16 1107,0 1110,8 C1117,16 1133,0 1140,8 C1154,16 1156,0 1170,8 C1177,13 1193,3 1200,8 C1202,16 1228,0 1230,8 C1237,16 1253,0 1260,8 C1263,16 1287,0 1290,8 C1297,16 1313,0 1320,8 C1334,16 1336,0 1350,8 C1357,13 1373,3 1380,8 C1382,16 1408,0 1410,8 C1417,16 1433,0 1440,8 L1440,16 L0,16 Z"
-              fill="#F08400"
-            />
-          </svg>
-        </div>
+        {/* Golfje onder de cream-sectie (rechtop, gerafelde rand wijst naar boven) */}
+        <div
+          aria-hidden="true"
+          style={{
+            height: 36,
+            width: "100%",
+            backgroundImage: `url(${golfjeMandarijn})`,
+            backgroundRepeat: "repeat-x",
+            backgroundPosition: "center top",
+            backgroundSize: "auto 100%",
+            lineHeight: 0,
+          }}
+        />
 
         {/* Green inspiratie section */}
         <div
