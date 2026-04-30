@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { CarrotHourglassLoader } from "./CarrotHourglassLoader";
+import { BlenderLoader } from "./BlenderLoader";
 
 interface RecipeLoadingDialogProps {
   open: boolean;
@@ -10,7 +10,7 @@ interface RecipeLoadingDialogProps {
 
 /** Generic cooking steps, always safe to show. */
 const GENERIC_STEPS = [
-  "De ingrediënten klaarzetten...",
+  "De boodschappen klaarzetten...",
   "Alles netjes afwegen...",
   "De keuken opruimen tussendoor...",
   "Een schoon snijplankje pakken...",
