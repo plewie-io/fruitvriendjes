@@ -316,7 +316,7 @@ const Index = () => {
 
       {/* Green banner */}
       <div
-        className="pt-24 pb-32 md:pt-20 md:pb-28 px-4"
+        className="py-16 md:py-12 px-4"
         style={{ backgroundColor: "#F08400" }}
       >
         <div className="container mx-auto max-w-4xl text-left">
