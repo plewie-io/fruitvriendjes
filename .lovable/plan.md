@@ -1,70 +1,28 @@
-## Plan: 4 aanpassingen
+## Doel
+Voorkomen dat de browser oude versies van de site blijft tonen door bij het laden automatisch oude caches en eventueel geregistreerde service workers op te ruimen.
 
-### 1. Oranje golfje SVG inzetten (boven & onder cream-sectie)
-- `user-uploads://Golfje_Mandarijn_dubbel.svg` kopiëren naar `src/assets/golfje-mandarijn-dubbel.svg`.
-- In `src/pages/Index.tsx` de twee inline SVG-`<path>`-golven (regels ~333-345 en ~547-559) vervangen door:
-  - **Bovenste rand** (boven cream-sectie, onder oranje hero): `<img>` met de SVG, `transform: scaleY(-1)` zodat de gerafelde rand naar beneden wijst, `display: block`, `width: 100%`, `height: auto`. Achtergrond eronder = cream `#FAF8F5`.
-  - **Onderste rand** (onder cream, boven oranje "inspiratie"-sectie): zelfde SVG zonder flip, `width: 100%`, `height: auto`. Achtergrond eronder = oranje.
-- De SVG is 1920px breed met `preserveAspectRatio` standaard — door `width:100%; height:auto` schaalt hij proportioneel mee zonder uitrekken. Op heel brede schermen valt hij netjes binnen 1920px; voor zekerheid gebruik ik `background-image` met `repeat-x` + `background-size: auto 100%` op een wrapper-div met vaste hoogte (~40-60px), zodat de golf bij hele brede schermen herhaalt in plaats van te schalen, en de oorspronkelijke vorm/golfgrootte behouden blijft.
+## Wijzigingen
 
-### 2. Loader-tekst: "tekent" → "genereert"
-In `src/components/RecipeLoadingDialog.tsx`:
-- `phase === "image"` titel wordt: **"Mandy genereert nu een mooie foto..."**
-- Recept-fase blijft: "Mandy bedenkt een lekker recept..."
+### 1. `index.html` — cache-opruimscript in de `<head>`
+Een klein inline-script toevoegen dat direct bij het laden van de pagina draait (vóór de React-app):
 
-**Lijst met laadzinnetjes** (rouleren elke 3.5s, gebaseerd op de boodschappen — zie `CONDITIONAL_STEPS` in `RecipeLoadingDialog.tsx`):
+- **Service workers afmelden:** als `navigator.serviceWorker` bestaat, alle geregistreerde service workers ophalen en `unregister()` aanroepen. Dit project gebruikt geen service worker, maar als er ooit één is geregistreerd (bijv. via een eerdere preview of browserextensie) blijft die hardnekkig oude bestanden serveren.
+- **Cache Storage legen:** als `window.caches` bestaat, alle cache-namen ophalen via `caches.keys()` en elk met `caches.delete()` verwijderen. Dit ruimt de Cache API op (gebruikt door PWA's/SW's).
+- **Veilig uitvoeren:** alles in een `try/catch` zodat een fout het laden van de site niet blokkeert. Geen `await` op top-level (compatibiliteit), gewoon `.then()`.
 
-*Generieke zinnen (altijd zichtbaar):*
-- De boodschappen klaarzetten...
-- Alles netjes afwegen...
-- De keuken opruimen tussendoor...
-- Een schoon snijplankje pakken...
-- Even proeven of het lekker is...
-- De tafel dekken...
-- Serveren met een glimlach!
+Het script draait stil op de achtergrond; gebruikers merken er niets van. Het wijzigt **niet** de Vite-asset-cache (die is al hash-gebaseerd en correct).
 
-*Conditioneel op basis van trefwoorden in het recept:*
-- "oven/bak/pizza/quiche/taart" → De oven voorverwarmen...
-- "groente/wortel/ui/paprika/..." → De groenten wassen en snijden...
-- "fruit/appel/banaan/..." → Het fruit wassen en in stukjes snijden...
-- "kip" → De kip mooi bruin bakken...
-- "rundvlees/gehakt" → Het vlees aanbakken in de pan...
-- "varken/spek/ham" → Het vlees rustig laten garen...
-- "vis/zalm/garnaal" → De vis voorzichtig bakken...
-- "ei/eieren" → De eieren losslaan...
-- "pasta/spaghetti/lasagne" → Een grote pan water aan de kook brengen...
-- "rijst/risotto" → De rijst spoelen en koken...
-- "aardappel/puree" → De aardappels schillen...
-- "saus/pesto/room" → De saus zachtjes laten pruttelen...
-- "knoflook/ui" → Knoflook en ui fijn snijden...
-- "verse kruiden" → Verse kruiden hakken...
-- "kaas/mozzarella/feta" → De kaas raspen...
-- "deeg/brood/pannenkoek" → Het beslag goed mengen...
-- "soep" → De soep laten trekken...
-- "smoothie/shake/sap" → Alles in de blender doen...
-- "sla/salade" → De salade luchtig mengen...
+### 2. `index.html` — extra cache-control meta-tag
+Een `<meta http-equiv="Cache-Control" content="no-cache">` toevoegen als extra hint aan de browser om de HTML niet vast te houden. De server stuurt dit al in headers, maar de meta-tag helpt in randgevallen (bijv. wanneer de pagina via "back/forward cache" geladen wordt).
 
-Tekst "Even geduld, dit duurt meestal maar een paar seconden!" blijft eronder staan.
+## Wat dit oplost
+- Als ergens (preview, oude deploy, extensie) ooit een service worker is geregistreerd die nog oude `index.html` of assets serveert, wordt die nu bij het volgende bezoek opgeruimd.
+- Oude Cache Storage entries worden geleegd, zodat de volgende keer alles vers van het netwerk komt.
 
-### 3. PDF-bestandsnaam = recept-titel (fix)
-In `src/lib/recipePdf.ts` de `extractRecipeTitle` functie verbeteren zodat hij niet de eerste recept-zin pakt:
-- Eerst zoeken naar `# / ## / ###` heading (huidig gedrag).
-- **Nieuwe fallback**: zoek naar een regel die er uitziet als een echte titel — kort (≤ ~70 tekens), geen punt aan het einde, geen werkwoordsvorm zoals "Verwarm/Snijd/Doe". Als die regel bovenaan staat en `**bold**` markdown bevat, ook accepteren.
-- Daarna pas terug naar "Recept" als fallback.
-- Hierdoor pakt hij niet langer "Verwarm de oven voor op 180°C..." als bestandsnaam.
+## Wat dit niet oplost
+- De allereerste keer dat een gebruiker met een vastzittende cache de site laadt, krijgt hij/zij nog steeds eenmalig de oude versie te zien. Het opruimen werkt pas vanaf de eerste keer dat het nieuwe `index.html` wél binnenkomt. Daarna is het probleem structureel weg.
+- Disk cache van de browser zelf (niet via SW/Cache API) wordt niet aangeraakt — daar zorgen Vite's gehashte filenames al voor.
 
-### 4. Blender-animatie i.p.v. zandloper
-- Geüploade afbeelding (3 blenders naast elkaar) wordt opgesplitst in **3 losse PNG's** via een Node-script in build-tijd → `src/assets/blender-1.png`, `blender-2.png`, `blender-3.png` (lege blender, blender met inhoud + beginnende swirl, blender met volle wervelende inhoud).
-- **Nieuwe component** `src/components/BlenderLoader.tsx`:
-  - Toont één blender-afbeelding tegelijk
-  - `setInterval` van **600ms** wisselt cyclus 1 → 2 → 3 → 1 → 2 → 3 → ...
-  - Subtiele `transition-opacity` voor zachte cross-fade tussen frames
-- In `RecipeLoadingDialog.tsx`: `<CarrotHourglassLoader>` vervangen door `<BlenderLoader size={160} />`. `CarrotHourglassLoader.tsx` blijft staan maar wordt niet meer gebruikt (kan later opgeruimd).
-
-### Te wijzigen / nieuwe bestanden
-- nieuw: `src/assets/golfje-mandarijn-dubbel.svg` (gekopieerd)
-- nieuw: `src/assets/blender-1.png`, `blender-2.png`, `blender-3.png` (gegenereerd door split-script)
-- nieuw: `src/components/BlenderLoader.tsx`
-- bewerkt: `src/pages/Index.tsx` (golf-randen)
-- bewerkt: `src/components/RecipeLoadingDialog.tsx` (titel + loader-component)
-- bewerkt: `src/lib/recipePdf.ts` (extractRecipeTitle fallback)
+## Stappen na implementatie
+1. Eénmalig publiceren zodat het script live komt.
+2. Daarna zou het cacheprobleem bij volgende wijzigingen niet meer terug moeten komen.
