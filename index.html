@@ -4,6 +4,33 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <script>
+      // Cache cleanup: unregister any service workers and clear Cache Storage
+      // so old assets don't keep getting served from previous visits.
+      (function () {
+        try {
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function (regs) {
+              regs.forEach(function (reg) {
+                reg.unregister().catch(function () {});
+              });
+            }).catch(function () {});
+          }
+          if (typeof window !== 'undefined' && 'caches' in window) {
+            window.caches.keys().then(function (keys) {
+              keys.forEach(function (key) {
+                window.caches.delete(key).catch(function () {});
+              });
+            }).catch(function () {});
+          }
+        } catch (e) {
+          // Silently ignore — cache cleanup must never break page load.
+        }
+      })();
+    </script>
     <title>De Fruitvriendjes - Leuke Recepten voor Kinderen</title>
     <meta
       name="description"
