@@ -282,23 +282,23 @@ const Index = () => {
       <SchoolfruitsHeader />
 
       <Dialog open={openLeerkrachten} onOpenChange={setOpenLeerkrachten}>
-        <DialogContent className="max-w-[98vw] md:max-w-[95vw] lg:max-w-6xl w-auto p-1 max-h-[98vh]">
+        <DialogContent className="w-[100vw] max-w-[100vw] sm:max-w-[95vw] lg:max-w-6xl h-[100vh] sm:h-auto max-h-[100vh] sm:max-h-[98vh] p-1 sm:rounded-lg rounded-none border-0 sm:border flex items-center justify-center">
           <DialogTitle className="sr-only">Info voor leerkrachten</DialogTitle>
           <img
             src={infoLeerkrachten}
             alt="Info voor leerkrachten"
-            className="w-full h-auto max-h-[96vh] max-w-full object-contain rounded-sm"
+            className="w-full h-full max-h-[98vh] object-contain rounded-sm"
           />
         </DialogContent>
       </Dialog>
 
       <Dialog open={openOuders} onOpenChange={setOpenOuders}>
-        <DialogContent className="max-w-[98vw] md:max-w-[95vw] lg:max-w-6xl w-auto p-1 max-h-[98vh]">
+        <DialogContent className="w-[100vw] max-w-[100vw] sm:max-w-[95vw] lg:max-w-6xl h-[100vh] sm:h-auto max-h-[100vh] sm:max-h-[98vh] p-1 sm:rounded-lg rounded-none border-0 sm:border flex items-center justify-center">
           <DialogTitle className="sr-only">Info voor ouders</DialogTitle>
           <img
             src={infoOuders}
             alt="Info voor ouders - uitleg Mandy Mandarijn"
-            className="w-full h-auto max-h-[96vh] max-w-full object-contain rounded-sm"
+            className="w-full h-full max-h-[98vh] object-contain rounded-sm"
           />
         </DialogContent>
       </Dialog>
