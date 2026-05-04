@@ -283,59 +283,49 @@ const Index = () => {
 
       <Dialog open={openLeerkrachten} onOpenChange={setOpenLeerkrachten}>
         <DialogContent
-          className="w-[100vw] max-w-[100vw] sm:max-w-[90vw] lg:max-w-3xl xl:max-w-4xl h-[100vh] sm:h-auto max-h-[100vh] sm:max-h-[92vh] p-0 sm:p-2 sm:rounded-lg rounded-none border-0 sm:border gap-0 [&>button]:hidden"
+          className="w-[100vw] max-w-[100vw] sm:max-w-[90vw] lg:max-w-3xl xl:max-w-4xl h-[100vh] max-h-[100vh] sm:h-[92vh] sm:max-h-[92vh] p-0 sm:rounded-lg rounded-none border-0 sm:border gap-0 [&>button]:hidden overflow-hidden"
           style={{
-            paddingTop: "max(env(safe-area-inset-top), 0.5rem)",
-            paddingBottom: "max(env(safe-area-inset-bottom), 0.5rem)",
-            paddingLeft: "max(env(safe-area-inset-left), 0.25rem)",
-            paddingRight: "max(env(safe-area-inset-right), 0.25rem)",
-          }}
-          onTouchStart={(e) => {
-            (e.currentTarget as any)._ty = e.touches[0].clientY;
-          }}
-          onTouchEnd={(e) => {
-            const start = (e.currentTarget as any)._ty;
-            if (start && e.changedTouches[0].clientY - start > 80) setOpenLeerkrachten(false);
+            paddingTop: "max(env(safe-area-inset-top), 0px)",
+            paddingBottom: "max(env(safe-area-inset-bottom), 0px)",
+            paddingLeft: "max(env(safe-area-inset-left), 0px)",
+            paddingRight: "max(env(safe-area-inset-right), 0px)",
           }}
         >
           <DialogTitle className="sr-only">Info voor leerkrachten</DialogTitle>
           <DialogClose className="absolute top-3 right-3 z-50 bg-black/70 hover:bg-black text-white rounded-full p-2 shadow-lg" aria-label="Sluiten">
             <X className="h-6 w-6" />
           </DialogClose>
-          <img
-            src={infoLeerkrachten}
-            alt="Info voor leerkrachten"
-            className="w-full h-full max-h-full object-contain rounded-sm"
-          />
+          <div className="w-full h-full overflow-y-auto overscroll-contain">
+            <img
+              src={infoLeerkrachten}
+              alt="Info voor leerkrachten"
+              className="w-full h-auto block"
+            />
+          </div>
         </DialogContent>
       </Dialog>
 
       <Dialog open={openOuders} onOpenChange={setOpenOuders}>
         <DialogContent
-          className="w-[100vw] max-w-[100vw] sm:max-w-[90vw] lg:max-w-3xl xl:max-w-4xl h-[100vh] sm:h-auto max-h-[100vh] sm:max-h-[92vh] p-0 sm:p-2 sm:rounded-lg rounded-none border-0 sm:border gap-0 [&>button]:hidden"
+          className="w-[100vw] max-w-[100vw] sm:max-w-[90vw] lg:max-w-3xl xl:max-w-4xl h-[100vh] max-h-[100vh] sm:h-[92vh] sm:max-h-[92vh] p-0 sm:rounded-lg rounded-none border-0 sm:border gap-0 [&>button]:hidden overflow-hidden"
           style={{
-            paddingTop: "max(env(safe-area-inset-top), 0.5rem)",
-            paddingBottom: "max(env(safe-area-inset-bottom), 0.5rem)",
-            paddingLeft: "max(env(safe-area-inset-left), 0.25rem)",
-            paddingRight: "max(env(safe-area-inset-right), 0.25rem)",
-          }}
-          onTouchStart={(e) => {
-            (e.currentTarget as any)._ty = e.touches[0].clientY;
-          }}
-          onTouchEnd={(e) => {
-            const start = (e.currentTarget as any)._ty;
-            if (start && e.changedTouches[0].clientY - start > 80) setOpenOuders(false);
+            paddingTop: "max(env(safe-area-inset-top), 0px)",
+            paddingBottom: "max(env(safe-area-inset-bottom), 0px)",
+            paddingLeft: "max(env(safe-area-inset-left), 0px)",
+            paddingRight: "max(env(safe-area-inset-right), 0px)",
           }}
         >
           <DialogTitle className="sr-only">Info voor ouders</DialogTitle>
           <DialogClose className="absolute top-3 right-3 z-50 bg-black/70 hover:bg-black text-white rounded-full p-2 shadow-lg" aria-label="Sluiten">
             <X className="h-6 w-6" />
           </DialogClose>
-          <img
-            src={infoOuders}
-            alt="Info voor ouders - uitleg Mandy Mandarijn"
-            className="w-full h-full max-h-full object-contain rounded-sm"
-          />
+          <div className="w-full h-full overflow-y-auto overscroll-contain">
+            <img
+              src={infoOuders}
+              alt="Info voor ouders - uitleg Mandy Mandarijn"
+              className="w-full h-auto block"
+            />
+          </div>
         </DialogContent>
       </Dialog>
 
