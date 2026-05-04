@@ -313,12 +313,12 @@ const Index = () => {
       </Dialog>
 
       <Dialog open={openOuders} onOpenChange={setOpenOuders}>
-        <DialogContent className="max-w-[95vw] md:max-w-[90vw] lg:max-w-5xl w-auto p-2 sm:p-4 max-h-[95vh]">
+        <DialogContent className="max-w-[98vw] md:max-w-[95vw] lg:max-w-6xl w-auto p-1 max-h-[98vh]">
           <DialogTitle className="sr-only">Info voor ouders</DialogTitle>
           <img
             src={infoOuders}
             alt="Info voor ouders - uitleg Mandy Mandarijn"
-            className="w-auto h-auto max-h-[88vh] max-w-full object-contain rounded mx-auto"
+            className="w-auto h-auto max-h-[96vh] max-w-full object-contain rounded-sm mx-auto"
           />
         </DialogContent>
       </Dialog>
