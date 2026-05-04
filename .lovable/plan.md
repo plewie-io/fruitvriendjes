@@ -1,28 +1,45 @@
 ## Doel
-Voorkomen dat de browser oude versies van de site blijft tonen door bij het laden automatisch oude caches en eventueel geregistreerde service workers op te ruimen.
+Twee knoppen toevoegen aan de linkerkant van het scherm in schoolfruit-groen. Elke knop opent een popup met een afbeelding uit de meegestuurde PDF (`Praktische_tip_mandy.pdf`).
 
-## Wijzigingen
+- **Knop 1:** "Info voor leerkrachten" → popup met afbeelding van pagina 1
+- **Knop 2:** "Info voor ouders" → popup met afbeelding van pagina 2 (uitleg Mandy Mandarijn)
 
-### 1. `index.html` — cache-opruimscript in de `<head>`
-Een klein inline-script toevoegen dat direct bij het laden van de pagina draait (vóór de React-app):
+## Stappen
 
-- **Service workers afmelden:** als `navigator.serviceWorker` bestaat, alle geregistreerde service workers ophalen en `unregister()` aanroepen. Dit project gebruikt geen service worker, maar als er ooit één is geregistreerd (bijv. via een eerdere preview of browserextensie) blijft die hardnekkig oude bestanden serveren.
-- **Cache Storage legen:** als `window.caches` bestaat, alle cache-namen ophalen via `caches.keys()` en elk met `caches.delete()` verwijderen. Dit ruimt de Cache API op (gebruikt door PWA's/SW's).
-- **Veilig uitvoeren:** alles in een `try/catch` zodat een fout het laden van de site niet blokkeert. Geen `await` op top-level (compatibiliteit), gewoon `.then()`.
+1. **PDF-pagina's omzetten naar afbeeldingen**
+   - Pagina 1 en 2 van de PDF renderen als hoge-resolutie PNG's (`pdftoppm`).
+   - Opslaan in `src/assets/`:
+     - `src/assets/info-leerkrachten.png`
+     - `src/assets/info-ouders.png`
 
-Het script draait stil op de achtergrond; gebruikers merken er niets van. Het wijzigt **niet** de Vite-asset-cache (die is al hash-gebaseerd en correct).
+2. **Vaste zijbalk met knoppen toevoegen** (in `src/pages/Index.tsx`)
+   - Een `fixed left-4 top-1/2 -translate-y-1/2` container met twee knoppen onder elkaar.
+   - Achtergrondkleur: schoolfruit-groen (`#9BB510` met hover `#B3CA17`).
+   - Witte tekst, `font-poster uppercase`, afgeronde hoeken, schaduw.
+   - Op mobiel: `bottom-4` horizontaal naast elkaar (zodat ze niet over de content vallen op kleine schermen).
 
-### 2. `index.html` — extra cache-control meta-tag
-Een `<meta http-equiv="Cache-Control" content="no-cache">` toevoegen als extra hint aan de browser om de HTML niet vast te houden. De server stuurt dit al in headers, maar de meta-tag helpt in randgevallen (bijv. wanneer de pagina via "back/forward cache" geladen wordt).
+3. **Popups (Dialog component)**
+   - Twee `Dialog` componenten gebruiken uit `@/components/ui/dialog`.
+   - State: `openLeerkrachten` en `openOuders`.
+   - Dialog-content: alleen de afbeelding, schermvullend op mobiel, `max-w-3xl` op desktop, met sluitknop (al ingebouwd).
+   - Klik op de knop → opent bijbehorende dialog.
 
-## Wat dit oplost
-- Als ergens (preview, oude deploy, extensie) ooit een service worker is geregistreerd die nog oude `index.html` of assets serveert, wordt die nu bij het volgende bezoek opgeruimd.
-- Oude Cache Storage entries worden geleegd, zodat de volgende keer alles vers van het netwerk komt.
+## Technische details
 
-## Wat dit niet oplost
-- De allereerste keer dat een gebruiker met een vastzittende cache de site laadt, krijgt hij/zij nog steeds eenmalig de oude versie te zien. Het opruimen werkt pas vanaf de eerste keer dat het nieuwe `index.html` wél binnenkomt. Daarna is het probleem structureel weg.
-- Disk cache van de browser zelf (niet via SW/Cache API) wordt niet aangeraakt — daar zorgen Vite's gehashte filenames al voor.
+- **Bestanden te bewerken:** `src/pages/Index.tsx`
+- **Nieuwe assets:** `src/assets/info-leerkrachten.png`, `src/assets/info-ouders.png`
+- **Component:** `Dialog` (al aanwezig in `src/components/ui/dialog.tsx`)
+- **Kleuren:** schoolfruit-groen `#9BB510` / hover `#B3CA17` (uit Core memory)
+- **Positionering:** `fixed` zodat knoppen meescrollen; `z-40` zodat ze boven content maar onder dialogs blijven.
 
-## Stappen na implementatie
-1. Eénmalig publiceren zodat het script live komt.
-2. Daarna zou het cacheprobleem bij volgende wijzigingen niet meer terug moeten komen.
+```text
+┌──────────────────────────────┐
+│  Header                      │
+├────┬─────────────────────────┤
+│ 📘 │                         │
+│Lkr │   Hoofd content         │
+├────┤   (Mandy Mandarijn)     │
+│ 👨‍👩 │                         │
+│Oud │                         │
+└────┴─────────────────────────┘
+```
