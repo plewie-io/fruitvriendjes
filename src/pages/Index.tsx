@@ -318,7 +318,7 @@ const Index = () => {
           <img
             src={infoOuders}
             alt="Info voor ouders - uitleg Mandy Mandarijn"
-            className="w-auto h-auto max-h-[96vh] max-w-full object-contain rounded-sm mx-auto"
+            className="w-full h-auto max-h-[96vh] max-w-full object-contain rounded-sm"
           />
         </DialogContent>
       </Dialog>
