@@ -14,11 +14,11 @@ import {
 import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
 import Footer from "@/components/Footer";
 import { RecipeLoadingDialog } from "@/components/RecipeLoadingDialog";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import infoLeerkrachten from "@/assets/info-leerkrachten.png";
 import infoOuders from "@/assets/info-ouders.png";
 
-import { Loader2, ChefHat, Undo2, Download, ThumbsUp, ThumbsDown, GraduationCap, Users } from "lucide-react";
+import { Loader2, ChefHat, Undo2, Download, ThumbsUp, ThumbsDown, GraduationCap, Users, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   generateRecipe as generateRecipeAI,
