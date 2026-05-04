@@ -281,26 +281,6 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-[#FAF8F5]">
       <SchoolfruitsHeader />
 
-      {/* Vaste info-knoppen links (mobiel: onderaan) */}
-      <div className="fixed z-40 left-3 top-1/2 -translate-y-1/2 flex flex-col gap-3 max-md:left-0 max-md:right-0 max-md:top-auto max-md:bottom-0 max-md:translate-y-0 max-md:flex-row max-md:justify-center max-md:gap-0">
-        <button
-          type="button"
-          onClick={() => setOpenLeerkrachten(true)}
-          className="bg-[#9BB510] hover:bg-[#B3CA17] text-white font-poster uppercase text-sm px-4 py-3 rounded-lg max-md:rounded-none max-md:rounded-t-lg shadow-lg flex items-center gap-2 transition-colors max-md:flex-1 max-md:justify-center"
-        >
-          <GraduationCap className="h-5 w-5 shrink-0" />
-          Info voor leerkrachten
-        </button>
-        <button
-          type="button"
-          onClick={() => setOpenOuders(true)}
-          className="bg-[#9BB510] hover:bg-[#B3CA17] text-white font-poster uppercase text-sm px-4 py-3 rounded-lg max-md:rounded-none max-md:rounded-t-lg shadow-lg flex items-center gap-2 transition-colors max-md:flex-1 max-md:justify-center"
-        >
-          <Users className="h-5 w-5 shrink-0" />
-          Info voor ouders
-        </button>
-      </div>
-
       <Dialog open={openLeerkrachten} onOpenChange={setOpenLeerkrachten}>
         <DialogContent className="max-w-[98vw] md:max-w-[95vw] lg:max-w-6xl w-auto p-1 max-h-[98vh]">
           <DialogTitle className="sr-only">Info voor leerkrachten</DialogTitle>
