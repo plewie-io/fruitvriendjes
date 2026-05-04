@@ -14,8 +14,11 @@ import {
 import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
 import Footer from "@/components/Footer";
 import { RecipeLoadingDialog } from "@/components/RecipeLoadingDialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import infoLeerkrachten from "@/assets/info-leerkrachten.png";
+import infoOuders from "@/assets/info-ouders.png";
 
-import { Loader2, ChefHat, Undo2, Download, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Loader2, ChefHat, Undo2, Download, ThumbsUp, ThumbsDown, GraduationCap, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   generateRecipe as generateRecipeAI,
@@ -42,6 +45,8 @@ const Index = () => {
   const [showSafetyDialog, setShowSafetyDialog] = useState(() => {
     return !sessionStorage.getItem("safetyDialogShown");
   });
+  const [openLeerkrachten, setOpenLeerkrachten] = useState(false);
+  const [openOuders, setOpenOuders] = useState(false);
   const [ingredients, setIngredients] = useState("");
   const [recipe, setRecipe] = useState<string | null>(null);
   const [recipeImage, setRecipeImage] = useState<string | null>(null);
@@ -275,6 +280,49 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF8F5]">
       <SchoolfruitsHeader />
+
+      {/* Vaste info-knoppen links (mobiel: onderaan) */}
+      <div className="fixed z-40 left-3 top-1/2 -translate-y-1/2 flex flex-col gap-3 max-md:left-0 max-md:right-0 max-md:top-auto max-md:bottom-3 max-md:translate-y-0 max-md:flex-row max-md:justify-center max-md:px-3">
+        <button
+          type="button"
+          onClick={() => setOpenLeerkrachten(true)}
+          className="bg-[#9BB510] hover:bg-[#B3CA17] text-white font-poster uppercase text-sm md:text-base px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 transition-colors"
+        >
+          <GraduationCap className="h-5 w-5" />
+          Info voor leerkrachten
+        </button>
+        <button
+          type="button"
+          onClick={() => setOpenOuders(true)}
+          className="bg-[#9BB510] hover:bg-[#B3CA17] text-white font-poster uppercase text-sm md:text-base px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 transition-colors"
+        >
+          <Users className="h-5 w-5" />
+          Info voor ouders
+        </button>
+      </div>
+
+      <Dialog open={openLeerkrachten} onOpenChange={setOpenLeerkrachten}>
+        <DialogContent className="max-w-3xl p-2 sm:p-4">
+          <DialogTitle className="sr-only">Info voor leerkrachten</DialogTitle>
+          <img
+            src={infoLeerkrachten}
+            alt="Info voor leerkrachten"
+            className="w-full h-auto rounded"
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={openOuders} onOpenChange={setOpenOuders}>
+        <DialogContent className="max-w-3xl p-2 sm:p-4">
+          <DialogTitle className="sr-only">Info voor ouders</DialogTitle>
+          <img
+            src={infoOuders}
+            alt="Info voor ouders - uitleg Mandy Mandarijn"
+            className="w-full h-auto rounded"
+          />
+        </DialogContent>
+      </Dialog>
+
 
       <RecipeLoadingDialog
         open={loading || imageLoading}
