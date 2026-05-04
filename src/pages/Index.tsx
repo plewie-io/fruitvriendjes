@@ -281,28 +281,28 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-[#FAF8F5]">
       <SchoolfruitsHeader />
 
-      {/* Vaste info-knoppen links (mobiel: onderaan) */}
-      <div className="fixed z-40 left-3 top-1/2 -translate-y-1/2 flex flex-col gap-3 max-md:left-0 max-md:right-0 max-md:top-auto max-md:bottom-3 max-md:translate-y-0 max-md:flex-row max-md:justify-center max-md:px-3">
+      {/* Vaste info-knoppen tegen de linker schermrand (mobiel: onderaan) */}
+      <div className="fixed z-40 left-0 top-1/2 -translate-y-1/2 flex flex-col gap-2 max-md:left-0 max-md:right-0 max-md:top-auto max-md:bottom-0 max-md:translate-y-0 max-md:flex-row max-md:justify-center max-md:gap-0">
         <button
           type="button"
           onClick={() => setOpenLeerkrachten(true)}
-          className="bg-[#9BB510] hover:bg-[#B3CA17] text-white font-poster uppercase text-sm md:text-base px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 transition-colors"
+          className="bg-[#9BB510] hover:bg-[#B3CA17] text-white font-poster uppercase text-xs md:text-sm px-2 py-4 md:py-6 rounded-r-lg max-md:rounded-none max-md:rounded-t-lg shadow-lg flex items-center gap-2 transition-colors max-md:flex-1 max-md:justify-center md:[writing-mode:vertical-rl] md:rotate-180"
         >
-          <GraduationCap className="h-5 w-5" />
+          <GraduationCap className="h-4 w-4" />
           Info voor leerkrachten
         </button>
         <button
           type="button"
           onClick={() => setOpenOuders(true)}
-          className="bg-[#9BB510] hover:bg-[#B3CA17] text-white font-poster uppercase text-sm md:text-base px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 transition-colors"
+          className="bg-[#9BB510] hover:bg-[#B3CA17] text-white font-poster uppercase text-xs md:text-sm px-2 py-4 md:py-6 rounded-r-lg max-md:rounded-none max-md:rounded-t-lg shadow-lg flex items-center gap-2 transition-colors max-md:flex-1 max-md:justify-center md:[writing-mode:vertical-rl] md:rotate-180"
         >
-          <Users className="h-5 w-5" />
+          <Users className="h-4 w-4" />
           Info voor ouders
         </button>
       </div>
 
       <Dialog open={openLeerkrachten} onOpenChange={setOpenLeerkrachten}>
-        <DialogContent className="max-w-3xl p-2 sm:p-4">
+        <DialogContent className="max-w-3xl p-2 sm:p-4 max-h-[90vh] overflow-y-auto">
           <DialogTitle className="sr-only">Info voor leerkrachten</DialogTitle>
           <img
             src={infoLeerkrachten}
@@ -313,7 +313,7 @@ const Index = () => {
       </Dialog>
 
       <Dialog open={openOuders} onOpenChange={setOpenOuders}>
-        <DialogContent className="max-w-3xl p-2 sm:p-4">
+        <DialogContent className="max-w-3xl p-2 sm:p-4 max-h-[90vh] overflow-y-auto">
           <DialogTitle className="sr-only">Info voor ouders</DialogTitle>
           <img
             src={infoOuders}
