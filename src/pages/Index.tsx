@@ -282,21 +282,21 @@ const Index = () => {
       <SchoolfruitsHeader />
 
       {/* Vaste info-knoppen links (mobiel: onderaan) */}
-      <div className="fixed z-40 left-3 top-1/2 -translate-y-1/2 flex flex-col gap-3 max-md:left-0 max-md:right-0 max-md:top-auto max-md:bottom-0 max-md:translate-y-0 max-md:flex-row max-md:justify-center max-md:gap-0">
+      <div className="fixed z-40 left-2 top-1/2 -translate-y-1/2 flex flex-col gap-2 max-md:left-0 max-md:right-0 max-md:top-auto max-md:bottom-0 max-md:translate-y-0 max-md:flex-row max-md:justify-center max-md:gap-0">
         <button
           type="button"
           onClick={() => setOpenLeerkrachten(true)}
-          className="bg-[#9BB510] hover:bg-[#B3CA17] text-white font-poster uppercase text-sm px-4 py-3 rounded-lg max-md:rounded-none max-md:rounded-t-lg shadow-lg flex items-center gap-2 transition-colors max-md:flex-1 max-md:justify-center"
+          className="bg-[#9BB510] hover:bg-[#B3CA17] text-white font-poster uppercase text-[11px] md:text-xs px-2 py-1.5 md:max-w-[110px] md:leading-tight rounded-md max-md:rounded-none max-md:rounded-t-lg max-md:text-sm max-md:px-4 max-md:py-3 shadow-lg flex items-center gap-1.5 transition-colors max-md:flex-1 max-md:justify-center"
         >
-          <GraduationCap className="h-5 w-5 shrink-0" />
+          <GraduationCap className="h-3.5 w-3.5 md:h-4 md:w-4 shrink-0 max-md:h-5 max-md:w-5" />
           Info voor leerkrachten
         </button>
         <button
           type="button"
           onClick={() => setOpenOuders(true)}
-          className="bg-[#9BB510] hover:bg-[#B3CA17] text-white font-poster uppercase text-sm px-4 py-3 rounded-lg max-md:rounded-none max-md:rounded-t-lg shadow-lg flex items-center gap-2 transition-colors max-md:flex-1 max-md:justify-center"
+          className="bg-[#9BB510] hover:bg-[#B3CA17] text-white font-poster uppercase text-[11px] md:text-xs px-2 py-1.5 md:max-w-[110px] md:leading-tight rounded-md max-md:rounded-none max-md:rounded-t-lg max-md:text-sm max-md:px-4 max-md:py-3 shadow-lg flex items-center gap-1.5 transition-colors max-md:flex-1 max-md:justify-center"
         >
-          <Users className="h-5 w-5 shrink-0" />
+          <Users className="h-3.5 w-3.5 md:h-4 md:w-4 shrink-0 max-md:h-5 max-md:w-5" />
           Info voor ouders
         </button>
       </div>
