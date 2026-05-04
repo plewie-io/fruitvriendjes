@@ -45,6 +45,8 @@ const Index = () => {
   const [showSafetyDialog, setShowSafetyDialog] = useState(() => {
     return !sessionStorage.getItem("safetyDialogShown");
   });
+  const [openLeerkrachten, setOpenLeerkrachten] = useState(false);
+  const [openOuders, setOpenOuders] = useState(false);
   const [ingredients, setIngredients] = useState("");
   const [recipe, setRecipe] = useState<string | null>(null);
   const [recipeImage, setRecipeImage] = useState<string | null>(null);
