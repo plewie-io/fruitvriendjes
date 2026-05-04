@@ -14,11 +14,11 @@ import {
 import { SchoolfruitsHeader } from "@/components/SchoolfruitsHeader";
 import Footer from "@/components/Footer";
 import { RecipeLoadingDialog } from "@/components/RecipeLoadingDialog";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import infoLeerkrachten from "@/assets/info-leerkrachten.png";
 import infoOuders from "@/assets/info-ouders.png";
 
-import { Loader2, ChefHat, Undo2, Download, ThumbsUp, ThumbsDown, GraduationCap, Users } from "lucide-react";
+import { Loader2, ChefHat, Undo2, Download, ThumbsUp, ThumbsDown, GraduationCap, Users, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   generateRecipe as generateRecipeAI,
@@ -282,23 +282,59 @@ const Index = () => {
       <SchoolfruitsHeader />
 
       <Dialog open={openLeerkrachten} onOpenChange={setOpenLeerkrachten}>
-        <DialogContent className="w-[100vw] max-w-[100vw] sm:max-w-[95vw] lg:max-w-6xl h-[100vh] sm:h-auto max-h-[100vh] sm:max-h-[98vh] p-1 sm:rounded-lg rounded-none border-0 sm:border flex items-center justify-center">
+        <DialogContent
+          className="w-[100vw] max-w-[100vw] sm:max-w-[90vw] lg:max-w-3xl xl:max-w-4xl h-[100vh] sm:h-auto max-h-[100vh] sm:max-h-[92vh] p-0 sm:p-2 sm:rounded-lg rounded-none border-0 sm:border gap-0 [&>button]:hidden"
+          style={{
+            paddingTop: "max(env(safe-area-inset-top), 0.5rem)",
+            paddingBottom: "max(env(safe-area-inset-bottom), 0.5rem)",
+            paddingLeft: "max(env(safe-area-inset-left), 0.25rem)",
+            paddingRight: "max(env(safe-area-inset-right), 0.25rem)",
+          }}
+          onTouchStart={(e) => {
+            (e.currentTarget as any)._ty = e.touches[0].clientY;
+          }}
+          onTouchEnd={(e) => {
+            const start = (e.currentTarget as any)._ty;
+            if (start && e.changedTouches[0].clientY - start > 80) setOpenLeerkrachten(false);
+          }}
+        >
           <DialogTitle className="sr-only">Info voor leerkrachten</DialogTitle>
+          <DialogClose className="absolute top-3 right-3 z-50 bg-black/70 hover:bg-black text-white rounded-full p-2 shadow-lg" aria-label="Sluiten">
+            <X className="h-6 w-6" />
+          </DialogClose>
           <img
             src={infoLeerkrachten}
             alt="Info voor leerkrachten"
-            className="w-full h-full max-h-[98vh] object-contain rounded-sm"
+            className="w-full h-full max-h-full object-contain rounded-sm"
           />
         </DialogContent>
       </Dialog>
 
       <Dialog open={openOuders} onOpenChange={setOpenOuders}>
-        <DialogContent className="w-[100vw] max-w-[100vw] sm:max-w-[95vw] lg:max-w-6xl h-[100vh] sm:h-auto max-h-[100vh] sm:max-h-[98vh] p-1 sm:rounded-lg rounded-none border-0 sm:border flex items-center justify-center">
+        <DialogContent
+          className="w-[100vw] max-w-[100vw] sm:max-w-[90vw] lg:max-w-3xl xl:max-w-4xl h-[100vh] sm:h-auto max-h-[100vh] sm:max-h-[92vh] p-0 sm:p-2 sm:rounded-lg rounded-none border-0 sm:border gap-0 [&>button]:hidden"
+          style={{
+            paddingTop: "max(env(safe-area-inset-top), 0.5rem)",
+            paddingBottom: "max(env(safe-area-inset-bottom), 0.5rem)",
+            paddingLeft: "max(env(safe-area-inset-left), 0.25rem)",
+            paddingRight: "max(env(safe-area-inset-right), 0.25rem)",
+          }}
+          onTouchStart={(e) => {
+            (e.currentTarget as any)._ty = e.touches[0].clientY;
+          }}
+          onTouchEnd={(e) => {
+            const start = (e.currentTarget as any)._ty;
+            if (start && e.changedTouches[0].clientY - start > 80) setOpenOuders(false);
+          }}
+        >
           <DialogTitle className="sr-only">Info voor ouders</DialogTitle>
+          <DialogClose className="absolute top-3 right-3 z-50 bg-black/70 hover:bg-black text-white rounded-full p-2 shadow-lg" aria-label="Sluiten">
+            <X className="h-6 w-6" />
+          </DialogClose>
           <img
             src={infoOuders}
             alt="Info voor ouders - uitleg Mandy Mandarijn"
-            className="w-full h-full max-h-[98vh] object-contain rounded-sm"
+            className="w-full h-full max-h-full object-contain rounded-sm"
           />
         </DialogContent>
       </Dialog>
