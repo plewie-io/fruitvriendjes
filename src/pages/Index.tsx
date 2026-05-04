@@ -283,19 +283,21 @@ const Index = () => {
 
       <Dialog open={openLeerkrachten} onOpenChange={setOpenLeerkrachten}>
         <DialogContent
-          className="w-[100vw] max-w-[100vw] sm:max-w-[90vw] lg:max-w-3xl xl:max-w-4xl h-[100vh] max-h-[100vh] sm:h-[92vh] sm:max-h-[92vh] p-0 sm:rounded-lg rounded-none border-0 sm:border gap-0 [&>button]:hidden overflow-hidden"
-          style={{
-            paddingTop: "max(env(safe-area-inset-top), 0px)",
-            paddingBottom: "max(env(safe-area-inset-bottom), 0px)",
-            paddingLeft: "max(env(safe-area-inset-left), 0px)",
-            paddingRight: "max(env(safe-area-inset-right), 0px)",
-          }}
+          className="!fixed !left-0 !top-0 !translate-x-0 !translate-y-0 w-screen h-[100dvh] max-w-none rounded-none border-0 p-0 gap-0 flex flex-col overflow-hidden [&>button]:hidden sm:!left-1/2 sm:!top-1/2 sm:!-translate-x-1/2 sm:!-translate-y-1/2 sm:w-[90vw] sm:max-w-3xl sm:h-[90vh] sm:rounded-lg sm:border"
         >
           <DialogTitle className="sr-only">Info voor leerkrachten</DialogTitle>
-          <DialogClose className="absolute top-3 right-3 z-50 bg-black/70 hover:bg-black text-white rounded-full p-2 shadow-lg" aria-label="Sluiten">
-            <X className="h-6 w-6" />
-          </DialogClose>
-          <div className="w-full h-full overflow-y-auto overscroll-contain">
+          <div
+            className="shrink-0 flex items-center justify-end px-3 bg-black/80 h-12"
+            style={{ paddingTop: "env(safe-area-inset-top)", height: "calc(3rem + env(safe-area-inset-top))" }}
+          >
+            <DialogClose className="text-white rounded-full p-2 hover:bg-white/10" aria-label="Sluiten">
+              <X className="h-6 w-6" />
+            </DialogClose>
+          </div>
+          <div
+            className="flex-1 min-h-0 overflow-y-auto overscroll-contain"
+            style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-y", paddingBottom: "env(safe-area-inset-bottom)" }}
+          >
             <img
               src={infoLeerkrachten}
               alt="Info voor leerkrachten"
@@ -307,19 +309,21 @@ const Index = () => {
 
       <Dialog open={openOuders} onOpenChange={setOpenOuders}>
         <DialogContent
-          className="w-[100vw] max-w-[100vw] sm:max-w-[90vw] lg:max-w-3xl xl:max-w-4xl h-[100vh] max-h-[100vh] sm:h-[92vh] sm:max-h-[92vh] p-0 sm:rounded-lg rounded-none border-0 sm:border gap-0 [&>button]:hidden overflow-hidden"
-          style={{
-            paddingTop: "max(env(safe-area-inset-top), 0px)",
-            paddingBottom: "max(env(safe-area-inset-bottom), 0px)",
-            paddingLeft: "max(env(safe-area-inset-left), 0px)",
-            paddingRight: "max(env(safe-area-inset-right), 0px)",
-          }}
+          className="!fixed !left-0 !top-0 !translate-x-0 !translate-y-0 w-screen h-[100dvh] max-w-none rounded-none border-0 p-0 gap-0 flex flex-col overflow-hidden [&>button]:hidden sm:!left-1/2 sm:!top-1/2 sm:!-translate-x-1/2 sm:!-translate-y-1/2 sm:w-[90vw] sm:max-w-3xl sm:h-[90vh] sm:rounded-lg sm:border"
         >
           <DialogTitle className="sr-only">Info voor ouders</DialogTitle>
-          <DialogClose className="absolute top-3 right-3 z-50 bg-black/70 hover:bg-black text-white rounded-full p-2 shadow-lg" aria-label="Sluiten">
-            <X className="h-6 w-6" />
-          </DialogClose>
-          <div className="w-full h-full overflow-y-auto overscroll-contain">
+          <div
+            className="shrink-0 flex items-center justify-end px-3 bg-black/80 h-12"
+            style={{ paddingTop: "env(safe-area-inset-top)", height: "calc(3rem + env(safe-area-inset-top))" }}
+          >
+            <DialogClose className="text-white rounded-full p-2 hover:bg-white/10" aria-label="Sluiten">
+              <X className="h-6 w-6" />
+            </DialogClose>
+          </div>
+          <div
+            className="flex-1 min-h-0 overflow-y-auto overscroll-contain"
+            style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-y", paddingBottom: "env(safe-area-inset-bottom)" }}
+          >
             <img
               src={infoOuders}
               alt="Info voor ouders - uitleg Mandy Mandarijn"
