@@ -442,6 +442,25 @@ const Index = () => {
                       {isModifyMode ? "Pas recept aan!" : "Maak een recept!"}
                     </Button>
 
+                    <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => setOpenLeerkrachten(true)}
+                        className="flex-1 bg-[#9BB510] hover:bg-[#B3CA17] text-white font-poster uppercase text-sm px-4 py-3 rounded-lg shadow flex items-center justify-center gap-2 transition-colors"
+                      >
+                        <GraduationCap className="h-5 w-5 shrink-0" />
+                        Info voor leerkrachten
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setOpenOuders(true)}
+                        className="flex-1 bg-[#9BB510] hover:bg-[#B3CA17] text-white font-poster uppercase text-sm px-4 py-3 rounded-lg shadow flex items-center justify-center gap-2 transition-colors"
+                      >
+                        <Users className="h-5 w-5 shrink-0" />
+                        Info voor ouders
+                      </button>
+                    </div>
+
                     {isModifyMode && (
                       <div className="flex gap-2">
                         {recipeHistory.length > 0 && (
